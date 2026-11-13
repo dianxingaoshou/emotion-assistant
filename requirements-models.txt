@@ -1,0 +1,8 @@
+# Optional real-model layer; use only this project's Python 3.12 .venv.
+# The verified PyPI Windows torch/torchaudio pair runs on CPU (CUDA=None).
+onnxruntime==1.22.1
+Pillow==11.1.0
+torch==2.6.0
+torchaudio==2.6.0
+funasr==1.2.6
+huggingface-hub==0.34.4

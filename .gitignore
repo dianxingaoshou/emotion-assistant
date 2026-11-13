@@ -1,0 +1,36 @@
+.venv/
+.runtime/
+models/
+data/
+reports/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.sqlite3*
+*.part
+
+# Machine-local settings, credentials and editor state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+id_rsa
+id_ed25519
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# Generated distributions, coverage and loose model weights
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors

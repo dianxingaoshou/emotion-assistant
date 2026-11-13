@@ -1,0 +1,9 @@
+[project]
+name = "desktop-emotion-assistant"
+version = "0.1.0"
+description = "Local opt-in multimodal observation and self-regulation prototype"
+requires-python = ">=3.12,<3.13"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+cache_dir = ".runtime/cache/pytest"

@@ -1,0 +1,67 @@
+name: Software checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: software-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-software:
+    name: Windows Python 3.12
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PYTHONUTF8: '1'
+      PYTHONIOENCODING: utf-8
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.12'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: requirements-base.txt
+      - name: Install isolated software-test environment
+        run: |
+          python -m venv .venv
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\.venv\Scripts\python.exe -m pip install --disable-pip-version-check -r requirements-base.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\.venv\Scripts\python.exe -m pip check
+      - name: Run regression and simulated closed-loop acceptance
+        run: .\.venv\Scripts\python.exe scripts/verify.py
+      - name: Check desktop workflow
+        run: .\.venv\Scripts\python.exe scripts/ui_smoke.py
+      - name: Check regulation feedback loop
+        run: .\.venv\Scripts\python.exe scripts/regulation_smoke.py
+      - name: Check new UI interfaces
+        run: .\.venv\Scripts\python.exe scripts/review_ui_smoke.py
+      - name: Upload software-check reports
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: software-check-reports
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            reports/acceptance.json
+            reports/tests.xml
+            reports/tests-output.txt
+            reports/ui-smoke-result.json
+            reports/regulation/result.json
+            reports/review/ui-contracts.json
