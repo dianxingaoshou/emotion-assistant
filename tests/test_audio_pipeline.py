@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from emotion_assistant.capture import CaptureRuntime, inference_process
+from emotion_assistant.capture import CaptureConfig, CaptureRuntime, SpeechSegmenter, inference_process
 from emotion_assistant.models import ModelHub
 
 
@@ -49,6 +49,28 @@ class AudioAdapterTests(unittest.TestCase):
         self.assertTrue(observation["valid"])
         self.assertEqual(self.hub._audio_model.calls, 1)
         self.assertIn("prediction_diagnostics", observation)
+
+    def test_voiced_fraction_and_noise_estimate_follow_signal_not_gain(self):
+        def analyze(gain, background):
+            segmenter = SpeechSegmenter()
+            for n in range(6+85+19):
+                voice = 6 <= n < 91
+                block = np.full(512, (.12 if voice else background)*gain, np.float32)
+                result = segmenter.feed(block, n*.032, .9 if voice else .05)
+            self.assertIsNotNone(result)
+            samples, start, end = result
+            return self.hub.analyze_audio_emotion(samples, "s", start, end, segmenter.last_metrics)
+        clean, lower_gain, noisy = analyze(1., .001), analyze(.5, .001), analyze(1., .07)
+        metrics = clean["quality_metrics"]
+        self.assertAlmostEqual(metrics["speech_ratio"], 85/110)
+        self.assertAlmostEqual(metrics["voiced_seconds"], 85*.032)
+        self.assertAlmostEqual(metrics["background_rms"], .001, places=5)
+        self.assertAlmostEqual(metrics["estimated_snr_db"], lower_gain["quality_metrics"]["estimated_snr_db"], places=4)
+        self.assertLess(noisy["quality"], clean["quality"])
+        continuous = SpeechSegmenter(maximum=1)
+        for n in range(32):
+            continuous.feed(np.ones(512, np.float32), n*.032, .9)
+        self.assertIsNone(continuous.last_metrics["estimated_snr_db"])
 
     def test_near_uniform_raw_is_retained_but_cannot_be_negative_evidence(self):
         self.hub._audio_model = AcousticModel([.25, .25, .25, .25])
@@ -130,6 +152,7 @@ def fake_runtime():
     runtime._asr_permission.set()
     runtime.stop_event, runtime.pause_event = threading.Event(), threading.Event()
     runtime.jobs = {"audio": queue.Queue(2), "asr": queue.Queue(2)}
+    runtime._init_monitor_state()
     runtime.processes = {}
     runtime.microphone = 0
     runtime.events = []
@@ -138,6 +161,57 @@ def fake_runtime():
 
 
 class PipelineTests(unittest.TestCase):
+    def test_saturated_result_queue_still_delivers_all_control_events(self):
+        import multiprocessing as mp
+        receive, send = mp.get_context("spawn").Pipe(duplex=False)
+        results, jobs, stop = queue.Queue(1), queue.Queue(), threading.Event()
+        results.put_nowait("busy")
+        jobs.put(("work", np.full(48000, .03, np.float32), 0, 3, 0))
+        jobs.put(None)
+        class FakeHub:
+            def __init__(self, *args, **kwargs):
+                pass
+            def load_audio_emotion(self):
+                return {"audio": {"ready": True}}
+            def analyze_audio_emotion(self, *args):
+                return {"valid": True, "modality": "audio", "t_end": 3}
+        try:
+            with patch("emotion_assistant.models.ModelHub", FakeHub):
+                inference_process("audio", ".", "s", time.monotonic()-3, jobs, results, stop, False, control=send)
+            events = [receive.recv() for _ in range(3)]
+        finally:
+            receive.close()
+        self.assertEqual([e["kind"] for e in events], ["loaded", "started", "done"])
+        self.assertTrue(events[-1]["result_dropped"])
+        self.assertEqual(events[1]["token"], events[-1]["token"])
+        self.assertEqual(results.get_nowait(), "busy")
+
+    def test_failed_worker_reloads_once_then_other_events_still_publish(self):
+        events = []
+        with tempfile.TemporaryDirectory() as missing:
+            runtime = CaptureRuntime("s", -1, None, missing, lambda frame: None, events.append,
+                                     config=CaptureConfig(max_reloads=1, retry_delay=.05))
+            try:
+                runtime._spawn_inference("audio")
+                runtime.start()
+                deadline = time.monotonic()+15
+                while time.monotonic() < deadline and runtime.telemetry()["workers"].get("audio") != "degraded":
+                    time.sleep(.02)
+                self.assertEqual(runtime.telemetry()["workers"]["audio"], "degraded")
+                states = [e["state"] for e in events if e["kind"] == "model_state"]
+                self.assertEqual(states, ["loading", "retry_wait", "loading", "degraded"])
+                unavailable = [e for e in events if e["kind"] == "observation"]
+                self.assertEqual(len(unavailable), 2)
+                self.assertFalse(runtime.accepts_result(unavailable[0]))
+                self.assertTrue(runtime.accepts_result(unavailable[1]))
+                runtime.results.put({"kind": "info", "message": "other capture source still active"})
+                deadline = time.monotonic()+2
+                while not any(e.get("message") == "other capture source still active" for e in events) and time.monotonic() < deadline:
+                    time.sleep(.02)
+                self.assertTrue(any(e.get("message") == "other capture source still active" for e in events))
+                self.assertEqual(runtime._restarts["audio"], 1)
+            finally:
+                runtime.stop()
     def test_runtime_starts_independent_workers_with_two_pending_audio_jobs_each(self):
         runtime = CaptureRuntime("s", -1, 0, Path("."), lambda frame: None,
                                  lambda event: None, asr_allowed=True)
@@ -163,6 +237,9 @@ class PipelineTests(unittest.TestCase):
         samples = np.full(16000, .04, np.float32)
         runtime._queue_segment(samples, 0, 1, set())
         acoustic, text = runtime.jobs["audio"].get_nowait(), runtime.jobs["asr"].get_nowait()
+        self.assertTrue(acoustic[8])
+        self.assertEqual(acoustic[8], text[8])
+        self.assertNotEqual(acoustic[0], text[0])
         samples[:] = 0
         self.assertTrue(np.all(acoustic[1] == .04))
         self.assertTrue(np.all(text[1] == .04))

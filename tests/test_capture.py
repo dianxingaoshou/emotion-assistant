@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from emotion_assistant.capture import CaptureRuntime, SpeechSegmenter, _offer
+from emotion_assistant.capture import CaptureConfig, CaptureRuntime, SpeechSegmenter, _offer
 
 
 class SpeechSegmenterTests(unittest.TestCase):
@@ -94,6 +94,7 @@ def fake_runtime():
     runtime.segments = queue.Queue(3)
     runtime.results = queue.Queue(64)
     runtime.jobs = {"visual": queue.Queue(1), "audio": queue.Queue(3)}
+    runtime._init_monitor_state()
     runtime.processes = {}
     runtime.thread = None
     return runtime
@@ -202,6 +203,38 @@ class RuntimeTests(unittest.TestCase):
         job = runtime.jobs["visual"].get_nowait()
         self.assertGreaterEqual(job[2], 5)
         self.assertEqual(job[3], 5.2)
+
+    def test_slower_schedule_does_not_expand_visual_evidence_coverage(self):
+        runtime = fake_runtime()
+        runtime.config = CaptureConfig(visual_period=2.)
+        runtime.on_event, runtime.on_frame = lambda event: None, lambda frame: None
+        runtime.frames.put((4., "frame"))
+        runtime.stop_event.wait = lambda timeout: runtime.stop_event.set()
+        runtime._monitor()
+        job = runtime.jobs["visual"].get_nowait()
+        self.assertEqual(job[3]-job[2], .5)
+        self.assertEqual(runtime.telemetry()["pending_jobs"]["visual"]["count"], 1)
+
+    def test_stage_telemetry_tracks_bounded_latency_and_queue_loss(self):
+        runtime = fake_runtime()
+        for n in range(300):
+            runtime.record_timing("audio", inference=n)
+        audio = runtime.jobs["audio"]
+        for n in range(audio.maxsize):
+            audio.put_nowait(n)
+        runtime.on_event = lambda event: None
+        runtime._queue_segment(np.zeros(100), 0, 1, set())
+        stats = runtime.telemetry()
+        latency = stats["recent_timing_ms"]["audio"]["inference"]
+        self.assertEqual(latency["n"], 256)
+        self.assertGreater(latency["p95"], latency["p50"])
+        self.assertEqual(stats["drops"]["audio.queue_full"], 1)
+
+    def test_schedule_rejects_invalid_capacity_and_nonfinite_timeout(self):
+        for settings in ({"segment_queue": 0}, {"max_reloads": -1}, {"visual_period": float("nan")},
+                         {"audio_timeout": 0}, {"audio_queue": 1.5}):
+            with self.assertRaises(ValueError):
+                CaptureConfig(**settings)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ from __future__ import annotations
 from concurrent.futures import Future, ThreadPoolExecutor
 from collections import OrderedDict
 from copy import deepcopy
+from dataclasses import asdict
 import csv
 from datetime import datetime, timedelta, timezone
 import json
@@ -14,13 +15,16 @@ import uuid
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, Qt
 
-from .capture import CaptureRuntime, invalid_observation
+from .capture import CaptureConfig, CaptureRuntime, invalid_observation
 from .core import FusionEngine, InterventionFlow
 from .paths import DATA, MODELS
 from .storage import Store
-from .regulation import ACTIVITIES, NEEDS, evaluate_outcome, recommend_activities, summarize_feedback
+from .regulation import ACTIVITIES, NEEDS, evaluate_outcome, summarize_feedback
+from .prompt_policy import ConflictGate, PromptTimingPolicy
+from .recommendation_policy import contextual_decision
 from .evidence import SustainedEvidenceGate
 from .assessment import AssessmentWindowCollector, compare_assessments
+from .personalization import FeedbackRecord, build_reference, compare_reference
 
 
 def simulation_observation(session_id, modality, start, end, negative=0.7, quality=0.85):
@@ -53,10 +57,15 @@ class Controller(QObject):
     _write_completed = Signal(object)
     _stop_failed = Signal(dict)
     evidence_changed = Signal(dict)
+    transcript_cleanup_changed = Signal()
+    _transcript_cleanup_finished = Signal(object)
 
     def __init__(self, database=None, parent=None):
         super().__init__(parent)
         self.store = Store(database or DATA / "sessions.sqlite3")
+        self.transcript_cleanup_inflight = {}
+        self.transcript_cleanup_failed = set(self.store.pending_transcript_cleanup())
+        self._transcript_cleanup_finished.connect(self._on_transcript_cleanup, Qt.ConnectionType.QueuedConnection)
         self.writer = ThreadPoolExecutor(max_workers=1, thread_name_prefix="sqlite-writer")
         self._write_slots = threading.BoundedSemaphore(256)
         self._observation_slots = threading.BoundedSemaphore(192)
@@ -73,7 +82,12 @@ class Controller(QObject):
         self.state = "idle"
         self.mode = "real"
         self.runtime = None
-        self.fusion = FusionEngine()
+        self.fusion = FusionEngine.from_project(DATA, baseline_version=None)
+        self.personal_learning = False
+        self._personal_reference_state = "disabled"
+        self.frozen_reference = build_reference([])
+        self._reference_context = {}
+        self._reference_observing_since = 0.
         self.flow = InterventionFlow()
         self.started = time.monotonic()
         self.activity_started = None
@@ -91,12 +105,20 @@ class Controller(QObject):
         self.current_user_name = ""
         self.regulation_need = "unsure"
         self.regulation_seconds = 120
+        self.recommendation_pre = None
+        self.prompt_timing = PromptTimingPolicy()
+        self.conflict_gate = ConflictGate()
+        self._request_source = None
+        self._request_decision_id = None
+        self._prompt_signature = None
+        self._offered_decision = None
         self.personalization = {}
         self._recommendation_serial = 0
         self._last_due_signature = ()
         self._pending_previous_id = None
         self._pending_root_id = None
         self._known_discomfort = set()
+        self._avoid_writes = {}
         self.evidence_gate = SustainedEvidenceGate()
         self.assessment = None
         self.pre_assessment = self.post_assessment = None
@@ -219,6 +241,15 @@ class Controller(QObject):
         if not str(user_name).strip():
             self.status_changed.emit("请填写个人档案名称")
             return
+        strategy = consent.get("fusion_strategy")
+        if strategy not in (None, "quality_v2", "calibrated_fusion"):
+            self.status_changed.emit("请选择有效的融合策略")
+            return
+        try:
+            capture_config = CaptureConfig() if mode == "simulation" else CaptureConfig.from_project(DATA)
+        except (ValueError, TypeError, OSError) as exc:
+            self.status_changed.emit(f"采集配置无效，请检查 data/capture-config.json（{exc}）")
+            return
         self.mode = "simulation" if mode == "simulation" else "real"
         users = self.store.list_users()
         user_id = next((u["id"] for u in users if u["name"] == user_name.strip()), None)
@@ -228,16 +259,28 @@ class Controller(QObject):
         self.personalization = {}
         self._known_discomfort = set()
         self._pending_previous_id = self._pending_root_id = None
+        self.personal_learning = consent.get("personal_learning") is True
+        self._personal_reference_state = "active" if self.personal_learning else "disabled"
+        requested_devices = consent.get("device_names") or {}
+        self.frozen_reference = (self.store.personal_reference(user_id, self.mode)
+                                 if self.personal_learning else build_reference([]))
         consent = {"collection": True, "transcript": consent.get("transcript") is True,
+                   "personal_learning": self.personal_learning,
                    "save_transcript": consent.get("transcript") is True, "raw_media": False}
         self.transcript_allowed = consent["transcript"]
         self.session_id = self.store.start_session(user_id, consent, self.mode)
         self.state = "running"
         self.started = time.monotonic()
-        self.fusion = FusionEngine()
+        self.fusion = FusionEngine.from_project(DATA, baseline_version=self.frozen_reference["version"], strategy=strategy)
         self.flow = InterventionFlow()
         self.evidence_gate.reset(self.session_id)
         self._audio_evidence.clear()
+        self.conflict_gate.reset(self.session_id)
+        since = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat(timespec="milliseconds")
+        self.prompt_timing.restore(self.store.recent_prompt_history(user_id, self.mode, since))
+        self._prompt_signature = self._offered_decision = self._request_source = None
+        self._request_decision_id = None
+        self.recommendation_pre = None
         self.assessment = None
         self.pre_assessment = self.post_assessment = None
         self._assessment_phase = None
@@ -247,6 +290,14 @@ class Controller(QObject):
         self.enabled_modalities = ({"visual"} if camera_index is not None and camera_index >= 0 else set())
         if mic_index is not None:
             self.enabled_modalities.add("audio")
+        if self.mode == "simulation":
+            self._reference_context = {"enabled_modalities": ["audio", "visual"], "fixture": "simulation-v1"}
+        else:
+            self._reference_context = {"enabled_modalities": sorted(self.enabled_modalities),
+                "camera": [camera_index, str(requested_devices.get("visual") or "")],
+                "microphone": [mic_index, str(requested_devices.get("audio") or "")],
+                "visual_period": capture_config.visual_period, "audio_quality_version": "vad-noise-v1"}
+        self._reference_observing_since = 0.
         self.cooldown_until = 0
         self.task_details = {}
         self.activity_started = None
@@ -255,8 +306,10 @@ class Controller(QObject):
         self._write(self.store.append_event, self.session_id, "configuration",
                     {"camera_index": camera_index, "mic_index": mic_index,
                      "video_resolution": [640, 480], "preview_fps_target": 15,
-                     "visual_inference_fps_target": 2, "audio_sample_rate": 16000,
-                     "fusion_min_quality": 0.2, "sustained_seconds": 20,
+                     "visual_inference_fps_target": 1/capture_config.visual_period,
+                     "capture_config": asdict(capture_config), "audio_sample_rate": 16000,
+                     "fusion_min_quality": self.fusion.min_quality, "fusion_config": self.fusion.config,
+                     "fusion_config_hash": self.fusion.config_hash, "sustained_seconds": self.evidence_gate.required_seconds,
                      "cooldown_seconds": 1200, "raw_media_saved": False,
                      "app_version": "0.1.0", "simulation": self.mode == "simulation"})
         if self.mode == "simulation":
@@ -266,7 +319,7 @@ class Controller(QObject):
         else:
             self.runtime = CaptureRuntime(self.session_id, int(camera_index if camera_index is not None else -1),
                                           mic_index, MODELS, self.frame_ready.emit,
-                                          self._event_received.emit, consent["transcript"])
+                                          self._event_received.emit, consent["transcript"], config=capture_config)
             try:
                 self.runtime.start()
                 self.status_changed.emit("本地会话已开始；模型加载期间只显示可用输入。随时可暂停或结束")
@@ -295,6 +348,17 @@ class Controller(QObject):
         if self.state != "running" or not self.session_id:
             return
         kind = event.get("kind")
+        if (self.mode == "real" and kind in ("observation", "utterance") and "generation" in event
+                and (self.runtime is None or not self.runtime.accepts_result(event))):
+            return
+        payload = event.get(kind, {})
+        timing = payload.get("timing", {}) if isinstance(payload, dict) else {}
+        if ("published_at" in timing and payload.get("session_id") == self.session_id
+                and self.runtime is not None and hasattr(self.runtime, "record_timing")):
+            arrival = time.monotonic()-self.runtime.origin
+            timing["ui_received_at"] = arrival
+            self.runtime.record_timing("asr" if kind == "utterance" else payload["modality"],
+                                       ui_dispatch=max(0., arrival-timing["published_at"])*1000)
         if kind == "observation":
             observation = event["observation"]
             if observation.get("session_id") != self.session_id:
@@ -315,9 +379,8 @@ class Controller(QObject):
             self._publish_fusion(result)
         elif kind == "utterance":
             utterance = event["utterance"]
-            if not self.transcript_allowed or utterance.get("session_id", self.session_id) != self.session_id:
+            if not self.transcript_allowed or utterance.get("session_id") != self.session_id:
                 return
-            utterance.setdefault("session_id", self.session_id)
             self.transcript_ready.emit(utterance)
             self._write(self.store.save_utterance, self.session_id, utterance, True)
         else:
@@ -327,6 +390,16 @@ class Controller(QObject):
     def _publish_fusion(self, result):
         result.update(session_id=self.session_id, processed_at=time.monotonic()-self.started,
                       simulation=self.mode == "simulation")
+        result.update(reference_context=self._reference_context,
+                      reference_observing=(self._reference_observing_since is not None
+                          and result["t_start"] >= self._reference_observing_since and self.state == "running"))
+        if self.personal_learning:
+            reference = compare_reference(self.frozen_reference, result)
+        else:
+            reference = {"status": self._personal_reference_state, "version": None}
+        reference["session_frozen_version"] = self.fusion.config.get("baseline_version")
+        reference["applied"] = reference["status"] in ("above_reference", "within_or_below_reference")
+        result["personal_reference"] = reference
         self.fusion_ready.emit(result)
         self._write(self.store.save_observation, self.session_id, result)
         priority = {"joint": 2, "audio_only": 1, "visual_only": 1, "unavailable": 0}
@@ -379,22 +452,100 @@ class Controller(QObject):
             return
         self.transcript_allowed = False
         if self.runtime:
-            self.runtime.set_asr_allowed(False)
-        future = self._write(self.store.set_transcript_consent, self.session_id, False)
-        return self._refresh_after_write(future, "已停止本次转写，之前获授权的历史保留")
+            try:
+                self.runtime.set_asr_allowed(False)
+            except (OSError, RuntimeError, ValueError):
+                self.status_changed.emit("转写输出已拦截，采集进程确认失败。")
+        return self._submit_transcript_cleanup(self.session_id)
+
+    def _submit_transcript_cleanup(self, session_id):
+        if session_id in self.transcript_cleanup_inflight:
+            return self.transcript_cleanup_inflight[session_id]
+        try:
+            # Independent of writer queue capacity, including already queued ASR results.
+            self.store.request_transcript_cleanup(session_id)
+        except Exception:
+            # The in-memory barrier is installed first. Still try the full transaction.
+            self.status_changed.emit("转写已停，清理请求暂未写入磁盘，正在尝试清理。")
+        self.transcript_cleanup_failed.discard(session_id)
+        future = self._write(self.store.set_transcript_consent, session_id, False)
+        self.transcript_cleanup_inflight[session_id] = future
+        self.transcript_cleanup_changed.emit()
+
+        def finished(result):
+            if not self.closed:
+                self._transcript_cleanup_finished.emit((session_id, not result.cancelled() and result.exception() is None))
+        future.add_done_callback(finished)
+        return future
+
+    @Slot(object)
+    def _on_transcript_cleanup(self, result):
+        if self.closed:
+            return
+        session_id, success = result
+        self.transcript_cleanup_inflight.pop(session_id, None)
+        if success:
+            self.transcript_cleanup_failed.discard(session_id)
+            self.status_changed.emit("转写已停止，已清除语境标注，授权期间的原转写文字保留。")
+        else:
+            self.transcript_cleanup_failed.add(session_id)
+            self.status_changed.emit("转写已停止，语境标注清理失败，可在转写面板重试。")
+        self.transcript_cleanup_changed.emit()
+
+    def retry_transcript_cleanup(self):
+        for session_id in self.store.pending_transcript_cleanup():
+            self._submit_transcript_cleanup(session_id)
 
     def _consider_prompt(self, result):
-        if self.flow.state not in ("observing", "cooldown") or time.monotonic() < self.cooldown_until:
+        if self.flow.state not in ("observing", "cooldown"):
             return
         now = time.monotonic() - self.started
-        if self.evidence_gate.observe(result, now):
-            self.request_intervention(source="sustained_observation")
-        self.evidence_changed.emit(self.evidence_gate.diagnostics(now))
+        self.evidence_gate.observe(result, now)
+        self.conflict_gate.observe(result, now)
+        self._evaluate_prompt(now)
+
+    def set_prompt_availability(self, mode):
+        if mode in self.prompt_timing.modes:
+            self.prompt_timing.mode = mode
+            self.evidence_gate.reset(self.session_id)
+            self.conflict_gate.reset(self.session_id)
+            self._prompt_signature = None
+
+    def note_prompt_refusal(self, source=None):
+        self.prompt_timing.history.append(("declined", datetime.now(timezone.utc).timestamp()))
+        self._write(self.store.append_event, self.session_id, "prompt_declined",
+                    {"source": source or self._request_source, "policy_version": self.prompt_timing.version,
+                     "decision_id": None if source else self._request_decision_id})
+
+    def _evaluate_prompt(self, now):
+        negative = self.evidence_gate.diagnostics(now)
+        conflict = self.conflict_gate.diagnostics(now)
+        source = ("clarify_conflict" if conflict["ready"] else
+                  "sustained_observation" if negative["ready"] else None)
+        evidence = conflict if conflict["ready"] else negative
+        policy = self.prompt_timing.evaluate(datetime.now(timezone.utc).timestamp(), source, time.monotonic() < self.cooldown_until)
+        if source and (self.flow.current or {}).get("save_status") in ("failed", "pending"):
+            policy.update(action="observe", reason="awaiting_feedback_save")
+        self.evidence_changed.emit(dict(negative, timing_reason=policy["reason"],
+                                        conflict_seconds=conflict["effective_seconds"]))
+        signature = (source, policy["action"], policy["reason"])
+        decision_id = None
+        if source and (policy["action"] == "ask" or self._prompt_signature != signature):
+            decision_id = uuid.uuid4().hex
+            self._write(self.store.append_event, self.session_id, "prompt_decision",
+                        dict(policy, decision_id=decision_id, source_ids=evidence["source_ids"],
+                             window_start=evidence.get("window_start"), window_end=evidence.get("window_end")))
+        self._prompt_signature = signature
+        if policy["action"] == "ask":
+            self.request_intervention(source=source, timing_decision_id=decision_id)
 
     def pause_session(self, paused):
         if self.state not in ("running", "paused"):
             return
         self.state = "paused" if paused else "running"
+        self._reference_observing_since = (time.monotonic()-self.started
+            if not paused and self.flow.state in ("observing", "cooldown") else None)
+        self.conflict_gate.reset(self.session_id)
         if self.runtime:
             self.runtime.pause(paused)
         self.negative_start = self.negative_end = None
@@ -496,15 +647,19 @@ class Controller(QObject):
         self._recommendation_serial += 1
         serial = self._recommendation_serial
         profile_id, profile_name, selected_mode = self.current_user_id, self.current_user_name, self.mode
-        selected_need, seconds = self.regulation_need, self.regulation_seconds
+        selected_need, seconds, pre = self.regulation_need, self.regulation_seconds, self.recommendation_pre
+        pending_avoids = self._pending_avoids(profile_id)
 
         def read():
             self._write(lambda: None).result(timeout=10)
             history = self.store.list_interventions(profile_id, selected_mode) if profile_id else []
             preferences = self.store.get_activity_preferences(profile_id) if profile_id else {}
+            preferences.update(dict.fromkeys(pending_avoids, "avoid"))
             pending = self.store.list_pending_followups(profile_id, selected_mode) if profile_id else []
+            excluded = self.store.historical_discomfort(profile_id, selected_mode) if len(history) >= 200 else set()
+            items, decision = contextual_decision(history, selected_need, seconds, pre, preferences, selected_mode, excluded)
             payload = {"need": selected_need, "available_seconds": seconds,
-                       "items": recommend_activities(history, selected_need, seconds, preferences, selected_mode),
+                       "items": items, "decision": decision,
                        "stats": summarize_feedback(history, selected_mode), "preferences": preferences,
                        "pending_followups": pending, "mode": selected_mode,
                        "user_name": profile_name, "user_id": profile_id, "history_limit": 200,
@@ -547,9 +702,23 @@ class Controller(QObject):
         for record in payload["pending_followups"]:
             record["is_due"] = due.get((record.get("session_id"), record.get("id")), False)
         self.personalization = payload
+        if self.state in ("running", "paused") and self.flow.state in ("confirming", "ready"):
+            self._record_recommendation(payload["decision"])
         self._known_discomfort = {item["activity"] for item in payload["stats"].get("per_activity", [])
                                   if item.get("discomfort_count", 0) > 0}
         self.recommendations_ready.emit(payload)
+
+    def set_recommendation_pre(self, value):
+        if value != self.recommendation_pre:
+            self.recommendation_pre = value
+            self.refresh_recommendations()
+
+    def _record_recommendation(self, decision):
+        if self._offered_decision is None or self._offered_decision[0] != decision:
+            identity = uuid.uuid4().hex
+            self._offered_decision = (deepcopy(decision), identity)
+            self._write(self.store.append_event, self.session_id, "recommendation_offered",
+                        dict(decision, decision_id=identity))
 
     def _refresh_after_write(self, future, message=None, record_id=None, require_result=False):
         context = {"user_id": self.current_user_id, "mode": self.mode,
@@ -577,21 +746,38 @@ class Controller(QObject):
             return None
         self._recommendation_serial += 1
         future = self._write(self.store.save_activity_preference, self.current_user_id, activity, preference)
+        key = (self.current_user_id, activity)
+        if preference == "avoid" or key in self._avoid_writes:
+            self._avoid_writes[key] = future
         return self._refresh_after_write(future)
 
+    def _pending_avoids(self, profile):
+        """Honor an explicit refusal until the latest preference write has committed."""
+        result = set()
+        for (owner, activity), future in list(self._avoid_writes.items()):
+            if future.done() and not future.cancelled() and future.exception() is None:
+                del self._avoid_writes[owner, activity]
+            elif owner == profile:
+                result.add(activity)
+        return result
+
     def _intervention_signal(self):
+        if self.flow.state not in ("observing", "cooldown") or self.state != "running":
+            self._reference_observing_since = None
+        elif self._reference_observing_since is None:
+            self._reference_observing_since = time.monotonic()-self.started
         current = self.flow.current
         if current and self.task_details:
             current["task_details"] = self.task_details
         remaining = None
         if current and self.flow.state == "running" and self.activity_started is not None:
             remaining = max(0, current["duration"] - int(time.monotonic() - self.activity_started))
-        self.intervention_changed.emit({"state": self.flow.state, "current": current,
+        self.intervention_changed.emit({"state": self.flow.state, "current": current, "source": self._request_source,
                                         "remaining_seconds": remaining,
                                         "assessment": self.assessment.snapshot(time.monotonic()-self.started) if self.assessment else None,
                                         "need": self.regulation_need, "mode": self.mode})
 
-    def request_intervention(self, source="user"):
+    def request_intervention(self, source="user", timing_decision_id=None):
         if self.state not in ("running", "paused"):
             self.status_changed.emit("先开始一次会话，再记录调节过程")
             return
@@ -599,6 +785,14 @@ class Controller(QObject):
             self.status_changed.emit("请先等待本次反馈保存，失败时可点击重试保存")
             return
         if self.flow.request():
+            self._request_source = source
+            self._request_decision_id = timing_decision_id
+            self._offered_decision = None
+            self.recommendation_pre = None
+            if source in ("sustained_observation", "clarify_conflict"):
+                self.prompt_timing.history.append(("asked", datetime.now(timezone.utc).timestamp()))
+                self._write(self.store.append_event, self.session_id, "prompt_asked",
+                            {"source": source, "decision_id": timing_decision_id})
             self.task_details = {}
             self.pre_model = None
             self.assessment = None
@@ -608,7 +802,7 @@ class Controller(QObject):
             if source != "alternative":
                 self._pending_previous_id = self._pending_root_id = None
             self._write(self.store.append_event, self.session_id, "intervention_requested",
-                        {"source": source, "t": time.monotonic() - self.started})
+                        {"source": source, "decision_id": timing_decision_id, "t": time.monotonic() - self.started})
             self._intervention_signal()
             self.refresh_recommendations()
 
@@ -616,9 +810,12 @@ class Controller(QObject):
         try:
             self.flow.confirm(bool(accepted))
             self._write(self.store.append_event, self.session_id, "intervention_confirmation",
-                        {"accepted": bool(accepted), "t": time.monotonic() - self.started})
+                        {"accepted": bool(accepted), "decision_id": self._request_decision_id,
+                         "t": time.monotonic() - self.started})
             if not accepted:
                 self.cooldown_until = time.monotonic() + 1200
+                if self._request_source in ("sustained_observation", "clarify_conflict"):
+                    self.note_prompt_refusal()
             else:
                 self.assessment = AssessmentWindowCollector()
                 self._assessment_phase = "pre"
@@ -644,12 +841,18 @@ class Controller(QObject):
             if isinstance(seconds, bool) or not isinstance(seconds, int) or not 1 <= seconds <= 3600:
                 raise ValueError("可用时间应为1至3600秒")
             history = self.store.list_interventions(self.current_user_id, self.mode)
+            pending_avoids = self._pending_avoids(self.current_user_id)
             preferences = self.store.get_activity_preferences(self.current_user_id)
-            candidates = recommend_activities(history, need, seconds, preferences, self.mode)
+            preferences.update(dict.fromkeys(pending_avoids, "avoid"))
+            excluded = self.store.historical_discomfort(self.current_user_id, self.mode) if len(history) >= 200 else set()
+            candidates, decision = contextual_decision(history, need, seconds, pre, preferences, self.mode, excluded)
             recommendation = next(item for item in candidates if item["activity"] == activity)
             if recommendation.get("blocked") or activity in self._known_discomfort:
                 raise ValueError("此方法已因偏好或不适反馈排除，请选择其他活动或调整偏好")
             record = self.flow.start(activity, pre, min(600, max(1, int(duration))))
+            offer = self._offered_decision
+            decision = dict(decision, decision_id=uuid.uuid4().hex, offered_decision_id=offer[1] if offer else None,
+                            prompt_decision_id=self._request_decision_id, user_selected_action=activity, outcome_id=record["id"])
             self.activity_started = time.monotonic()
             self.task_details = task_details or {}
             self._finish_assessment_for_activity(record["id"])
@@ -662,7 +865,7 @@ class Controller(QObject):
                 "assessment_phase": "during", "save_status": "pending",
                 "started_session_t": self.activity_started - self.started,
                 "context": context, "steps": deepcopy(ACTIVITIES[activity]["steps"]),
-                "recommendation": recommendation, "recommendation_mode": self.mode,
+                "recommendation": recommendation, "recommendation_mode": self.mode, "decision_log": decision,
                 "selection": "user_selected", "user_id": self.current_user_id,
                 "mode": self.mode, "session_id": self.session_id,
                 "previous_intervention_id": self._pending_previous_id,
@@ -678,8 +881,8 @@ class Controller(QObject):
     def _finish_assessment_for_activity(self, intervention_id):
         if self.assessment is not None and self._assessment_phase == "pre":
             now = time.monotonic()-self.started
-            snapshot = self.assessment.snapshot(now)
-            self.pre_assessment = self.assessment.finish(now, skip=snapshot.get("status") == "collecting")
+            self.assessment.advance(now)
+            self.pre_assessment = self.assessment.finish(now, skip=self.assessment.lifecycle == "collecting")
             self.pre_assessment["intervention_id"] = intervention_id
         self.assessment = None
         self._assessment_phase = "during"
@@ -692,7 +895,9 @@ class Controller(QObject):
         self.assessment = AssessmentWindowCollector()
         self._assessment_phase = "post"
         self.post_assessment = None
-        self.assessment.begin(self.session_id, self.flow.current["id"], "post", time.monotonic()-self.started)
+        protocol = (self.pre_assessment or {}).get("comparison_protocol")
+        self.assessment.begin(self.session_id, self.flow.current["id"], "post",
+                              time.monotonic()-self.started, comparison_protocol=protocol)
         self.flow.annotate({"assessment_phase": "post"})
         self._intervention_signal()
 
@@ -711,6 +916,8 @@ class Controller(QObject):
         if self.assessment is None:
             return
         result = self.assessment.finish(time.monotonic()-self.started, skip=True)
+        if result["status"] != "skipped":
+            return
         result["skip_reason"] = reason if isinstance(reason, str) else "user_skipped"
         if self._assessment_phase == "pre":
             self.pre_assessment = result
@@ -800,7 +1007,8 @@ class Controller(QObject):
             self._recommendation_serial += 1
             if self.assessment is not None and self._assessment_phase == "post":
                 now_t = time.monotonic()-self.started
-                self.post_assessment = self.assessment.finish(now_t, skip=self.assessment.snapshot(now_t).get("status") == "collecting")
+                self.assessment.advance(now_t)
+                self.post_assessment = self.assessment.finish(now_t, skip=self.assessment.lifecycle == "collecting")
             comparison = compare_assessments(self.pre_assessment, self.post_assessment)
             comparable = comparison.get("comparable", False)
             now = datetime.now(timezone.utc)
@@ -813,7 +1021,8 @@ class Controller(QObject):
                 "assessments": {"pre": self.pre_assessment, "post": self.post_assessment},
                 "assessment_comparison": comparison, "assessment_phase": "finished", "save_status": "pending",
                 "started_session_t": (self.activity_started or self.started) - self.started,
-                "model_comparison": "independent_windows_observation_only" if comparable else "insufficient",
+                "model_comparison": ("independent_windows_observation_only" if comparable else
+                                     "per_modality_only" if comparison.get("per_modality_delta") else "insufficient"),
                 "completed_session_t": time.monotonic() - self.started,
                 "loop_result": evaluate_outcome(record["pre"], post, helpfulness),
                 "next_step": str(next_step).strip()[:1000], "feedback_note": str(feedback_note).strip()[:2000],
@@ -877,15 +1086,63 @@ class Controller(QObject):
         return self._refresh_after_write(future, "已保存延迟复测；下次推荐将参考这次反馈",
                                          intervention_id, require_result=True)
 
-    def correct_observation(self, label):
+    def feedback_target(self):
+        """Freeze what was displayed when the user opened the feedback dialog."""
+        return {"session_id": self.session_id, "observation": deepcopy(self.latest_summary),
+                "viewed_at": time.monotonic()-self.started}
+
+    def correct_observation(self, label, feedback_type="subjective_correction", target=None):
         if not self.session_id or self.state not in ("running", "paused"):
             return
-        self._write(self.store.append_event, self.session_id, "user_correction",
-                    {"label": str(label), "t": time.monotonic() - self.started})
-        self.cooldown_until = time.monotonic() + 1200
-        self.negative_start = self.negative_end = None
-        self.evidence_gate.reset(self.session_id)
-        self.status_changed.emit("已记录你的修正；20分钟内停止主动询问，仍可随时主动调节")
+        target = self.feedback_target() if target is None else target
+        if target["session_id"] != self.session_id:
+            self.status_changed.emit("原会话已结束，请重新选择当前观察。")
+            return
+        try:
+            record = FeedbackRecord.create(self.current_user_id, self.session_id, feedback_type, label,
+                self.personal_learning and self.state == "running", target["observation"], target["viewed_at"])
+        except ValueError as exc:
+            self.status_changed.emit(str(exc))
+            return
+        if feedback_type in ("do_not_disturb", "subjective_correction"):
+            self.cooldown_until = time.monotonic() + 1200
+            self.negative_start = self.negative_end = None
+            self.evidence_gate.reset(self.session_id)
+        if feedback_type == "do_not_disturb":
+            self.note_prompt_refusal("user_timing_feedback")
+        messages = {"subjective_correction": "已记录你的主观修正，主动询问暂停 20 分钟。",
+                    "distress_report": "已记录当前困扰，可在调节页自行选择活动。",
+                    "do_not_disturb": "已记录时机反馈，主动询问暂停 20 分钟。",
+                    "typical_reference": "已记录日常参考反馈，会话结束后按来源和采集条件检查。"}
+        return self._refresh_after_write(self._write(self.store.save_observation_feedback, record),
+                                         messages[feedback_type])
+
+    def pause_personal_learning(self):
+        if self.state not in ("running", "paused") or not self.personal_learning:
+            return
+        self.store.pause_personal_learning(self.session_id)
+        self.personal_learning = False
+        self._personal_reference_state = "paused"
+        self.status_changed.emit("本次个人学习已暂停。")
+
+    def reference_for_profile(self, name, mode):
+        if self.state in ("running", "paused", "stopping", "stop_failed"):
+            reference = (self.store.personal_reference(self.current_user_id, self.mode)
+                         if self._personal_reference_state == "disabled" else self.frozen_reference)
+            return self.current_user_id, reference
+        user_id = next((u["id"] for u in self.store.list_users() if u["name"] == name.strip()), None)
+        return user_id, self.store.personal_reference(user_id, mode) if user_id else build_reference([])
+
+    def reset_personal_reference(self, name, mode):
+        uid, _ = self.reference_for_profile(name, mode)
+        if uid:
+            active = self.state in ("running", "paused", "stopping", "stop_failed")
+            self.store.reset_personal_reference(uid, self.mode if active else mode)
+            if active:
+                self.frozen_reference = build_reference([])
+                self.personal_learning = False
+                self._personal_reference_state = "reset"
+            self.status_changed.emit("已清除该档案在当前来源下的个人参考。")
 
     def _activity_tick(self):
         now = time.monotonic()-self.started
@@ -895,17 +1152,15 @@ class Controller(QObject):
                     self._fuse_pending_audio(eid)
                 if entry["observation"]["t_end"] < now-120:
                     self._audio_evidence.pop(eid, None)
-        if (self.state == "running" and self.flow.state in ("observing", "cooldown")
-                and time.monotonic() >= self.cooldown_until and self.evidence_gate.ready(now)):
-            self.request_intervention(source="sustained_observation")
+        if self.state == "running" and self.flow.state in ("observing", "cooldown"):
+            self._evaluate_prompt(now)
         if self.assessment is not None:
-            snapshot = self.assessment.snapshot(now)
-            if snapshot.get("remaining_seconds", 0) <= 0 and snapshot.get("status") == "collecting":
-                result = self.assessment.finish(now)
-                if self._assessment_phase == "pre":
-                    self.pre_assessment = result
-                else:
-                    self.post_assessment = result
+            self.assessment.advance(now)
+            if self.assessment.lifecycle == "finalized":
+                if self._assessment_phase == "pre" and self.pre_assessment is None:
+                    self.pre_assessment = self.assessment.snapshot(now)
+                elif self._assessment_phase == "post" and self.post_assessment is None:
+                    self.post_assessment = self.assessment.snapshot(now)
             if self.flow.state == "ready":
                 self._intervention_signal()
         if self.flow.state == "running":
@@ -935,14 +1190,34 @@ class Controller(QObject):
             return
         try:
             import psutil
+        except ImportError:
+            return
+        try:
             process = psutil.Process()
             all_processes = [process] + process.children(recursive=True)
-            rss = sum(p.memory_info().rss for p in all_processes if p.is_running())
+            rss, times = 0, {}
+            for child in all_processes:
+                try:
+                    with child.oneshot():
+                        cpu = child.cpu_times()
+                        size = child.memory_info().rss
+                        times[(child.pid, child.create_time())] = cpu.user+cpu.system
+                        rss += size
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+            now = time.monotonic()
+            previous = getattr(self, "_last_resource_sample", None)
+            percent = None
+            if previous and previous[0] == self.session_id and now > previous[1]:
+                delta = sum(max(0., value-previous[2][key]) for key, value in times.items() if key in previous[2])
+                percent = 100*delta/(now-previous[1])
+            self._last_resource_sample = (self.session_id, now, times)
+            capture = self.runtime.telemetry() if self.runtime is not None and hasattr(self.runtime, "telemetry") else None
             self._write(self.store.append_event, self.session_id, "resource",
-                        {"t": time.monotonic() - self.started, "rss_bytes": rss,
-                         "processes": len(all_processes)})
-        except Exception:
-            pass
+                        {"t": now-self.started, "rss_bytes": rss, "processes": len(times),
+                         "cpu_percent_one_core": percent, "capture": capture})
+        except (psutil.Error, OSError):
+            return
 
     def refresh_history(self):
         if self.closed:

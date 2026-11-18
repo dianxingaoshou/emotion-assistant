@@ -169,7 +169,7 @@ class TrendChart(QWidget):
             score *= 100
         if score is not None and not 0 <= score <= 100:
             score = None
-        if (result.get("valid") is False or result.get("display_score") is False
+        if (result.get("valid") is False or result.get("display_score") is False or result.get("decision") == "abstain"
                 or (scores is not None and scores["uncertain"] >= 0.5)
                 or (raw_scores is not None and scores is None)
                 or (start is not None and (start < 0 or start >= stamp))):

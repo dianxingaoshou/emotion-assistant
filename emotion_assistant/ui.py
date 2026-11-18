@@ -35,7 +35,7 @@ from .regulation_widgets import RecommendationCards, OutcomeCard
 
 LABELS = {
     "positive": "正向", "neutral": "中性", "negative": "负向",
-    "uncertain": "不确定", "unknown": "未知", "other": "其他",
+    "uncertain": "未映射", "unknown": "未知", "other": "其他",
     "happy": "愉快", "happiness": "愉快", "sad": "低落",
     "sadness": "低落", "angry": "愤怒", "anger": "愤怒",
     "fear": "恐惧", "fearful": "恐惧", "disgust": "厌恶",
@@ -63,6 +63,11 @@ REASONS = {
     "audio_too_short": "语音片段太短。", "audio_clipped": "音频削波失真。",
     "audio_silent_or_too_quiet": "静音或音量过低。",
     "insufficient_speech_duration": "有效语音不足两秒，暂不生成声学结论。",
+    "below_visual_only_acceptance": "本次视觉预测未达到单视觉接受条件。",
+    "below_audio_only_acceptance": "本次声学预测未达到单声学接受条件。",
+    "below_joint_acceptance": "本次联合预测未达到联合接受条件。",
+    "unmapped_class": "本段主要线索无法归入正向、中性或负向。",
+    "prediction_near_uniform": "各类别分数接近，本段保留为空白。",
 }
 ACTIVITY_HINTS = {key: item["summary"] for key, item in ACTIVITY_LIBRARY.items()}
 
@@ -216,7 +221,7 @@ class ModalityCard(QFrame):
         layout.addWidget(self.dominant)
         self.distribution = SignalDistribution()
         layout.addWidget(self.distribution)
-        self.scores = QLabel("正向 —   中性 —   负向 —   不确定 —")
+        self.scores = QLabel("正向 —   中性 —   负向 —   未映射 —")
         self.scores.setObjectName("smallMuted")
         self.scores.setWordWrap(True)
         layout.addWidget(self.scores)
@@ -281,7 +286,7 @@ class ModalityCard(QFrame):
             self.scores.setText("   ".join(f"{LABELS[key]} {_percent(scores.get(key))}" for key in ("positive", "neutral", "negative", "uncertain")))
         else:
             self.dominant.setText("暂无有效线索")
-            self.scores.setText("正向 —   中性 —   负向 —   不确定 —")
+            self.scores.setText("正向 —   中性 —   负向 —   未映射 —")
         self.reason.setText(_reason(result.get("reason") or "等待有效输入"))
         self.model.setText("模型：" + _text(result.get("model_version", result.get("model"))))
         start, end = _number(result.get("t_start")), _number(result.get("t_end"))
@@ -540,6 +545,13 @@ class MainWindow(QMainWindow):
         consent_row.addWidget(self.consent)
         consent_row.addSpacing(15)
         consent_row.addWidget(self.transcript_consent)
+        self.learning_consent = QCheckBox("学习个人参考")
+        self.learning_consent.setToolTip("仅将你主动确认的日常线索加入本地参考。每次会话单独授权。")
+        self.reference_button = _button("个人参考")
+        self.reference_button.setObjectName("ghost")
+        self.reference_button.setToolTip("查看参考依据、暂停学习或重置当前档案的参考")
+        consent_row.addWidget(self.learning_consent)
+        consent_row.addWidget(self.reference_button)
         consent_row.addStretch()
         self.refresh_button = _button("刷新设备")
         self.refresh_button.setObjectName("ghost")
@@ -636,6 +648,8 @@ class MainWindow(QMainWindow):
         self.user_name.setFocus()
 
     def _update_clock(self):
+        if self._context_hint and time.monotonic() >= self._context_hint[1]:
+            self._clear_context_hint()
         if self._session_started is not None and self.session_state in ("running", "paused", "stopping"):
             self.session_clock.setText("本次会话  " + _session_time(time.monotonic() - self._session_started))
 
@@ -674,6 +688,11 @@ class MainWindow(QMainWindow):
         self.fusion_reason.setObjectName("muted")
         self.fusion_reason.setWordWrap(True)
         fusion_l.addWidget(self.fusion_reason)
+        self.personal_reference_label = QLabel()
+        self.personal_reference_label.setObjectName("smallMuted")
+        self.personal_reference_label.setWordWrap(True)
+        self.personal_reference_label.hide()
+        fusion_l.addWidget(self.personal_reference_label)
         self.chart = TrendChart()
         fusion_l.addWidget(self.chart, 1)
         # Refactoring UI §5.7: actual line/marker keys work without color.
@@ -685,7 +704,7 @@ class MainWindow(QMainWindow):
         caution.setObjectName("smallMuted")
         meta_row.addWidget(caution)
         fusion_l.addLayout(meta_row)
-        self.fusion_weights = QLabel("视觉权重 —　·　语音权重 —　·　不确定 —")
+        self.fusion_weights = QLabel("视觉权重 —　·　语音权重 —　·　未映射 —")
         self.fusion_weights.setObjectName("smallMuted")
         self.fusion_weights.setWordWrap(True)
         fusion_l.addWidget(self.fusion_weights)
@@ -726,6 +745,13 @@ class MainWindow(QMainWindow):
         self.transcript.setMaximumHeight(105)
         self.transcript.setStyleSheet("background:#F8FAF8; border:0; padding:8px;")
         transcript_l.addWidget(self.transcript)
+        self._context_hint = None
+        self._last_context_end = -1.
+        self.context_button = _button("")
+        self.context_button.setObjectName("ghost")
+        self.context_button.clicked.connect(self._use_context_hint)
+        self.context_button.hide()
+        transcript_l.addWidget(self.context_button)
         # §3.3 / §8.4: when transcription is off, a short explanation replaces
         # an empty editor; the supporting card is sized to its actual content.
         self.transcript_notice = QLabel("转写未开启。可在下次会话前于设备设置中单独授权。")
@@ -736,6 +762,10 @@ class MainWindow(QMainWindow):
         self.revoke_transcript_button.setObjectName("ghost")
         self.revoke_transcript_button.hide()
         transcript_l.addWidget(self.revoke_transcript_button, 0, Qt.AlignmentFlag.AlignLeft)
+        self.retry_transcript_button = _button("重试清除语境标注")
+        self.retry_transcript_button.setObjectName("ghost")
+        self.retry_transcript_button.hide()
+        transcript_l.addWidget(self.retry_transcript_button, 0, Qt.AlignmentFlag.AlignLeft)
         self.transcript.hide()
         right.addWidget(transcript_card)
         action_card = QFrame()
@@ -750,7 +780,7 @@ class MainWindow(QMainWindow):
         self.request_button = _button("我想调整一下", True)
         self.correct_button = _button("修正当前观察")
         self.correct_button.setObjectName("ghost")
-        self.correct_button.setToolTip("记录你对当前线索的修正，并暂停重复主动提示。")
+        self.correct_button.setToolTip("反馈当前感受、提示时机，或确认自己的日常参考。")
         # §2.8 / §3.6: one primary action with a quiet adjacent correction.
         self.live_action_row = QHBoxLayout()
         self.live_action_row.setSpacing(SPACE["sm"])
@@ -758,6 +788,13 @@ class MainWindow(QMainWindow):
         self.live_action_row.addWidget(self.correct_button, 1)
         self.live_action_row.setDirection(QBoxLayout.Direction.TopToBottom if self.width() < 1280 else QBoxLayout.Direction.LeftToRight)
         actions.addLayout(self.live_action_row)
+        self.prompt_availability = QComboBox()
+        for caption, key in (("允许主动询问", "available"), ("专注中，暂缓询问", "focused"),
+                             ("勿扰，仅手动调节", "quiet")):
+            self.prompt_availability.addItem(caption, key)
+        self.prompt_availability.setAccessibleName("主动询问设置")
+        self.prompt_availability.setToolTip("可随时更改。最近一小时最多主动询问两次。")
+        actions.addWidget(self.prompt_availability)
         right.addWidget(action_card)
         layout.addLayout(right, 4)
         page.setMinimumHeight(555)
@@ -1285,6 +1322,14 @@ class MainWindow(QMainWindow):
             text.setWordWrap(True)
             text.setObjectName("muted")
             card_l.addWidget(text)
+            if index == 1:
+                self.fusion_strategy = QComboBox()
+                self.fusion_strategy.setAccessibleName("下一场会话的融合策略")
+                self.fusion_strategy.addItem("融合策略 · 遵循本地设置", None)
+                self.fusion_strategy.addItem("质量加权", "quality_v2")
+                self.fusion_strategy.addItem("使用本地校准参数", "calibrated_fusion")
+                self.fusion_strategy.setToolTip("开始会话时固定策略。缺少匹配的校准参数时采用质量加权。")
+                card_l.addWidget(self.fusion_strategy)
             card_l.addStretch()
             grid.addWidget(card, index // 2, index % 2)
         layout.addLayout(grid)
@@ -1308,6 +1353,9 @@ class MainWindow(QMainWindow):
         if hasattr(self.controller, "evidence_changed"):
             self.controller.evidence_changed.connect(self._on_evidence)
         self.revoke_transcript_button.clicked.connect(self._revoke_transcript)
+        if hasattr(self.controller, "transcript_cleanup_changed"):
+            self.controller.transcript_cleanup_changed.connect(self._set_session_controls)
+            self.retry_transcript_button.clicked.connect(self.controller.retry_transcript_cleanup)
         self.skip_assessment_button.clicked.connect(lambda: self.controller.skip_assessment())
         self.retry_save_button.clicked.connect(self.controller.retry_activity_save)
         self.refresh_button.clicked.connect(self.controller.refresh_devices)
@@ -1323,7 +1371,16 @@ class MainWindow(QMainWindow):
         self.mic_combo.currentTextChanged.connect(self.mic_combo.setToolTip)
         self.user_name.textChanged.connect(self._set_session_controls)
         self.request_button.clicked.connect(self._request_activity)
+        if hasattr(self.controller, "set_prompt_availability"):
+            self.prompt_availability.currentIndexChanged.connect(
+                lambda: self.controller.set_prompt_availability(self.prompt_availability.currentData()))
+        if hasattr(self.controller, "set_recommendation_pre"):
+            self.pre_combo.currentIndexChanged.connect(
+                lambda: self.controller.set_recommendation_pre(self.pre_combo.currentData()))
         self.correct_button.clicked.connect(self._correct_observation)
+        self.reference_button.clicked.connect(self._show_personal_reference)
+        self.user_name.textEdited.connect(lambda: self.learning_consent.setChecked(False))
+        self.mode_combo.currentIndexChanged.connect(lambda: self.learning_consent.setChecked(False))
         self.activity_request_button.clicked.connect(self._request_activity)
         self.accept_button.clicked.connect(lambda: self.controller.confirm_intervention(True))
         self.reject_button.clicked.connect(lambda: self.controller.confirm_intervention(False))
@@ -1364,7 +1421,7 @@ class MainWindow(QMainWindow):
     def _set_session_controls(self, *_args) -> None:
         active = self.session_state in ("running", "paused", "starting", "stopping", "stop_failed")
         for widget in (self.user_name, self.mode_combo, self.camera_combo, self.mic_combo,
-                       self.refresh_button, self.consent, self.transcript_consent):
+                       self.refresh_button, self.consent, self.transcript_consent, self.learning_consent, self.fusion_strategy):
             widget.setEnabled(not active)
         simulated = self.mode_combo.currentData() == "simulation"
         has_input = (self.camera_combo.currentData() not in (None, -1)
@@ -1399,7 +1456,18 @@ class MainWindow(QMainWindow):
         self.session_summary.setText(summary)
         self.session_summary.setToolTip(summary)
         self.transcript.setVisible(self.transcript_consent.isChecked())
-        self.transcript_notice.setVisible(not self.transcript_consent.isChecked())
+        failed = bool(getattr(self.controller, "transcript_cleanup_failed", False))
+        pending = bool(getattr(self.controller, "transcript_cleanup_inflight", False))
+        self.retry_transcript_button.setVisible(failed)
+        self.transcript_notice.setVisible(not self.transcript_consent.isChecked() or pending or failed)
+        if failed:
+            self.transcript_notice.setText("转写撤回后的语境标注尚待清理。导出已隐藏这些标注，可重试清理。")
+        elif pending:
+            self.transcript_notice.setText("已停止相关转写，正在清除语境标注。")
+        elif getattr(self, "_revoked_session", None) and self._revoked_session == self.session_id:
+            self.transcript_notice.setText("本次转写已停止，已清除语境标注。之前获授权的原转写文字保留。")
+        else:
+            self.transcript_notice.setText("转写未开启。可在下次会话前于设备设置中单独授权。")
         self._sync_action_hierarchy()
         self._set_activity_controls()
 
@@ -1428,7 +1496,10 @@ class MainWindow(QMainWindow):
         self.controller.start_session(
             name, self.camera_combo.currentData() if self.camera_combo.currentData() is not None else -1,
             self.mic_combo.currentData(),
-            {"collection": self.consent.isChecked(), "transcript": self.transcript_consent.isChecked(), "raw_media": False},
+            {"collection": self.consent.isChecked(), "transcript": self.transcript_consent.isChecked(),
+             "personal_learning": self.learning_consent.isChecked(), "raw_media": False,
+             "fusion_strategy": self.fusion_strategy.currentData(),
+             "device_names": {"visual": self.camera_combo.currentText(), "audio": self.mic_combo.currentText()}},
             mode=mode,
         )
 
@@ -1436,6 +1507,7 @@ class MainWindow(QMainWindow):
         self.controller.pause_session(self.session_state != "paused")
 
     def _on_session(self, result: dict) -> None:
+        self._clear_context_hint()
         previous_id = self.session_id
         self.session_state = str(result.get("state", self.session_state))
         self.session_id = result.get("session_id", self.session_id)
@@ -1454,6 +1526,8 @@ class MainWindow(QMainWindow):
         if self.session_state == "paused":
             self.preview_state.setText("采集已暂停，设备不再产生新的观察；可继续或结束会话。")
         elif self.session_state == "stopped":
+            self.learning_consent.setChecked(False)
+            self.personal_reference_label.hide()
             self._preview_image = None
             self.preview.clear()
             self.preview.setText("本次会话已结束\n设备已请求释放")
@@ -1463,11 +1537,13 @@ class MainWindow(QMainWindow):
             self.preview_state.setText("模拟回放中，不使用真实设备。" if self._session_mode in ("simulation", "demo", "replay")
                                        else "采集中 · 原始视频和音频不长期保存")
         if self.session_id != previous_id:
+            self._last_context_end = -1.
             self._session_started = time.monotonic()
             self.session_clock.setText("本次会话  00:00")
             self.settings_toggle.setChecked(False)
             self._toggle_settings(False)
             self.chart.clear()
+            self.personal_reference_label.hide()
             self._fusion_display_end = -1
             self._fusion_display_priority = -1
             self._fusion_display_event = None
@@ -1479,7 +1555,7 @@ class MainWindow(QMainWindow):
             self.fusion_label.setText("—")
             self.fusion_mode.setText("尚无模态参与")
             self.fusion_interval.setText("尚无观察区间")
-            self.fusion_weights.setText("视觉相对权重 —　·　语音相对权重 —　·　不确定 —")
+            self.fusion_weights.setText("视觉相对权重 —　·　语音相对权重 —　·　未映射 —")
             self.fusion_reason.setText("新会话尚无有效结果；表情与声音只提供可观察线索。")
             self.fusion_reason.setStyleSheet("")
             self.post_combo.setCurrentIndex(0)
@@ -1563,6 +1639,10 @@ class MainWindow(QMainWindow):
         self._fusion_display_end = end
         self._fusion_display_priority = priority
         self._fusion_display_event = result.get("event_id")
+        reference = result.get("personal_reference") or {}
+        message = reference.get("message", "")
+        self.personal_reference_label.setText(message)
+        self.personal_reference_label.setVisible(bool(message))
         scores = result.get("scores") or result.get("fused_scores") or {}
         negative = _number(result.get("negative_score"))
         if negative is None:
@@ -1573,7 +1653,7 @@ class MainWindow(QMainWindow):
             negative *= 100
         uncertain = _number(scores.get("uncertain", result.get("uncertainty")))
         valid = result.get("valid", bool(scores)) and result.get("display_score", True)
-        if uncertain is not None and uncertain >= 0.5:
+        if result.get("decision") == "abstain" or (uncertain is not None and uncertain >= 0.5):
             valid = False
         self.fusion_label.setText(f"{negative:.0f}" if valid and negative is not None else "—")
         self.fusion_label.setToolTip("负向线索分数来自当前有效模型输出，不是心理健康评分。" if valid else "证据不足，暂不显示分数。")
@@ -1591,25 +1671,54 @@ class MainWindow(QMainWindow):
         weights = result.get("weights") or {}
         visual_weight = weights.get("visual", weights.get("video", result.get("visual_weight")))
         audio_weight = weights.get("audio", result.get("audio_weight"))
-        self.fusion_weights.setText(f"视觉权重 {_percent(visual_weight)}　·　语音权重 {_percent(audio_weight)}　·　不确定 {_percent(uncertain)}")
+        self.fusion_weights.setText(f"视觉权重 {_percent(visual_weight)}　·　语音权重 {_percent(audio_weight)}　·　未映射 {_percent(uncertain)}")
         divergence = _number(result.get("disagreement_js", (result.get("conflict_diagnostics") or {}).get("jensen_shannon")))
         versions = result.get("model_versions") or {}
         self.fusion_reason.setToolTip(f"模态分布差异：{divergence if divergence is not None else '不可比'}\n参与模型：{json.dumps(versions, ensure_ascii=False)}\n融合配置：{result.get('fusion_config_hash', '未记录')}")
+        if "decision" in result:
+            calibration = {"disabled": "质量加权", "fitted": "已按标注校准", "unfitted": "未拟合，使用质量加权",
+                           "invalid_artifact": "参数无效，使用质量加权", "version_mismatch": "版本不符，使用质量加权",
+                           "missing_modality": "缺少对应参数，使用质量加权"}
+            action = {"abstain": "暂缓判断", "observe_only": "仅观察", "ask": "可累计询问证据"}
+            state = calibration.get(result.get("calibration_status"), "校准参数不可用")
+            self.fusion_weights.setText(f"视觉权重 {_percent(visual_weight)}　·　语音权重 {_percent(audio_weight)}\n"
+                                        f"{state} · {action.get(result['decision'], '仅观察')}")
+            diagnostics = result.get("predictive_uncertainty") or {}
+            entropies = "、".join(f"{name} {_percent((diagnostics.get(key) or {}).get('normalized_entropy'))}"
+                                for key, name in (("visual", "视觉"), ("audio", "声学")) if isinstance(diagnostics.get(key), dict))
+            reliability = result.get("reliability") or {}
+            estimates = "、".join(f"{name} {_percent(reliability[key])}" for key, name in
+                                 (("visual", "视觉"), ("audio", "声学")) if key in reliability)
+            self.fusion_weights.setToolTip(f"输入质量 {_percent(result.get('input_quality'))} · 未映射类别占比 {_percent(result.get('unmapped_mass'))}\n"
+                                          f"预测分布熵 {entropies or '暂无'}\n按标注估计的可靠性 {estimates or '未使用'}\n"
+                                          f"校准版本 {result.get('calibration_version') or '未使用'}\n"
+                                          + " / ".join(result.get("decision_reasons") or []))
+            if result["decision"] == "abstain" and not conflict:
+                explanation = next((REASONS[r] for r in result.get("decision_reasons", []) if r in REASONS), None)
+                if explanation:
+                    self.fusion_reason.setText(explanation)
 
     def _on_evidence(self, result):
         seconds = _number(result.get("effective_seconds", result.get("negative_seconds")), 0)
         density = result.get("coverage_density", result.get("density"))
         self.evidence_progress.setText(f"有效负向证据 {seconds:.1f} / 20 秒 · 覆盖密度 {_percent(density)} · 等待迟到结果 3 秒")
         self.evidence_progress.setToolTip("按有效区间并集计时，重复和空白不计；中性、冲突和无效证据不能当作连续负向证据。")
+        timing = {"quiet": "勿扰中", "focused": "专注中", "hourly_budget": "已达到本小时询问上限",
+                  "recent_declines": "最近已多次拒绝", "cooldown": "暂缓重复询问"}
+        if result.get("timing_reason") in timing:
+            self.evidence_progress.setText(self.evidence_progress.text() + " · " + timing[result["timing_reason"]])
 
     def _revoke_transcript(self):
+        self._clear_context_hint()
+        self._revoked_session = self.session_id
         self.controller.set_transcript_allowed(False)
         self.transcript_consent.setChecked(False)
         self._set_session_controls()
-        self.transcript_notice.setText("本次转写已停止；之前获授权的历史保留，后续转写任务和旧结果已拦截。")
-        self.transcript_notice.show()
 
     def _on_transcript(self, result: dict) -> None:
+        if (self.session_state != "running" or not self.transcript_consent.isChecked()
+                or result.get("session_id") != self.session_id):
+            return
         text = str(result.get("text", result.get("transcript", ""))).strip()
         prefix = "[模拟] " if self._session_mode in ("simulation", "demo", "replay") else ""
         stamp = result.get("t_start")
@@ -1617,9 +1726,32 @@ class MainWindow(QMainWindow):
             prefix += f"{stamp:.1f}s  "
         if text:
             self.transcript.appendPlainText(prefix + text)
+            end = _number(result.get("t_end"))
+            if end is None or end < self._last_context_end:
+                return
+            self._last_context_end = end
+            self._clear_context_hint()
+            hint = (result.get("semantic_context") or {}).get("need_hint")
+            if hint in NEEDS and self._session_started is not None and self.activity_state != "running":
+                expires = self._session_started + end + 30
+                if expires > time.monotonic():
+                    self._context_hint = (hint, expires)
+                    self.context_button.setText("采用需求建议 · " + NEEDS[hint])
+                    self.context_button.show()
         else:
             reason = result.get("reason", result.get("status", "未生成转写"))
             self.transcript.appendPlainText(prefix + str(reason))
+
+    def _clear_context_hint(self):
+        self._context_hint = None
+        self.context_button.hide()
+
+    def _use_context_hint(self):
+        if (self._context_hint and time.monotonic() < self._context_hint[1]
+                and self.session_state == "running" and self.transcript_consent.isChecked()):
+            self.need_combo.setCurrentIndex(self.need_combo.findData(self._context_hint[0]))
+            self.tabs.setCurrentIndex(1)
+        self._clear_context_hint()
 
     def _on_status(self, status: str) -> None:
         self.statusBar().showMessage(str(status))
@@ -1629,10 +1761,63 @@ class MainWindow(QMainWindow):
         self.controller.request_intervention()
 
     def _correct_observation(self) -> None:
-        labels = {"正向线索": "positive", "中性线索": "neutral", "负向线索": "negative", "不确定 / 不符合当前感受": "uncertain"}
-        choice, accepted = QInputDialog.getItem(self, "修正当前观察", "请选择更符合你当前情况的线索。\n这条反馈与模型输出分别保存。", list(labels), 3, False)
+        target = self.controller.feedback_target()
+        choices = {"与我的感受不符": ("subjective_correction", "uncertain"),
+                   "我感到平静或中性": ("subjective_correction", "neutral"),
+                   "我的感受偏正向": ("subjective_correction", "positive"),
+                   "我的感受偏负向": ("subjective_correction", "negative"),
+                   "我现在有些困扰": ("distress_report", "distressed"),
+                   "现在请别打扰我": ("do_not_disturb", "busy")}
+        if self.controller.personal_learning:
+            choices["这是我的日常状态，用作个人参考"] = ("typical_reference", "usual")
+        choice, accepted = QInputDialog.getItem(self, "反馈当前观察", "想怎样记录刚才的情况？",
+                                                 list(choices), 0, False)
         if accepted:
-            self.controller.correct_observation(labels[choice])
+            kind, label = choices[choice]
+            self.controller.correct_observation(label, kind, target)
+
+    def _show_personal_reference(self):
+        name, mode = self.user_name.text().strip(), self.mode_combo.currentData()
+        uid, snapshot = self.controller.reference_for_profile(name, mode)
+        box = QMessageBox(self)
+        box.setWindowTitle("个人参考依据")
+        source = "模拟回放" if mode == "simulation" else "真实设备"
+        box.setText(f"{name or '未选档案'} · {source}")
+        groups = snapshot["groups"].values()
+        lines = []
+        details = []
+        for group in groups:
+            modalities = "＋".join({"audio": "声学", "visual": "视觉"}[m] for m in group["modalities"])
+            status = "可比较" if group["ready"] else "积累中"
+            lines.append(f"{modalities} · {group['count']} 次 / {group['sessions']} 场 · {status}")
+            details.append(f"{modalities}  负向线索中位数 {group['median']:.2f}，"
+                           f"四分位区间 {group['q25']:.2f}–{group['q75']:.2f}\n"
+                           f"设备 {json.dumps(group['capture_context'], ensure_ascii=False)}\n"
+                           f"模型 {json.dumps(group['model_versions'], ensure_ascii=False)}\n"
+                           "反馈编号 " + "、".join(group["feedback_ids"]))
+        box.setInformativeText("\n".join(lines or ["还没有符合条件的日常参考。"]) +
+            "\n相同设备、模型和质量条件下，至少 2 场已结束会话、5 次独立确认后才显示比较。")
+        if details:
+            box.setDetailedText("本次参考版本 " + snapshot["version"] + "\n\n" + "\n\n".join(details))
+        box.setStandardButtons(QMessageBox.StandardButton.Close)
+        pause = reset = None
+        if self.controller.personal_learning and self.session_state in ("running", "paused"):
+            pause = box.addButton("暂停本次学习", QMessageBox.ButtonRole.ActionRole)
+        if uid:
+            reset = box.addButton("重置个人参考", QMessageBox.ButtonRole.ActionRole)
+        box.exec()
+        if pause is not None and box.clickedButton() == pause:
+            self.controller.pause_personal_learning()
+            self.learning_consent.setChecked(False)
+            self.personal_reference_label.hide()
+        elif reset is not None and box.clickedButton() == reset:
+            confirmed = QMessageBox.question(self, "重置个人参考",
+                f"清除「{name}」在{source}下的参考依据，并暂停本次学习？原会话反馈可在历史中查看。",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+            if confirmed == QMessageBox.StandardButton.Yes:
+                self.controller.reset_personal_reference(name, mode)
+                self.learning_consent.setChecked(False)
+                self.personal_reference_label.hide()
 
     def _set_activity_controls(self) -> None:
         if not hasattr(self, "activity_request_button"):
@@ -1651,7 +1836,9 @@ class MainWindow(QMainWindow):
         status = assessment.get("status")
         remaining_window = max(0, math.ceil(_number(assessment.get("remaining_seconds"), 0)))
         coverage = _percent(assessment.get("coverage"))
-        status_text = {"collecting": f"还需约 {remaining_window} 秒", "complete": "观察窗已完成",
+        settle_remaining = max(0, math.ceil(_number(assessment.get("settle_remaining_seconds"), 0)))
+        status_text = {"collecting": f"还需约 {remaining_window} 秒",
+                       "settling": f"采集结束，等待窗内结果（最多 {settle_remaining} 秒）", "complete": "观察窗已完成",
                        "insufficient": "有效证据不足", "skipped": "已跳过"}.get(status, "尚未开始")
         if phase == "pre":
             self.pre_assessment_hint.setText(f"辅助前测：{status_text} · 有效覆盖 {coverage}。\n可直接开始练习；不足时不进行模型前后比较。")
@@ -1659,7 +1846,7 @@ class MainWindow(QMainWindow):
             self.assessment_hint.setText(f"独立后测：{status_text} · 有效覆盖 {coverage}。\n现在保存会结束辅助观察；用户自评与主观反馈仍独立记录。")
         elif self._retest_open:
             self.assessment_hint.setText("未采集独立辅助后测（例如采集已暂停）。仍可保存自己的感受，模型比较会保留不足。")
-        self.skip_assessment_button.setVisible(self._retest_open and phase == "post" and status == "collecting")
+        self.skip_assessment_button.setVisible(self._retest_open and phase == "post" and status in ("collecting", "settling"))
         finished = current.get("status") in ("completed", "cancelled")
         saved_or_empty = current.get("save_status") not in ("pending", "failed")
         self.request_button.setEnabled(active_session and observing and saved_or_empty)
@@ -1707,7 +1894,10 @@ class MainWindow(QMainWindow):
         self.activity_name.setVisible(not finished)
         self.countdown.setVisible(not finished)
         if self._retest_open and phase == "post":
-            self.countdown.setText(f"{remaining_window // 60:02d}:{remaining_window % 60:02d}" if status == "collecting" else status_text)
+            if status == "settling":
+                self.countdown.setText(f"等待 {settle_remaining} 秒")
+            else:
+                self.countdown.setText(f"{remaining_window // 60:02d}:{remaining_window % 60:02d}" if status == "collecting" else status_text)
             self.countdown.setToolTip("独立辅助后测的剩余观察时间，与练习计划时长分别计时。")
         else:
             self.countdown.setToolTip("本次练习的计划剩余时长。")
@@ -1733,7 +1923,13 @@ class MainWindow(QMainWindow):
         self.activity_preview.setText("练习路径\n" + "\n".join(f"{index+1}. {step['title']}" for index, step in enumerate(steps)))
         selected = next((item for item in self._recommendation_items if item["activity"] == key), None)
         if selected:
-            self.recommendation_reason.setText("；".join(selected.get("reasons", [])[:3]))
+            reason = "；".join(selected.get("reasons", [])[:3])
+            matched = selected.get("matched_feedback")
+            if matched and self.pre_combo.currentData() is not None:
+                spread = matched.get("sample_sd")
+                detail = f"变化的标准差为 {spread:.1f} 分" if spread is not None else "尚不足以估计波动"
+                reason += f"\n相近起始困扰、时间和需求的独立复测有 {matched['count']} 次，{detail}。"
+            self.recommendation_reason.setText(reason)
         self.breathing.setVisible(self.activity_state == "running" and key == "breathing" and not self._retest_open)
 
     def _open_retest(self):
@@ -1930,6 +2126,10 @@ class MainWindow(QMainWindow):
             "cooldown": "本次活动或确认已结束。暂时不重复主动打扰，你仍可随时主动请求。",
         }
         self.activity_status.setText(str(result.get("message") or labels.get(state, "当前流程：" + state)))
+        if state == "confirming" and result.get("source") == "clarify_conflict":
+            self.activity_status.setText("近一段时间，表情和声音给出的线索持续不同。你现在想调整一下吗？可以选「暂不需要」。")
+        if state == "running":
+            self._clear_context_hint()
         if state in ("confirming", "pending", "requested") and old_state not in ("confirming", "pending", "requested"):
             self.tabs.setCurrentIndex(1)
             self.regulation_tabs.setCurrentIndex(0)

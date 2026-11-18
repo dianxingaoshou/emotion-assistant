@@ -7,16 +7,15 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import datetime, timezone
-import hashlib
-import json
 import math
+from pathlib import Path
 import threading
 import time
 import uuid
 
-from .evidence import jensen_shannon_divergence, raw_prediction_diagnostics
-
-LABELS = ("positive", "neutral", "negative", "uncertain")
+from .calibration import Calibration, LABELS, read_json
+from .evidence import raw_prediction_diagnostics
+from .fusion_policy import FusionConfig, FusionPolicy
 
 
 def utc_now() -> str:
@@ -56,7 +55,7 @@ def _scores(value) -> dict | None:
     if any(not math.isfinite(v) or v < 0 for v in values.values()):
         return None
     total = sum(values.values())
-    if total <= 0:
+    if total <= 0 or not math.isfinite(total):
         return None
     # Normalize across ALL four labels, including uncertain mass.
     return {label: value / total for label, value in values.items()}
@@ -80,6 +79,14 @@ def _quality(observation) -> float:
     return min(1.0, max(0.0, quality)) if math.isfinite(quality) else 0.0
 
 
+def _result_age(observation):
+    try:
+        seconds = float(observation.get("end_to_end_ms", 0)) / 1000
+        return max(0, seconds) if math.isfinite(seconds) else 0.0
+    except (ValueError, TypeError):
+        return 0.0
+
+
 class FusionEngine:
     """Fuse audio only with visual evidence from its actual recorded interval.
 
@@ -89,25 +96,48 @@ class FusionEngine:
     """
 
     def __init__(self, min_quality=0.2, history_seconds=120.0, max_history=3000,
-                 visual_weight=1.0, audio_weight=1.0):
-        if not 0 <= min_quality <= 1:
-            raise ValueError("min_quality must be in [0, 1]")
+                 visual_weight=1.0, audio_weight=1.0, *, config=None, calibration=None,
+                 baseline_version=None, configuration_issue=None):
         if history_seconds <= 0 or max_history < 1:
             raise ValueError("history limits must be positive")
-        if visual_weight <= 0 or audio_weight <= 0:
-            raise ValueError("base weights must be positive")
-        self.min_quality = float(min_quality)
         self.history_seconds = float(history_seconds)
         self.max_history = int(max_history)
-        self.visual_weight, self.audio_weight = float(visual_weight), float(audio_weight)
-        self.config = {"min_quality": self.min_quality, "visual_weight": self.visual_weight,
-                       "audio_weight": self.audio_weight, "conflict_js_threshold": .18,
-                       "conflict_dominance": .6, "version": "quality-aligned-v2"}
-        self.config_hash = hashlib.sha256(json.dumps(self.config, sort_keys=True).encode()).hexdigest()
+        settings = config or FusionConfig(min_quality=min_quality, visual_weight=visual_weight, audio_weight=audio_weight)
+        self.policy = FusionPolicy(settings, calibration, baseline_version, configuration_issue)
         self._visual = {}
         self._session_id = None
         self._latest_end = 0.0
         self._lock = threading.RLock()
+
+    @classmethod
+    def from_project(cls, data_dir, *, baseline_version=None, strategy=None):
+        directory = Path(data_dir)
+        issue = None
+        try:
+            options = read_json((directory / "fusion-policy.json").read_text(encoding="utf-8-sig"))
+            settings = FusionConfig(**options)
+        except FileNotFoundError:
+            settings = FusionConfig()
+        except (TypeError, ValueError, OSError):
+            settings = FusionConfig()
+            issue = "invalid_policy_configuration"
+        if strategy is not None:
+            from dataclasses import replace
+            settings = replace(settings, strategy=strategy)
+        fitted = Calibration.load(directory / "calibration.json") if settings.strategy == "calibrated_fusion" else None
+        return cls(config=settings, calibration=fitted, baseline_version=baseline_version, configuration_issue=issue)
+
+    @property
+    def config(self):
+        return self.policy.config
+
+    @property
+    def config_hash(self):
+        return self.policy.config_hash
+
+    @property
+    def min_quality(self):
+        return self.policy.settings.min_quality
 
     def clear(self):
         with self._lock:
@@ -136,7 +166,8 @@ class FusionEngine:
                 self._visual = {item["event_id"]: item for item in ordered[-self.max_history:]}
 
     def _eligible(self, observation):
-        return (bool(observation.get("valid")) and _quality(observation) >= self.min_quality
+        return (bool(observation.get("valid")) and 0 < _quality(observation)
+                and _quality(observation) >= self.min_quality
                 and _scores(observation.get("scores")) is not None
                 and _interval(observation) is not None
                 and raw_prediction_diagnostics(observation.get("raw_scores"))["decision_eligible"])
@@ -155,7 +186,11 @@ class FusionEngine:
         # count duration or quality. Equal active windows share each tiny interval.
         boundaries = sorted({p for _, left, right in candidates for p in (left, right)})
         mass = dict.fromkeys(LABELS, 0.0)
-        quality_integral, covered = 0.0, 0.0
+        quality_integral, covered, age_integral = 0.0, 0.0, 0.0
+        diag_mass = {key: 0.0 for key in ("normalized_entropy", "top1", "margin")}
+        diag_weight = 0.0
+        diag_by_id = {item["event_id"]: raw_prediction_diagnostics(item.get("raw_scores"))
+                      for item, _, _ in candidates}
         for left, right in zip(boundaries, boundaries[1:]):
             active = [item for item, a, b in candidates if a < right and b > left]
             if not active:
@@ -168,24 +203,33 @@ class FusionEngine:
             for item in active:
                 weight = duration * _quality(item) / len(active)
                 distribution = _scores(item["scores"])
+                age_integral += weight * _result_age(item)
+                diagnostic = diag_by_id[item["event_id"]]
+                if diagnostic["available"]:
+                    diag_weight += weight
+                    for key in diag_mass:
+                        diag_mass[key] += weight * diagnostic[key]
                 for label in LABELS:
                     mass[label] += weight * distribution[label]
         coverage = covered / (end - start)
         # Partial evidence lowers the quality of the whole requested interval.
         quality = quality_integral / (end - start)
-        return {"scores": _scores(mass), "quality": quality, "coverage": coverage,
+        return {"scores": _scores(mass), "quality": quality_integral / covered, "coverage": coverage,
+                "effective_quality": quality, "age": age_integral / quality_integral,
+                "diagnostics": {"available": bool(diag_weight), "basis": "raw_source_distributions",
+                                **{k: v / diag_weight if diag_weight else None for k, v in diag_mass.items()}},
                 "source_ids": [item["event_id"] for item, _, _ in candidates],
-                "model_versions": sorted({str(item["model_version"]) for item, _, _ in candidates if item.get("model_version")}),
+                "versions": sorted({str(item.get("model_version") or "") for item, _, _ in candidates}),
                 "intervals": interval_union([(left, right) for _, left, right in candidates]),
                 "covered_seconds": covered}
 
-    @staticmethod
-    def _empty(modality, start, end, reason):
+    def _empty(self, modality, start, end, reason):
         return {"event_id": str(uuid.uuid4()), "modality": modality,
                 "t_start": start, "t_end": end, "scores": None, "quality": 0.0,
                 "weights": {"visual": 0.0, "audio": 0.0}, "valid": False,
                 "reason": reason, "status": "unavailable", "conflict": False,
-                "source_ids": []}
+                "source_ids": [], "fusion_config_hash": self.config_hash, "fusion_config": self.config,
+                "model_versions": {}, "modalities": [], "modality_intervals": {}, **self.policy.evaluate({})}
 
     def visual_summary(self, start, end) -> dict:
         start, end = float(start), float(end)
@@ -196,16 +240,13 @@ class FusionEngine:
         with self._lock:
             visual = self._visual_in_interval(start, end)
             result["session_id"] = self._session_id
-            result.update(fusion_config_hash=self.config_hash, fusion_config=deepcopy(self.config),
-                          model_versions={}, modalities=[], modality_intervals={})
             if visual:
                 result.update({"coverage": visual["coverage"],
                                "covered_seconds": visual["covered_seconds"]})
-            if visual and visual["quality"] >= self.min_quality:
-                result.update(scores=visual["scores"], quality=visual["quality"],
-                              valid=True, status="visual_only", reason="visual_only",
-                              weights={"visual": 1.0, "audio": 0.0}, source_ids=visual["source_ids"],
-                              model_versions={"visual": visual["model_versions"]}, modalities=["visual"],
+            if visual and visual["effective_quality"] >= self.min_quality:
+                result.update(self.policy.evaluate({"visual": visual}))
+                result.update(source_ids=visual["source_ids"],
+                              model_versions={"visual": list(filter(None, visual["versions"]))}, modalities=["visual"],
                               modality_intervals={"visual": visual["intervals"]})
         return result
 
@@ -217,59 +258,35 @@ class FusionEngine:
         result = self._empty("fusion", start, end, "no_usable_modalities")
         result["session_id"] = observation.get("session_id")
         result["audio_event_id"] = observation.get("event_id")
-        result.update(fusion_config_hash=self.config_hash, fusion_config=deepcopy(self.config),
-                      model_versions={}, modalities=[], modality_intervals={})
         if interval is None:
             result["reason"] = "invalid_audio_interval"
             return result
         with self._lock:
             visual = (self._visual_in_interval(start, end)
                       if observation.get("session_id") == self._session_id else None)
-            visual_ok = bool(visual and visual["quality"] >= self.min_quality)
-            audio_ok = self._eligible(observation)
             if visual:
                 result["visual_coverage"] = visual["coverage"]
-            if not (visual_ok or audio_ok):
-                return result
-            v_weight = self.visual_weight * visual["quality"] if visual_ok else 0.0
-            a_weight = self.audio_weight * _quality(observation) if audio_ok else 0.0
-            denominator = v_weight + a_weight
-            weights = {"visual": v_weight / denominator, "audio": a_weight / denominator}
-            audio_scores = _scores(observation.get("scores")) if audio_ok else None
-            scores = {label: ((weights["visual"] * visual["scores"][label] if visual_ok else 0)
-                              + (weights["audio"] * audio_scores[label] if audio_ok else 0))
-                      for label in LABELS}
-            status = "joint" if visual_ok and audio_ok else "visual_only" if visual_ok else "audio_only"
-            # A 100% relative weight does NOT turn weak evidence into high quality.
-            quality = ((v_weight * visual["quality"] if visual_ok else 0)
-                       + (a_weight * _quality(observation) if audio_ok else 0)) / denominator
-            conflict = False
-            divergence = None
-            if visual_ok and audio_ok:
-                v, a = visual["scores"], audio_scores
-                divergence = jensen_shannon_divergence(v, a)
-                v_label, a_label = max(v, key=v.get), max(a, key=a.get)
-                conflict = ((v["positive"] >= 0.5 and a["negative"] >= 0.5)
-                            or (a["positive"] >= 0.5 and v["negative"] >= 0.5)
-                            or (v_label != a_label and "uncertain" not in (v_label, a_label)
-                                and v[v_label] >= .6 and a[a_label] >= .6
-                                and divergence is not None and divergence >= .18))
-            source_ids = list(visual["source_ids"]) if visual_ok else []
-            if audio_ok and observation.get("event_id"):
-                source_ids.append(observation["event_id"])
-            versions, intervals = {}, {}
-            if visual_ok:
-                versions["visual"] = visual["model_versions"]
+            branches, intervals, source_ids = {}, {}, []
+            if visual and visual["effective_quality"] >= self.min_quality:
+                branches["visual"] = visual
                 intervals["visual"] = visual["intervals"]
-            if audio_ok:
-                versions["audio"] = [str(observation["model_version"])] if observation.get("model_version") else []
+                source_ids.extend(visual["source_ids"])
+            if self._eligible(observation):
+                duration = end - start
+                metrics = observation.get("quality_metrics")
+                voiced = metrics.get("voiced_seconds") if isinstance(metrics, dict) else None
+                if isinstance(voiced, (int, float)) and not isinstance(voiced, bool) and math.isfinite(voiced):
+                    duration = max(0., min(duration, voiced))
+                branches["audio"] = {"scores": _scores(observation["scores"]), "quality": _quality(observation),
+                                     "coverage": 1.0, "age": _result_age(observation), "duration": duration,
+                                     "versions": [str(observation.get("model_version") or "")],
+                                     "diagnostics": raw_prediction_diagnostics(observation.get("raw_scores"))}
                 intervals["audio"] = [[start, end]]
-            result.update(scores=scores, quality=quality, weights=weights, valid=True,
-                          status=status, conflict=conflict, source_ids=source_ids,
-                          model_versions=versions, modalities=sorted(versions), modality_intervals=intervals,
-                          conflict_diagnostics={"jensen_shannon": divergence, "threshold": .18},
-                          disagreement_js=divergence if divergence is not None else 0.0,
-                          reason="modalities_conflict_user_confirmation" if conflict else status)
+                if observation.get("event_id"):
+                    source_ids.append(observation["event_id"])
+            result.update(self.policy.evaluate(branches))
+            result.update(source_ids=source_ids, modalities=sorted(branches), modality_intervals=intervals,
+                          model_versions={k: list(filter(None, v["versions"])) for k, v in branches.items()})
         return result
 
 

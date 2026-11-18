@@ -1,8 +1,10 @@
 """Bounded capture and inference processes. No neural work in audio callback."""
 from __future__ import annotations
 
-from collections import deque
-from math import gcd
+from collections import Counter, deque
+from dataclasses import asdict, dataclass
+import json
+import math
 from pathlib import Path
 import multiprocessing as mp
 import queue
@@ -11,6 +13,40 @@ import time
 import uuid
 
 import numpy as np
+
+
+@dataclass(frozen=True)
+class CaptureConfig:
+    visual_period: float = .5
+    frame_queue: int = 2
+    segment_queue: int = 2
+    result_queue: int = 64
+    visual_queue: int = 1
+    audio_queue: int = 2
+    asr_queue: int = 2
+    visual_timeout: float = 10.
+    audio_timeout: float = 40.
+    asr_timeout: float = 60.
+    load_timeout: float = 180.
+    retry_delay: float = 2.
+    max_reloads: int = 1
+    error_limit: int = 3
+
+    @classmethod
+    def from_project(cls, data_dir):
+        try:
+            settings = json.loads((Path(data_dir)/"capture-config.json").read_text(encoding="utf-8-sig"))
+        except FileNotFoundError:
+            return cls()
+        return cls(**settings)
+
+    def __post_init__(self):
+        for name, value in asdict(self).items():
+            if name.endswith("_queue") or name in ("max_reloads", "error_limit"):
+                if type(value) is not int or value < (0 if name == "max_reloads" else 1):
+                    raise ValueError(f"Invalid capture setting: {name}")
+            elif type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+                raise ValueError(f"Invalid capture setting: {name}")
 
 
 def invalid_observation(session_id, modality, start, end, reason):
@@ -74,6 +110,17 @@ class SpeechSegmenter:
         self.start = None
         self.last_voice = None
         self.expected_next = None
+        self.voice_samples = self.noise_samples = 0
+        self.voice_energy = self.noise_energy = 0.
+        self.last_metrics = None
+
+    def _measure(self, block, probability):
+        if probability >= .5:
+            self.voice_samples += len(block)
+            self.voice_energy += float(np.dot(block, block))
+        elif probability <= .2:
+            self.noise_samples += len(block)
+            self.noise_energy += float(np.dot(block, block))
 
     def feed(self, block, start, probability):
         block = np.asarray(block, np.float32)
@@ -84,18 +131,29 @@ class SpeechSegmenter:
         voice = probability >= 0.5
         if self.start is None:
             if not voice:
-                self.preroll.append((start, block.copy()))
+                self.preroll.append((start, block.copy(), probability))
                 return None
             self.start = self.preroll[0][0] if self.preroll else start
-            self.blocks = [b for _, b in self.preroll]
+            self.blocks = [b for _, b, _ in self.preroll]
+            for _, b, p in self.preroll:
+                self._measure(b, p)
             self.preroll.clear()
         self.blocks.append(block.copy())
+        self._measure(block, probability)
         if voice:
             self.last_voice = end
         if ((self.last_voice is not None and end - self.last_voice >= self.silence)
                 or end - self.start >= self.maximum):
             result = (np.concatenate(self.blocks), self.start, end)
+            metrics = {"speech_ratio": self.voice_samples/len(result[0]), "voiced_seconds": self.voice_samples/16000,
+                       "background_rms": None, "estimated_snr_db": None}
+            if self.noise_samples >= 1536 and self.voice_samples:
+                noise_power = self.noise_energy/self.noise_samples
+                speech_power = max(1e-10, self.voice_energy/self.voice_samples-noise_power)
+                metrics.update(background_rms=math.sqrt(noise_power),
+                               estimated_snr_db=10*math.log10(speech_power/max(1e-10, noise_power)))
             self.reset()
+            self.last_metrics = metrics
             return result
         return None
 
@@ -244,9 +302,10 @@ def audio_process(device, model_dir, origin, stop, pause, segment_queue, status_
                         block, pending = pending[:512], pending[512:]
                         segment = segmenter.feed(block, pending_start, vad(block))
                         pending_start += 512 / 16000
-                        ready_segment = (*segment, time.monotonic()-origin) if segment else None
+                        ready_segment = (*segment, time.monotonic()-origin, segmenter.last_metrics) if segment else None
                         if ready_segment and not _offer(segment_queue, ready_segment):
-                            _offer(status_queue, {"kind": "gap", "message": "语音队列已满，本语段未分析",
+                            _offer(status_queue, {"kind": "gap", "stage": "vad", "dropped_count": 1,
+                                                  "message": "语音队列已满，本语段未分析",
                                                   "t": pending_start})
                 # Unfinished segments are deliberately discarded across pause/end.
         except Exception as exc:
@@ -255,15 +314,30 @@ def audio_process(device, model_dir, origin, stop, pause, segment_queue, status_
 
 
 def inference_process(modality, model_dir, session_id, origin, jobs, results, stop, asr_allowed,
-                      permission=None, generation_value=None, consent_value=None):
+                      permission=None, generation_value=None, consent_value=None, control=None):
     from .paths import configure_environment
     configure_environment()
     from .models import ModelHub
+    def notify(event):
+        # Runtime uses a dedicated one-way pipe per worker. The separate queue
+        # fallback preserves the original standalone worker entry point.
+        if control is not None:
+            control.send(event)
+        else:
+            while not stop.is_set():
+                try:
+                    results.put(event, timeout=.1)
+                    break
+                except queue.Full:
+                    continue
+
     try:
         hub = ModelHub(Path(model_dir), enable_asr=modality == "asr" and asr_allowed)
         status = (hub.load_visual() if modality == "visual" else
                   hub.load_audio_emotion() if modality == "audio" else hub.load_asr())
-        _offer(results, {"kind": "loaded", "modality": modality, "status": status})
+        notify({"kind": "loaded", "modality": modality, "status": status})
+        if not all(record.get("ready") for record in status.values()):
+            return
         while not stop.is_set():
             try:
                 item = jobs.get(timeout=0.1)
@@ -275,21 +349,28 @@ def inference_process(modality, model_dir, session_id, origin, jobs, results, st
             queued_at = item[5] if len(item) > 5 else time.monotonic() - origin
             vad_ready_at = item[7] if len(item) > 7 else None
             consent_generation = item[6] if len(item) > 6 else 0
+            segment_id = item[8] if len(item) > 8 else None
             if (generation_value is not None and generation != generation_value.value
                     or modality == "asr" and (permission is not None and not permission.is_set()
                     or consent_value is not None and consent_generation != consent_value.value)):
+                if control is not None:
+                    notify({"kind": "discarded", "modality": modality, "token": token})
                 continue
-            _offer(results, {"kind": "started", "modality": modality, "token": token,
-                             "generation": generation})
+            notify({"kind": "started", "modality": modality, "token": token,
+                    "generation": generation, "started_at": time.monotonic()})
             inference_started = time.monotonic()
+            result_dropped = failed = False
             try:
                 if modality == "visual":
                     payload = hub.analyze_frame(data, session_id, start, end)
                 elif modality == "audio":
-                    payload = hub.analyze_audio_emotion(data, session_id, start, end)
+                    vad_metrics = item[9] if len(item) > 9 else None
+                    payload = (hub.analyze_audio_emotion(data, session_id, start, end, vad_metrics)
+                               if vad_metrics else hub.analyze_audio_emotion(data, session_id, start, end))
                 else:
                     payload = hub.transcribe_audio(data, session_id, start, end,
                         asr_allowed=asr_allowed and (permission is None or permission.is_set()))
+                failed = bool(payload and str(payload.get("reason", "")).startswith("inference_error"))
                 if (payload is not None and (modality != "asr" or payload.get("valid"))
                         and not stop.is_set()):
                     finished = time.monotonic() - origin
@@ -302,30 +383,42 @@ def inference_process(modality, model_dir, session_id, origin, jobs, results, st
                                 "inference_finished": finished})
                     if vad_ready_at is not None:
                         payload["timing"]["vad_ready_at"] = vad_ready_at
+                    if segment_id is not None:
+                        payload["segment_id"] = segment_id
                     kind = "utterance" if modality == "asr" else "observation"
-                    _offer(results, {"kind": kind, kind: payload, "generation": generation,
-                                     "consent_generation": consent_generation})
+                    result_dropped = not _offer(results, {"kind": kind, kind: payload, "generation": generation,
+                                                         "consent_generation": consent_generation})
             except Exception as exc:
+                failed = True
                 if modality == "asr":
-                    _offer(results, {"kind": "error", "stage": "asr", "reason": "inference_error",
+                    result_dropped = not _offer(results, {"kind": "error", "stage": "asr", "reason": "inference_error",
                         "message": f"转写失败：{type(exc).__name__}；声学观察不受影响"})
                 else:
                     obs = invalid_observation(session_id, modality, start, end,
                                               f"推理失败：{type(exc).__name__}")
                     obs["processed_at"] = time.monotonic() - origin
+                    if segment_id is not None:
+                        obs["segment_id"] = segment_id
                     obs["end_to_end_ms"] = max(0, (obs["processed_at"] - end) * 1000)
                     obs["latency_ms"] = (time.monotonic() - inference_started) * 1000
-                    _offer(results, {"kind": "observation", "observation": obs, "generation": generation})
-            _offer(results, {"kind": "done", "modality": modality, "token": token,
-                             "generation": generation})
+                    result_dropped = not _offer(results, {"kind": "observation", "observation": obs, "generation": generation})
+            notify({"kind": "done", "modality": modality, "token": token, "generation": generation,
+                    "result_dropped": result_dropped, "inference_failed": failed})
     except Exception as exc:
-        _offer(results, {"kind": "error", "message": f"{modality}模型加载失败：{type(exc).__name__}；采集仍可继续"})
+        if not stop.is_set():
+            notify({"kind": "error", "stage": modality, "message": f"{modality}模型进程失败：{type(exc).__name__}"})
+    finally:
+        if control is not None:
+            control.close()
 
 
 class CaptureRuntime:
     """Owns every process/queue; stop forcibly reaps hung device/model calls."""
+    config = CaptureConfig()
+
     def __init__(self, session_id, camera, microphone, model_dir, on_frame, on_event,
-                 asr_allowed=False):
+                 asr_allowed=False, config=None):
+        self.config = config if config is not None else CaptureConfig()
         self.session_id = session_id
         self.camera = camera
         self.microphone = microphone
@@ -336,12 +429,13 @@ class CaptureRuntime:
         self.ctx = mp.get_context("spawn")
         self.stop_event = self.ctx.Event()
         self.pause_event = self.ctx.Event()
-        self.frames = self.ctx.Queue(2)
-        self.segments = self.ctx.Queue(2)
-        self.results = self.ctx.Queue(64)
-        self.jobs = {"visual": self.ctx.Queue(1), "audio": self.ctx.Queue(2), "asr": self.ctx.Queue(2)}
+        self.frames = self.ctx.Queue(self.config.frame_queue)
+        self.segments = self.ctx.Queue(self.config.segment_queue)
+        self.results = self.ctx.Queue(self.config.result_queue)
+        self.jobs = {m: self.ctx.Queue(getattr(self.config, m+"_queue")) for m in ("visual", "audio", "asr")}
         self.processes = {}
         self.worker_started_at = {}
+        self._init_monitor_state()
         self.generation = 0
         self._generation_value = self.ctx.Value("q", 0)
         self._consent_value = self.ctx.Value("q", 0)
@@ -352,6 +446,48 @@ class CaptureRuntime:
         self.accept_after = 0.0
         self.thread = None
 
+    def _init_monitor_state(self):
+        self._channel_lock = threading.RLock()
+        self._channels = {}
+        self._metric_lock = threading.RLock()
+        self._waiting = {m: {} for m in self.jobs}
+        self._timings = {}
+        self._drops = Counter()
+        self._worker_states = {}
+        self._restarts = Counter()
+        self._worker_epochs = Counter()
+
+    def telemetry(self):
+        now = time.monotonic()-self.origin
+        with self._metric_lock:
+            durations = {m: {k: tuple(samples) for k, samples in stages.items()}
+                         for m, stages in self._timings.items()}
+            waiting = {m: {"count": len(times), "oldest_age_ms": 1000*max(0., now-min(times.values())) if times else 0.}
+                       for m, times in self._waiting.items()}
+            states = dict(self._worker_states)
+            drops = dict(self._drops)
+        return {"config": asdict(self.config), "workers": states, "drops": drops, "pending_jobs": waiting,
+                "recent_timing_ms": {m: {k: {"n": len(values), "p50": float(np.percentile(values, 50)),
+                                              "p95": float(np.percentile(values, 95))}
+                                         for k, values in stages.items()} for m, stages in durations.items()}}
+
+    def record_timing(self, stage, **metrics):
+        with self._metric_lock:
+            history = self._timings.setdefault(stage, {})
+            for key, value in metrics.items():
+                if isinstance(value, (int, float)) and math.isfinite(value) and value >= 0:
+                    history.setdefault(key, deque(maxlen=256)).append(value)
+
+    def _drop(self, reason, count=1):
+        with self._metric_lock:
+            self._drops[reason] += count
+
+    def _worker_state(self, modality, state, message):
+        with self._metric_lock:
+            self._worker_states[modality] = state
+        self.on_event({"kind": "model_state", "stage": modality, "state": state, "message": message,
+                       "reloads": self._restarts[modality]})
+
     def _spawn(self, name, target, args):
         process = self.ctx.Process(target=target, args=args, name=f"emotion-{name}", daemon=True)
         process.start()
@@ -359,11 +495,26 @@ class CaptureRuntime:
         self.worker_started_at[name] = time.monotonic()
 
     def _spawn_inference(self, modality):
-        self._spawn(modality, inference_process,
-                    (modality, self.model_dir, self.session_id, self.origin,
-                     self.jobs[modality], self.results, self.stop_event,
-                     modality == "asr", self._asr_permission,
-                     self._generation_value, self._consent_value))
+        with self._channel_lock:
+            if self.stop_event.is_set() or modality in self._channels:
+                return
+            receive, send = self.ctx.Pipe(duplex=False)
+            output = self.ctx.Queue(self.config.result_queue)
+            try:
+                self._spawn(modality, inference_process,
+                            (modality, self.model_dir, self.session_id, self.origin,
+                             self.jobs[modality], output, self.stop_event,
+                             modality == "asr", self._asr_permission,
+                             self._generation_value, self._consent_value, send))
+                self._channels[modality] = (receive, output)
+                self._worker_epochs[modality] += 1
+            except Exception:
+                receive.close()
+                output.close()
+                raise
+            finally:
+                send.close()
+            self._worker_state(modality, "loading", f"{modality} 模型正在加载")
 
     def start(self):
         for modality, enabled in (("visual", self.camera >= 0), ("audio", self.microphone is not None)):
@@ -387,12 +538,16 @@ class CaptureRuntime:
             self._generation_value.value = self.generation
         self.accept_after = time.monotonic() - self.origin
         self.pause_event.set() if paused else self.pause_event.clear()
-        for q in (self.frames, self.segments, *self.jobs.values()):
-            try:
-                while True:
-                    q.get_nowait()
-            except queue.Empty:
-                pass
+        with self._channel_lock:
+            for q in (self.frames, self.segments, *self.jobs.values()):
+                try:
+                    while True:
+                        q.get_nowait()
+                except queue.Empty:
+                    pass
+            with self._metric_lock:
+                for jobs in self._waiting.values():
+                    jobs.clear()
 
     def set_asr_allowed(self, allowed):
         """Invalidate queued and in-flight text on every consent transition."""
@@ -404,33 +559,72 @@ class CaptureRuntime:
         if allowed:
             self._asr_accept_after = time.monotonic() - self.origin
         self._asr_permission.set() if allowed else self._asr_permission.clear()
-        try:
-            while True:
-                self.jobs["asr"].get_nowait()
-        except queue.Empty:
-            pass
-        if allowed and self.microphone is not None and "asr" not in self.processes:
+        with self._channel_lock:
+            try:
+                while True:
+                    self.jobs["asr"].get_nowait()
+            except queue.Empty:
+                pass
+            with self._metric_lock:
+                self._waiting["asr"].clear()
+        if (allowed and self.microphone is not None and "asr" not in self.processes
+                and self._worker_states.get("asr") not in ("retry_wait", "degraded")):
             self._spawn_inference("asr")
         self.on_event({"kind": "info", "stage": "asr", "reason": "consent_changed",
             "message": "转写已开启" if allowed else "转写授权已撤回；旧转写结果不再发布"})
 
-    def _publish_result(self, event):
+    def accepts_result(self, event):
         if self.stop_event.is_set() or self.pause_event.is_set() or event.get("generation") != self.generation:
-            return
+            return False
+        if "worker_epoch" in event:
+            stage = "asr" if event["kind"] == "utterance" else event["observation"]["modality"]
+            with self._channel_lock:
+                if event["worker_epoch"] != self._worker_epochs[stage]:
+                    return False
         if event["kind"] == "utterance" and (not getattr(self, "asr_allowed", False)
                 or event.get("consent_generation") != self._consent_value.value):
+            return False
+        return True
+
+    def _publish_result(self, event):
+        if not self.accepts_result(event):
             return
         payload = event[event["kind"]]
         published_at = time.monotonic() - self.origin
         payload.setdefault("timing", {})["published_at"] = published_at
         if "t_end" in payload:
             payload["end_to_end_ms"] = max(0, (published_at - payload["t_end"]) * 1000)
+            timing = payload["timing"]
+            stage = "asr" if event["kind"] == "utterance" else payload.get("modality", "unknown")
+            self.record_timing(stage, queue=payload.get("queue_wait_ms"), inference=payload.get("inference_ms"),
+                               end_to_end=payload["end_to_end_ms"],
+                               vad=(timing["vad_ready_at"]-payload["t_end"])*1000 if "vad_ready_at" in timing else None,
+                               publish=(published_at-timing["inference_finished"])*1000 if "inference_finished" in timing else None)
         self.on_event(event)
 
-    def _queue_segment(self, samples, start, end, timed_out, vad_ready_at=None):
+    def _queue_job(self, stage, job):
+        with self._channel_lock, self._metric_lock:
+            target = self.jobs[stage]
+            accepted = _offer(target, job)
+            if not accepted and stage == "visual":
+                try:
+                    evicted = target.get_nowait()
+                    self._waiting[stage].pop(evicted[0], None)
+                    self._drop("visual.superseded")
+                except queue.Empty:
+                    pass
+                accepted = _offer(target, job)
+            if accepted:
+                self._waiting[stage][job[0]] = job[5]
+            else:
+                self._drop(stage+".queue_full")
+        return accepted
+
+    def _queue_segment(self, samples, start, end, timed_out, vad_ready_at=None, vad_metrics=None):
         """Independent queues own separate PCM snapshots, never a callback buffer."""
         generation = self.generation
         consent_generation = self._consent_value.value if hasattr(self, "_consent_value") else 0
+        segment_id = uuid.uuid4().hex
         for stage in ("audio", "asr"):
             if stage not in self.jobs or stage in timed_out:
                 continue
@@ -441,11 +635,58 @@ class CaptureRuntime:
             snapshot = np.array(samples, dtype=np.float32, copy=True)
             snapshot.flags.writeable = False
             job = (uuid.uuid4().hex, snapshot, start, end, generation,
-                   time.monotonic() - self.origin, consent_generation, vad_ready_at)
-            if not _offer(self.jobs[stage], job):
+                   time.monotonic() - self.origin, consent_generation, vad_ready_at, segment_id, vad_metrics)
+            if not self._queue_job(stage, job):
                 self.on_event({"kind": "gap", "stage": stage, "reason": "queue_full",
                     "dropped_count": 1, "t": end,
                     "message": ("声学" if stage == "audio" else "转写") + "推理积压，当前任务已跳过"})
+
+    def _events(self):
+        with self._channel_lock:
+            channels = [(stage, control, output, self._worker_epochs[stage])
+                        for stage, (control, output) in self._channels.items()]
+        for _, control, _, _ in channels:
+            try:
+                while control.poll():
+                    yield control.recv()
+            except (EOFError, OSError):
+                pass
+        for source, epoch in [(self.results, None), *((output, epoch) for _, _, output, epoch in channels)]:
+            try:
+                for _ in range(self.config.result_queue):
+                    event = source.get_nowait()
+                    if epoch is not None and event.get("kind") in ("observation", "utterance"):
+                        event["worker_epoch"] = epoch
+                    yield event
+            except queue.Empty:
+                pass
+
+    def _retire_worker(self, stage):
+        with self._channel_lock:
+            self._worker_epochs[stage] += 1
+            process = self.processes[stage]
+            if process.is_alive():
+                process.terminate()
+            process.join(timeout=1)
+            if process.is_alive():
+                return False
+            process.close()
+            del self.processes[stage]
+            channels = self._channels.pop(stage, None)
+            if channels:
+                control, output = channels
+                control.close()
+                output.cancel_join_thread()
+                output.close()
+            # A forcibly interrupted reader can leave an IPC queue unusable.
+            old = self.jobs[stage]
+            old.cancel_join_thread()
+            old.close()
+            self.jobs[stage] = self.ctx.Queue(getattr(self.config, stage+"_queue"))
+            with self._metric_lock:
+                self._drop(stage+".retired_pending", len(self._waiting[stage]))
+                self._waiting[stage].clear()
+            return True
 
     def _monitor(self):
         last_visual = -10.0
@@ -453,26 +694,40 @@ class CaptureRuntime:
         startup = time.monotonic()
         loaded = set()
         timed_out = set()
+        retry_at, consecutive_errors = {}, Counter()
         while not self.stop_event.is_set():
-            try:
-                while True:
-                    event = self.results.get_nowait()
-                    kind = event.get("kind")
-                    if kind == "started":
-                        if event.get("generation", self.generation) == self.generation:
-                            running[event["modality"]] = (event.get("token"), time.monotonic())
-                    elif kind == "done":
-                        if running.get(event["modality"], (None,))[0] == event.get("token"):
-                            running.pop(event["modality"], None)
-                    elif kind == "loaded":
-                        loaded.add(event["modality"])
-                        self.on_event({"kind": "info", "message": f"{event['modality']} 模型状态：{event['status']}"})
-                    elif kind in ("observation", "utterance"):
-                        self._publish_result(event)
+            failures = {}
+            for event in self._events():
+                kind, stage = event.get("kind"), event.get("modality")
+                if kind in ("started", "discarded"):
+                    with self._metric_lock:
+                        self._waiting[stage].pop(event.get("token"), None)
+                    if kind == "discarded":
+                        self._drop(stage+".invalidated")
+                    elif event.get("generation", self.generation) == self.generation:
+                        running[stage] = (event.get("token"), event.get("started_at", time.monotonic()))
+                elif kind == "done":
+                    if running.get(stage, (None,))[0] == event.get("token"):
+                        running.pop(stage, None)
+                    if event.get("result_dropped"):
+                        self._drop(stage+".result_queue_full")
+                    consecutive_errors[stage] = consecutive_errors[stage]+1 if event.get("inference_failed") else 0
+                    if consecutive_errors[stage] >= self.config.error_limit:
+                        failures[stage] = "连续推理失败"
+                elif kind == "loaded":
+                    loaded.add(stage)
+                    if all(v.get("ready") for v in event["status"].values()):
+                        self._worker_state(stage, "ready", f"{stage} 模型已就绪")
                     else:
-                        self.on_event(event)
-            except queue.Empty:
-                pass
+                        failures[stage] = "加载失败"
+                        self.on_event({"kind": "error", "stage": stage, "message": f"{stage} 模型加载失败：{event['status']}"})
+                elif kind in ("observation", "utterance"):
+                    self._publish_result(event)
+                else:
+                    if kind == "gap":
+                        self._drop(event.get("stage", "microphone")+".capture_gap",
+                                   event.get("dropped_count", event.get("count", 1)))
+                    self.on_event(event)
             if not self.pause_event.is_set():
                 latest = None
                 try:
@@ -483,37 +738,53 @@ class CaptureRuntime:
                 if latest and latest[0] >= self.accept_after:
                     stamp, frame = latest
                     self.on_frame(frame)
-                    if stamp - last_visual >= 0.5 and "visual" not in timed_out:
-                        _offer(self.jobs["visual"], (uuid.uuid4().hex, frame, max(self.accept_after, stamp - 0.5),
-                                                     stamp, self.generation,
-                                                     time.monotonic()-self.origin), latest=True)
+                    if stamp - last_visual >= self.config.visual_period and "visual" not in timed_out:
+                        span = min(.5, self.config.visual_period)
+                        self._queue_job("visual", (uuid.uuid4().hex, frame, max(self.accept_after, stamp - span),
+                                                   stamp, self.generation, time.monotonic()-self.origin))
                         last_visual = stamp
                 try:
                     segment = self.segments.get_nowait()
                     samples, start, end = segment[:3]
                     if start >= self.accept_after:
-                        self._queue_segment(samples, start, end, timed_out,
-                                            segment[3] if len(segment) > 3 else None)
+                        self._queue_segment(samples, start, end, timed_out, *segment[3:])
                 except queue.Empty:
                     pass
             for modality in ("visual", "audio", "asr"):
+                if modality in retry_at and time.monotonic() >= retry_at[modality]:
+                    if self.pause_event.is_set() or (modality == "asr" and not self.asr_allowed):
+                        continue
+                    del retry_at[modality]
+                    self._restarts[modality] += 1
+                    try:
+                        self._spawn_inference(modality)
+                        timed_out.discard(modality)
+                    except (OSError, RuntimeError) as exc:
+                        self._worker_state(modality, "degraded", f"{modality} 重载失败（{type(exc).__name__}）")
                 process = self.processes.get(modality)
                 if process is None or modality in timed_out:
                     continue
-                deadline = 10 if modality == "visual" else 40 if modality == "audio" else 60
+                deadline = getattr(self.config, modality+"_timeout")
                 expired = (modality in running and time.monotonic() - running[modality][1] > deadline)
                 load_start = getattr(self, "worker_started_at", {}).get(modality, startup)
-                load_expired = modality not in loaded and time.monotonic() - load_start > 180
-                if expired or load_expired or not process.is_alive():
-                    if process.is_alive():
-                        process.terminate()
-                    process.join(timeout=1)
+                load_expired = modality not in loaded and time.monotonic() - load_start > self.config.load_timeout
+                if expired or load_expired or modality in failures or not process.is_alive():
+                    reason = failures.get(modality) or ("模型超时" if expired or load_expired else "进程退出")
+                    stopped = self._retire_worker(modality)
                     timed_out.add(modality)
+                    loaded.discard(modality)
+                    running.pop(modality, None)
+                    consecutive_errors[modality] = 0
                     now = time.monotonic() - self.origin
                     if modality != "asr":
-                        self.on_event({"kind": "observation", "observation": invalid_observation(
-                            self.session_id, modality, max(0, now - .5), now, "模型超时或退出；结束后重新开始可重载")})
-                    self.on_event({"kind": "error", "message": f"{modality}模型已降级，界面及其余采集继续运行"})
+                        self.on_event({"kind": "observation", "generation": self.generation,
+                                       "worker_epoch": self._worker_epochs[modality], "observation": invalid_observation(
+                            self.session_id, modality, max(0, now - .5), now, reason)})
+                    if stopped and self._restarts[modality] < self.config.max_reloads:
+                        retry_at[modality] = time.monotonic()+self.config.retry_delay
+                        self._worker_state(modality, "retry_wait", f"{modality} {reason}，等待重载")
+                    else:
+                        self._worker_state(modality, "degraded", f"{modality} {reason}，本次会话已降级")
             self.stop_event.wait(0.015)
 
     def stop(self):
@@ -537,3 +808,9 @@ class CaptureRuntime:
         for q in (self.frames, self.segments, self.results, *self.jobs.values()):
             q.cancel_join_thread()
             q.close()
+        with self._channel_lock:
+            for control, output in self._channels.values():
+                control.close()
+                output.cancel_join_thread()
+                output.close()
+            self._channels.clear()

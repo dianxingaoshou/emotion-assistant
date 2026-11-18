@@ -317,7 +317,8 @@ class ModelHub:
             reason = None
         return audio, metrics, reason
 
-    def analyze_audio_emotion(self, samples, session_id: str, t_start: float, t_end: float) -> dict:
+    def analyze_audio_emotion(self, samples, session_id: str, t_start: float, t_end: float,
+                              vad_metrics=None) -> dict:
         """Return acoustic evidence immediately, without calling or waiting for ASR."""
         started = time.perf_counter()
         observation = self._observation("audio", session_id, t_start, t_end)
@@ -325,6 +326,10 @@ class ModelHub:
             try:
                 import numpy as np
                 audio, metrics, reason = self._audio_input(samples, t_start, t_end)
+                if vad_metrics:
+                    metrics.update({key: value for key, value in vad_metrics.items()
+                                    if key in ("speech_ratio", "voiced_seconds", "background_rms", "estimated_snr_db")
+                                    and isinstance(value, (int, float)) and math.isfinite(value)})
                 observation["quality_metrics"] = metrics
                 if reason:
                     return self._finish(observation, started, reason)
@@ -348,6 +353,10 @@ class ModelHub:
                         values /= values.sum()
                         raw = {str(label): float(score) for label, score in zip(labels, values)}
                         quality = min(1.0, duration / 4.0) * min(1.0, rms / 0.015) * max(0.0, 1.0-clipped/0.05)
+                        if "speech_ratio" in metrics:
+                            quality *= max(0., min(1., metrics["speech_ratio"]))
+                        if "estimated_snr_db" in metrics:
+                            quality *= .4+.6*max(0., min(1., metrics["estimated_snr_db"]/20))
                         observation.update(scores=_canonical(raw), raw_scores=raw, quality=float(quality),
                                            valid=True, reason="ok")
                         self._prediction_gate(observation)
@@ -379,6 +388,9 @@ class ModelHub:
                     language="auto", use_itn=True, batch_size=1)
                 text = re.sub(r"<\|[^|]*\|>", "", str(result[0].get("text", ""))).strip()
                 transcript.update(text=text, valid=bool(text), reason="ok" if text else "empty_transcript")
+                if text:
+                    from .semantic_context import interpret_context
+                    transcript["semantic_context"] = interpret_context(text)
             except Exception as exc:
                 transcript["reason"] = f"inference_error: {type(exc).__name__}: {exc}"
         return self._finish(transcript, started)
@@ -396,4 +408,8 @@ class ModelHub:
             utterance = None
             observation["asr_reason"] = f"inference_error: {type(exc).__name__}: {exc}"
         observation["wrapper_latency_ms"] = round((time.perf_counter()-started)*1000, 3)
+        segment_id = uuid.uuid4().hex
+        observation["segment_id"] = segment_id
+        if utterance:
+            utterance["segment_id"] = segment_id
         return observation, utterance

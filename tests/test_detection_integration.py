@@ -12,11 +12,13 @@ from types import SimpleNamespace
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 import pytest
+from PySide6.QtCore import QTimer
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
 import emotion_assistant.controller as controller_module
 from emotion_assistant.controller import Controller, simulation_observation
+from emotion_assistant.capture import CaptureConfig, CaptureRuntime
 from emotion_assistant.ui import MainWindow
 from emotion_assistant.ui_widgets import TrendChart
 
@@ -176,6 +178,69 @@ def test_pause_clears_pending_and_old_results_cannot_publish(rig, app):
     assert published == []
     barrier(controller, app)
     assert rows(controller, "fusion:before-pause") == []
+
+
+def test_gui_dispatch_rechecks_session_generation_and_worker_epoch(rig, app):
+    controller, _ = rig
+    controller.mode = "real"
+    runtime = CaptureRuntime(controller.session_id, -1, None, ".", lambda frame: None, lambda event: None)
+    controller.runtime = runtime
+    received = []
+    controller.observation_ready.connect(received.append)
+    def queued(event_id, epoch):
+        item = simulation_observation(controller.session_id, "visual", 0., 1.)
+        item["event_id"] = event_id
+        event = {"kind": "observation", "generation": runtime.generation, "worker_epoch": epoch, "observation": item}
+        QTimer.singleShot(0, lambda: controller._handle_event(event))
+    try:
+        queued("pre-pause", 0)
+        runtime.pause(True)
+        runtime.pause(False)
+        queued("retired-worker", 0)
+        runtime._worker_epochs["visual"] = 1
+        queued("current-worker", 1)
+        app.processEvents()
+        assert [o["event_id"] for o in received] == ["current-worker"]
+    finally:
+        runtime.stop()
+        controller.runtime = None
+
+
+def test_capture_configuration_loads_isolated_project_overrides(tmp_path):
+    assert CaptureConfig.from_project(tmp_path).visual_period == .5
+    options = tmp_path/"capture-config.json"
+    options.write_text('{"visual_period": 1.5, "audio_queue": 3}', encoding="utf-8-sig")
+    config = CaptureConfig.from_project(tmp_path)
+    assert config.visual_period == 1.5 and config.audio_queue == 3 and config.load_timeout == 180.
+    options.write_text('{"visual_period": -1}', encoding="utf-8")
+    with pytest.raises(ValueError):
+        CaptureConfig.from_project(tmp_path)
+
+
+def test_activity_tick_finalizes_pre_and_post_without_a_user_action(rig):
+    controller, _ = rig
+    controller.request_intervention()
+    controller.confirm_intervention(True)
+    at(rig, 30)
+    controller._activity_tick()
+    assert controller.assessment.lifecycle == "settling" and controller.pre_assessment is None
+    at(rig, 32)
+    send(controller, "visual", 0, 30, "late-pre")
+    at(rig, 33)
+    controller._activity_tick()
+    first = controller.pre_assessment
+    assert first["status"] == "complete" and first["source_ids"] == ["late-pre"]
+    at(rig, 34)
+    send(controller, "visual", 0, 30, "too-late")
+    controller._activity_tick()
+    assert controller.pre_assessment is first and first["source_ids"] == ["late-pre"]
+    controller.start_activity("break", 7, 120)
+    at(rig, 40)
+    controller.begin_post_assessment()
+    at(rig, 73)
+    controller._activity_tick()
+    assert controller.post_assessment["status"] == "insufficient"
+    assert controller.post_assessment["lifecycle"] == "finalized"
 
 
 def test_pre_during_and_new_post_window_are_independent_and_persisted(rig, app):

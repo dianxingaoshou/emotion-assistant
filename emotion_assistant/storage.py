@@ -11,6 +11,7 @@ import threading
 import uuid
 
 from .core import interval_duration, interval_union, utc_now
+from .personalization import FeedbackRecord, build_reference, comparison_key, matches_final_revision
 
 
 class Store:
@@ -43,6 +44,13 @@ class Store:
                 id TEXT NOT NULL, payload_json TEXT NOT NULL,
                 PRIMARY KEY(session_id, id)
             );
+            CREATE TABLE IF NOT EXISTS pending_transcript_cleanup (
+                session_id TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE
+            );
+            CREATE TRIGGER IF NOT EXISTS no_utterance_after_revoke_request
+                BEFORE INSERT ON utterances
+                WHEN EXISTS (SELECT 1 FROM pending_transcript_cleanup WHERE session_id=NEW.session_id)
+                BEGIN SELECT RAISE(ABORT,'transcript cleanup pending'); END;
             CREATE TABLE IF NOT EXISTS self_reports (
                 id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
                 phase TEXT NOT NULL, distress INTEGER NOT NULL CHECK(distress BETWEEN 0 AND 10),
@@ -67,6 +75,13 @@ class Store:
             );
             CREATE INDEX IF NOT EXISTS observations_interval ON observations(session_id, t_start, t_end);
             CREATE INDEX IF NOT EXISTS session_user ON sessions(user_id);
+            CREATE TABLE IF NOT EXISTS observation_feedback (
+                feedback_id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+                event_id TEXT, reference_candidate INTEGER NOT NULL,
+                created_at TEXT NOT NULL, payload_json TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS feedback_session ON observation_feedback(session_id, reference_candidate);
         """)
         # Enforce the same opt-in inside SQLite as well as in the Python writer.
         # This guards future code paths that accidentally bypass _safe_payload.
@@ -87,6 +102,28 @@ class Store:
                     BEGIN SELECT RAISE(ABORT,'transcript persistence requires consent'); END
                 """)
         self._db.commit()
+        self._revocation_barrier = set()
+        for session_id in self.pending_transcript_cleanup():
+            try:
+                self.set_transcript_consent(session_id, False)
+            except sqlite3.Error:
+                # The journal still denies new writes and masks derived data on export.
+                continue
+
+    def pending_transcript_cleanup(self):
+        with self._lock:
+            rows = self._db.execute("SELECT session_id FROM pending_transcript_cleanup")
+            return sorted(self._revocation_barrier | {row[0] for row in rows})
+
+    def request_transcript_cleanup(self, session_id):
+        """Stop newly queued writes immediately and journal the intent before async cleanup."""
+        with self._lock, self._db:
+            self._revocation_barrier.add(session_id)
+            self._db.execute("INSERT OR IGNORE INTO pending_transcript_cleanup VALUES (?)", (session_id,))
+
+    def _transcript_cleanup_requested(self, session_id):
+        return (session_id in self._revocation_barrier or self._db.execute(
+            "SELECT 1 FROM pending_transcript_cleanup WHERE session_id=?", (session_id,)).fetchone() is not None)
 
     @staticmethod
     def _json(value):
@@ -103,9 +140,9 @@ class Store:
         # Accepted canonical opt-in key: save_transcript. Compatibility with
         # transcript is explicit; missing permission always means no transcript.
         permitted = consent.get("save_transcript", consent.get("transcript", False)) is True
-        if permitted:
+        if permitted and not self._transcript_cleanup_requested(session_id):
             return deepcopy(payload)
-        private_keys = {"text", "transcript", "transcription", "raw_text", "asr_text",
+        private_keys = {"text", "transcript", "transcription", "raw_text", "asr_text", "semantic_context", "evidence_text",
                         "transcript_text", "utterance_text", "recognized_text"}
         def scrub(value):
             if isinstance(value, dict):
@@ -161,6 +198,8 @@ class Store:
         utterance_id = utterance.get("id") or utterance.get("event_id") or str(uuid.uuid4())
         with self._lock, self._db:
             consent = json.loads(self._session(session_id)["consent_json"])
+            if self._transcript_cleanup_requested(session_id):
+                return None
             permitted = consent.get("save_transcript", consent.get("transcript", False)) is True
             if not permitted and (require_consent or consent.get("transcript_revoked_at")):
                 return None
@@ -182,7 +221,13 @@ class Store:
             self._db.execute("BEGIN IMMEDIATE")
             consent = json.loads(self._session(session_id)["consent_json"])
             previous = consent.get("save_transcript", consent.get("transcript", False)) is True
+            pending = self._transcript_cleanup_requested(session_id)
+            if allowed and pending:
+                raise ValueError("pending transcript cleanup")
             if previous == allowed and consent.get("transcript") is allowed and consent.get("save_transcript") is allowed:
+                if pending:
+                    self._db.execute("DELETE FROM pending_transcript_cleanup WHERE session_id=?", (session_id,))
+                    self._revocation_barrier.discard(session_id)
                 return consent
             now = utc_now()
             revision = consent.get("transcript_consent_revision", 0)
@@ -192,12 +237,18 @@ class Store:
                            transcript_consent_updated_at=now)
             if not allowed:
                 consent["transcript_revoked_at"] = now
+                self._db.execute("""UPDATE utterances SET payload_json=json_remove(payload_json,'$.semantic_context')
+                    WHERE session_id=? AND json_type(payload_json,'$.semantic_context') IS NOT NULL""", (session_id,))
+                self._db.execute("DELETE FROM pending_transcript_cleanup WHERE session_id=?", (session_id,))
             self._db.execute("UPDATE sessions SET consent_json=? WHERE id=?", (self._json(consent), session_id))
             self._db.execute("INSERT INTO events(session_id,kind,created_at,payload_json) VALUES (?, ?, ?, ?)",
                 (session_id, "transcript_consent_changed", now,
                  self._json({"allowed": allowed, "previously_allowed": previous,
                              "retains_authorized_history": True, "revision": revision + 1})))
-            return deepcopy(consent)
+        with self._lock:
+            if not allowed:
+                self._revocation_barrier.discard(session_id)
+        return deepcopy(consent)
 
     def save_self_report(self, session_id, phase: str, distress: int, intervention_id=None) -> str:
         if isinstance(distress, bool) or not isinstance(distress, int) or not 0 <= distress <= 10:
@@ -210,6 +261,69 @@ class Store:
             self._db.execute("INSERT INTO self_reports VALUES (?, ?, ?, ?, ?, ?)",
                              (report_id, session_id, phase, distress, intervention_id, utc_now()))
         return report_id
+
+    def save_observation_feedback(self, record: FeedbackRecord):
+        with self._lock, self._db:
+            session = self._session(record.session_id)
+            if session["user_id"] != record.user_id or session["ended_at"]:
+                raise ValueError("反馈所属的会话已结束或档案不一致")
+            payload = self._safe_payload(record.session_id, record.payload())
+            consent = json.loads(session["consent_json"])
+            payload["learning_consent"] = record.learning_consent and consent.get("personal_learning") is True
+            evidence = payload["evidence"]
+            eligible = bool(payload["learning_consent"] and record.feedback_type == "typical_reference"
+                            and evidence.get("fresh_at_feedback") and comparison_key(evidence))
+            stamp = utc_now()
+            payload.update(mode=session["mode"], created_at=stamp,
+                           reference_candidate_at_feedback=eligible)
+            if evidence.get("event_id") and record.feedback_type in ("subjective_correction", "distress_report"):
+                self._db.execute("""UPDATE observation_feedback SET reference_candidate=0
+                    WHERE session_id=? AND event_id=?""", (record.session_id, evidence["event_id"]))
+            self._db.execute("INSERT INTO observation_feedback VALUES (?, ?, ?, ?, ?, ?)",
+                (record.feedback_id, record.session_id, evidence.get("event_id"), eligible, stamp, self._json(payload)))
+            self._db.execute("INSERT INTO events(session_id,kind,created_at,payload_json) VALUES (?, ?, ?, ?)",
+                (record.session_id, "user_correction" if record.feedback_type == "subjective_correction"
+                 else "observation_feedback", stamp, self._json({"feedback_id": record.feedback_id,
+                 "feedback_type": record.feedback_type, "label": record.user_label,
+                 "target_event_ids": record.target_event_ids, "learning_consent": payload["learning_consent"]})))
+            return payload
+
+    def pause_personal_learning(self, session_id):
+        with self._lock, self._db:
+            session = self._session(session_id)
+            consent = json.loads(session["consent_json"])
+            consent["personal_learning"] = False
+            self._db.execute("UPDATE sessions SET consent_json=? WHERE id=?", (self._json(consent), session_id))
+
+    def reset_personal_reference(self, user_id, mode):
+        """Exclude all prior reference candidates without rewriting the original feedback."""
+        with self._lock, self._db:
+            self._db.execute("""UPDATE observation_feedback SET reference_candidate=0
+                WHERE reference_candidate=1 AND session_id IN
+                (SELECT id FROM sessions WHERE user_id=? AND mode=?)""", (user_id, mode))
+            self._db.execute("""UPDATE sessions SET consent_json=json_set(consent_json, '$.personal_learning', json('false'))
+                WHERE user_id=? AND mode=? AND ended_at IS NULL""", (user_id, mode))
+
+    def personal_reference(self, user_id, mode):
+        """Use opt-in references from completed sessions and verify the final evidence revision."""
+        if mode not in ("real", "simulation"):
+            return build_reference([])
+        with self._lock:
+            rows = self._db.execute("""SELECT f.payload_json, o.payload_json AS final_observation
+                FROM sessions s JOIN observation_feedback f ON f.session_id=s.id
+                JOIN observations o ON o.session_id=s.id AND o.event_id=f.event_id
+                WHERE s.user_id=? AND s.mode=? AND s.ended_at IS NOT NULL AND f.reference_candidate=1
+                AND NOT EXISTS (SELECT 1 FROM json_each(f.payload_json,'$.evidence.source_ids') src
+                    WHERE NOT EXISTS (SELECT 1 FROM observations raw WHERE raw.session_id=f.session_id
+                        AND raw.event_id=src.value AND raw.valid=1 AND raw.modality IN ('visual','audio')))
+                ORDER BY f.created_at DESC, f.rowid DESC LIMIT 512""", (user_id, mode))
+            records = []
+            for row in rows:
+                record = json.loads(row["payload_json"])
+                final = json.loads(row["final_observation"])
+                if matches_final_revision(record, final):
+                    records.append(record)
+            return build_reference(records)
 
     def save_intervention(self, session_id, record: dict) -> str:
         record_id = record.get("id") or str(uuid.uuid4())
@@ -371,6 +485,27 @@ class Store:
         parameters.append(limit)
         with self._lock:
             return [self._intervention_payload(row) for row in self._db.execute(query, parameters)]
+
+    def historical_discomfort(self, user_id, mode):
+        """Rare full-history safety check when the ranking sample has reached its cap."""
+        from .regulation import _discomfort
+        modes = ("simulation", "demo", "replay") if mode == "simulation" else ("real",)
+        marks = ",".join("?" for _ in modes)
+        with self._lock:
+            rows = self._db.execute(f"""SELECT i.payload_json FROM interventions i
+                JOIN sessions s ON s.id=i.session_id WHERE s.user_id=? AND s.mode IN ({marks})""",
+                (user_id, *modes))
+            return {entry.get("activity") for row in rows
+                    if _discomfort(entry := json.loads(row[0]))}
+
+    def recent_prompt_history(self, user_id, mode, since):
+        with self._lock:
+            rows = self._db.execute("""SELECT e.kind, e.created_at FROM events e
+                JOIN sessions s ON e.session_id=s.id WHERE s.user_id=? AND s.mode=?
+                AND e.kind IN ('prompt_asked','prompt_declined') AND e.created_at>=?
+                ORDER BY e.created_at DESC,e.id DESC LIMIT 128""", (user_id, mode, since)).fetchall()
+        return [(row["kind"].removeprefix("prompt_"), datetime.fromisoformat(row["created_at"]).timestamp())
+                for row in reversed(rows)]
 
     def get_intervention(self, session_id, intervention_id) -> dict | None:
         with self._lock:
@@ -564,18 +699,28 @@ class Store:
                 - datetime.fromisoformat(session["started_at"])).total_seconds())
             result = {"schema_version": 1, "exported_at": utc_now(), "user": user,
                       "session": session, "observations": observations, "utterances": payloads("utterances"),
+                      "observation_feedback": [dict(json.loads(row["payload_json"]),
+                          reference_candidate=bool(row["reference_candidate"])) for row in self._db.execute(
+                          "SELECT payload_json,reference_candidate FROM observation_feedback WHERE session_id=? ORDER BY rowid",
+                          (session_id,))],
                       "self_reports": [dict(row) for row in self._db.execute(
                           "SELECT * FROM self_reports WHERE session_id=? ORDER BY created_at,id", (session_id,))],
                       "interventions": payloads("interventions"), "events": events, "coverage": coverage,
                       "profile_preferences": self.get_activity_preferences(session["user_id"])}
-        destination = Path(path)
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
-        return destination
+            if self._transcript_cleanup_requested(session_id):
+                session["consent"].update(transcript=False, save_transcript=False, semantic_cleanup_pending=True)
+            if not session["consent"].get("save_transcript", session["consent"].get("transcript", False)):
+                for utterance in result["utterances"]:
+                    utterance.pop("semantic_context", None)
+            destination = Path(path)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
+            return destination
 
     def delete_session(self, session_id):
         with self._lock, self._db:
             self._db.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+            self._revocation_barrier.discard(session_id)
 
     def close(self):
         with self._lock:

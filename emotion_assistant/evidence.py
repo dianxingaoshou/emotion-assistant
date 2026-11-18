@@ -141,7 +141,10 @@ class SustainedEvidenceGate:
             if any(not math.isfinite(value) or value < 0 for value in values) or sum(values) <= 0:
                 return False
             scores = {label: value/sum(values) for label, value in zip(("positive", "neutral", "negative", "uncertain"), values)}
-            return (record.get("valid") is True and float(record.get("quality", 0)) >= self.policy.min_quality
+            # Legacy observations predate selective decisions. New outputs
+            # must explicitly admit a candidate before its time can accumulate.
+            return (record.get("decision", "ask") == "ask"
+                    and record.get("valid") is True and float(record.get("quality", 0)) >= self.policy.min_quality
                     and not record.get("conflict") and float(scores.get("uncertain", 1)) < self.policy.uncertain_threshold
                     and float(scores.get("negative", 0)) >= self.policy.negative_threshold
                     and raw_prediction_diagnostics(record.get("raw_scores"))["decision_eligible"])

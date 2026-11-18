@@ -109,7 +109,7 @@ def worker_check(model_dir, image, audio):
     import queue
     from emotion_assistant.capture import inference_process
     context = mp.get_context("spawn")
-    output = context.Queue(64)
+    outputs, controls = {}, {}
     stop = context.Event()
     permission = context.Event()
     permission.set()
@@ -117,7 +117,7 @@ def worker_check(model_dir, image, audio):
     consent_generation = context.Value("q", 0)
     jobs = {modality: context.Queue(2) for modality in ("visual", "audio", "asr")}
     processes = {}
-    report = {"scope": "Independent official samples, separate session IDs; no cross-sample fusion or device capture.",
+    report = {"scope": "Independent official face and voice samples. Acoustic and ASR workers share the voice segment. No device capture.",
               "timestamp_source": "synthetic replay intervals; end-to-end durations are not a live benchmark",
               "worker_contract": "independent visual, acoustic-emotion and optional text workers",
               "queue_maxsize": {modality: 2 for modality in jobs},
@@ -126,42 +126,55 @@ def worker_check(model_dir, image, audio):
         for modality, data, end in (("visual", image, .5), ("audio", audio, len(audio)/16000),
                                     ("asr", audio, len(audio)/16000)):
             origin = time.monotonic()-max(10, end)-1
+            controls[modality], send = context.Pipe(duplex=False)
+            outputs[modality] = context.Queue(64)
+            sample_session = "official_face_worker_smoke" if modality == "visual" else "official_voice_worker_smoke"
             process = context.Process(target=inference_process,
-                args=(modality, str(model_dir), "official_"+modality+"_worker_smoke",
-                      origin, jobs[modality], output, stop, modality == "asr",
-                      permission, generation, consent_generation),
+                args=(modality, str(model_dir), sample_session,
+                      origin, jobs[modality], outputs[modality], stop, modality == "asr",
+                      permission, generation, consent_generation, send),
                 name="model-smoke-"+modality)
             process.start()
+            send.close()
             processes[modality] = process
             queued_at = time.monotonic()-origin
             jobs[modality].put(("official_"+modality+"_sample", data, 0.0, end, 0,
-                                queued_at, 0, queued_at if modality != "visual" else None))
+                                queued_at, 0, queued_at if modality != "visual" else None,
+                                "official_voice_segment_1" if modality != "visual" else None))
         deadline = time.monotonic()+120
         done = set()
-        while len(done) < 3 and time.monotonic() < deadline:
-            try:
-                event = output.get(timeout=1)
-            except queue.Empty:
+        while time.monotonic() < deadline:
+            events = [recv.recv() for recv in controls.values() if recv.poll()]
+            for output in outputs.values():
+                try:
+                    events.append(output.get_nowait())
+                except queue.Empty:
+                    pass
+            if not events:
                 if any(process.exitcode is not None for process in processes.values()):
                     raise RuntimeError("Inference worker exited before delivering its result")
-                continue
-            kind = event.get("kind")
-            if kind == "loaded":
-                report["loaded"][event["modality"]] = event["status"]
-            elif kind == "observation":
-                observation = event["observation"]
-                report["observations"][observation["modality"]] = observation
-            elif kind == "utterance":
-                report["utterances"].append(event["utterance"])
-            elif kind == "done":
-                done.add(event["modality"])
-            elif kind == "error":
-                raise RuntimeError(event.get("message", "worker error"))
+                time.sleep(.02)
+            for event in events:
+                kind = event.get("kind")
+                if kind == "loaded":
+                    report["loaded"][event["modality"]] = event["status"]
+                elif kind == "observation":
+                    observation = event["observation"]
+                    report["observations"][observation["modality"]] = observation
+                elif kind == "utterance":
+                    report["utterances"].append(event["utterance"])
+                elif kind == "done":
+                    done.add(event["modality"])
+                elif kind == "error":
+                    raise RuntimeError(event.get("message", "worker error"))
+            if len(done) == 3 and len(report["observations"]) == 2 and report["utterances"]:
+                break
         assert done == {"visual", "audio", "asr"}, "Inference worker IPC timed out"
         assert all(report["observations"].get(modality, {}).get("valid") for modality in ("visual", "audio"))
         assert report["loaded"]["audio"].keys() == {"audio"}, "Acoustic worker must not load ASR"
         assert report["loaded"]["asr"].keys() == {"asr"}, "ASR worker must not load the emotion model"
         assert report["utterances"] and report["utterances"][0]["text"] and report["utterances"][0]["valid"]
+        assert report["observations"]["audio"]["segment_id"] == report["utterances"][0]["segment_id"] == "official_voice_segment_1"
         assert "scores" not in report["utterances"][0], "Text must not become a third emotion vote"
         report["done"] = sorted(done)
     finally:
@@ -173,7 +186,9 @@ def worker_check(model_dir, image, audio):
                 process.join(5)
         for modality, process in processes.items():
             report["exited"][modality] = {"exitcode": process.exitcode, "alive": process.is_alive()}
-        for work_queue in (*jobs.values(), output):
+        for receive in controls.values():
+            receive.close()
+        for work_queue in (*jobs.values(), *outputs.values()):
             work_queue.close()
             work_queue.join_thread()
     assert all(item["exitcode"] == 0 and not item["alive"] for item in report["exited"].values())

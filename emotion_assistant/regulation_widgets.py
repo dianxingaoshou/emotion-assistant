@@ -108,13 +108,28 @@ class OutcomeCard(QFrame):
         help_label = {"helpful": "觉得有帮助", "no_change": "无明显帮助", "worse": "更不舒服", "unknown": "暂时无法评价"}.get(record.get("helpfulness"), "未填写")
         window_comparison = record.get("assessment_comparison") or {}
         comparable = window_comparison.get("comparable") is True
-        comparison = "独立前后观察窗可比，仅提供辅助观察变化" if comparable else "模型前后条件不可比，不推断改善"
+        deltas = window_comparison.get("per_modality_delta") or {}
+        if comparable:
+            comparison = "独立前后观察窗可比，按预设权重汇总"
+        elif deltas:
+            comparison = "仅部分模态条件匹配，综合结果不可比"
+        else:
+            comparison = "模型前后条件不可比"
         detail = f"主观反馈：{help_label}\n{comparison}。"
         assessments = record.get("assessments") or {}
         if assessments:
             pre_window, post_window = assessments.get("pre") or {}, assessments.get("post") or {}
             detail += f"\n前窗覆盖 {pre_window.get('coverage', 0):.0%} · 后窗覆盖 {post_window.get('coverage', 0):.0%}。"
-            self.detail.setToolTip("；".join(str(item) for item in window_comparison.get("reasons", [])))
+        reasons = {"different_modalities": "前后可用模态不同", "different_or_missing_quality": "采集质量不匹配",
+                   "insufficient_modality_score_coverage": "单模态覆盖不足",
+                   "different_model_versions": "模型版本不匹配", "different_fusion_configuration": "融合配置不匹配",
+                   "pre_window_incomplete": "前测未取得足够观察", "post_window_incomplete": "后测未取得足够观察",
+                   "reused_source_evidence": "前后窗共用了来源", "missing_source_evidence": "缺少独立观察来源"}
+        self.detail.setToolTip("、".join(reasons.get(item, item) for item in window_comparison.get("reasons", [])))
+        if deltas:
+            names = {"visual": "视觉", "audio": "声学"}
+            detail += "\n各模态负向线索（前减后）  " + " · ".join(
+                f"{names[m]} {change['negative']:+.3f}" for m, change in deltas.items() if m in names)
         if comparable:
             negative_delta = (window_comparison.get("model_delta") or {}).get("negative")
             if isinstance(negative_delta, (float, int)):
