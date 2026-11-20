@@ -22,6 +22,7 @@ from .storage import Store
 from .regulation import ACTIVITIES, NEEDS, evaluate_outcome, summarize_feedback
 from .prompt_policy import ConflictGate, PromptTimingPolicy
 from .recommendation_policy import contextual_decision
+from .crossover import trial_order, trial_prompt, write_report
 from .evidence import SustainedEvidenceGate
 from .assessment import AssessmentWindowCollector, compare_assessments
 from .personalization import FeedbackRecord, build_reference, compare_reference
@@ -79,6 +80,10 @@ class Controller(QObject):
         self._write_completed.connect(self._handle_write_completion, Qt.ConnectionType.QueuedConnection)
         self._stop_failed.connect(self._handle_stop_failure, Qt.ConnectionType.QueuedConnection)
         self.session_id = None
+        self.trial = None
+        self._trial_active_since = None
+        self._trial_seconds = 0.
+        self._trial_unwanted_at = None
         self.state = "idle"
         self.mode = "real"
         self.runtime = None
@@ -225,8 +230,78 @@ class Controller(QObject):
         self.background.submit(detect)
 
     def _session_signal(self):
-        self.session_changed.emit({"state": self.state, "session_id": self.session_id,
-                                   "mode": self.mode, "user_name": self.current_user_name})
+        self.session_changed.emit(
+            {
+                "state": self.state,
+                "session_id": self.session_id,
+                "mode": self.mode,
+                "user_name": self.current_user_name,
+                "trial": deepcopy(self.trial),
+            }
+        )
+
+    def trial_status(self, user_name, mode):
+        if (
+            self.state in ("running", "paused", "stopping", "stop_failed")
+            and self.trial
+            and self.current_user_name == user_name.strip()
+            and mode == self.mode
+        ):
+            return dict(self.trial, status="in_progress", next_period=None)
+        uid = next((u["id"] for u in self.store.list_users() if u["name"] == user_name.strip()), None)
+        return self.store.trial_status(uid, mode)
+
+    def withdraw_trial(self, user_name=None, mode=None):
+        name = (self.current_user_name if user_name is None else user_name).strip()
+        selected = self.mode if mode is None else mode
+        if not name or selected not in ("real", "simulation"):
+            return False
+        uid = next((u["id"] for u in self.store.list_users() if u["name"] == name), None)
+        if not self.store.withdraw_trial(uid, selected):
+            return False
+        if uid == self.current_user_id and selected == self.mode:
+            self.trial = self._trial_active_since = self._trial_unwanted_at = None
+            self._session_signal()
+            self.refresh_recommendations()
+        return True
+
+    def rate_trial_prompt(self, wanted):
+        if (
+            not self.trial
+            or self.state not in ("running", "paused")
+            or self.flow.state != "confirming"
+            or self._request_source not in ("sustained_observation", "clarify_conflict")
+            or not self._request_decision_id
+            or type(wanted) is not bool
+        ):
+            return False
+        # Serialize after prompt_asked; never infer a burden label from rejection.
+        try:
+            saved = self._write(
+                self.store.rate_trial_prompt, self.session_id, self._request_decision_id, wanted
+            ).result(timeout=5)
+        except Exception:
+            self.status_changed.emit("本次提示评价未确认保存，可重试")
+            return False
+        if saved and not wanted:
+            self._trial_unwanted_at = time.monotonic()
+        return saved
+
+    def trial_results(self, mode="real"):
+        return self.store.analyze_trial(mode)
+
+    def export_trial_results(self, path, mode="real"):
+        if Path(path).suffix.lower() != ".json" or (
+            self.store.path and self.store.path.resolve() == Path(path).resolve()
+        ):
+            raise ValueError("请选择独立的 JSON 报告文件")
+        return write_report(path, self.trial_results(mode))
+
+    def _freeze_trial_exposure(self):
+        if self._trial_active_since is not None:
+            self._trial_seconds += max(0.0, time.monotonic() - self._trial_active_since)
+            self._trial_active_since = None
+        return self._trial_seconds if self.trial else None
 
     def start_session(self, user_name, camera_index, mic_index, consent, mode="real"):
         if self.state in ("running", "paused", "stopping", "stop_failed"):
@@ -266,11 +341,21 @@ class Controller(QObject):
                                  if self.personal_learning else build_reference([]))
         consent = {"collection": True, "transcript": consent.get("transcript") is True,
                    "personal_learning": self.personal_learning,
+                   "crossover_trial": consent.get("crossover_trial") is True,
                    "save_transcript": consent.get("transcript") is True, "raw_media": False}
         self.transcript_allowed = consent["transcript"]
-        self.session_id = self.store.start_session(user_id, consent, self.mode)
+        try:
+            sid = self.store.start_session(user_id, consent, self.mode)
+        except ValueError as exc:
+            self.status_changed.emit(str(exc))
+            return
+        self.session_id = sid
+        self.trial = self.store.trial_assignment(sid) if consent["crossover_trial"] else None
         self.state = "running"
         self.started = time.monotonic()
+        self._trial_seconds = 0.
+        self._trial_active_since = self.started if self.trial else None
+        self._trial_unwanted_at = None
         self.fusion = FusionEngine.from_project(DATA, baseline_version=self.frozen_reference["version"], strategy=strategy)
         self.flow = InterventionFlow()
         self.evidence_gate.reset(self.session_id)
@@ -522,8 +607,13 @@ class Controller(QObject):
         conflict = self.conflict_gate.diagnostics(now)
         source = ("clarify_conflict" if conflict["ready"] else
                   "sustained_observation" if negative["ready"] else None)
-        evidence = conflict if conflict["ready"] else negative
+        condition = self.trial["condition"] if self.trial else None
+        if condition == "basic" and negative["ready"]:
+            source = "sustained_observation"
+        evidence = conflict if source == "clarify_conflict" else negative
         policy = self.prompt_timing.evaluate(datetime.now(timezone.utc).timestamp(), source, time.monotonic() < self.cooldown_until)
+        policy = trial_prompt(policy,condition,negative["ready"],conflict["ready"],
+                              self._trial_unwanted_at is not None and time.monotonic()-self._trial_unwanted_at < 3600)
         if source and (self.flow.current or {}).get("save_status") in ("failed", "pending"):
             policy.update(action="observe", reason="awaiting_feedback_save")
         self.evidence_changed.emit(dict(negative, timing_reason=policy["reason"],
@@ -542,6 +632,11 @@ class Controller(QObject):
     def pause_session(self, paused):
         if self.state not in ("running", "paused"):
             return
+        if self.trial:
+            if paused:
+                self._freeze_trial_exposure()
+            elif self.state == "paused":
+                self._trial_active_since = time.monotonic()
         self.state = "paused" if paused else "running"
         self._reference_observing_since = (time.monotonic()-self.started
             if not paused and self.flow.state in ("observing", "cooldown") else None)
@@ -567,11 +662,13 @@ class Controller(QObject):
         self._simulation_timer.stop()
         self._session_signal()
         sid, runtime = self.session_id, self.runtime
+        active_seconds = self._freeze_trial_exposure()
         def release():
             try:
                 if runtime:
                     runtime.stop()
-                self._write(self.store.finish_session, sid).result(timeout=10)
+                args = (sid,) if active_seconds is None else (sid,active_seconds)
+                self._write(self.store.finish_session, *args).result(timeout=10)
             except Exception as exc:
                 if not self.closed:
                     self._stop_failed.emit({"session_id": sid, "error": type(exc).__name__})
@@ -584,6 +681,8 @@ class Controller(QObject):
         if session_id != self.session_id:
             return
         self.state = "stopped"
+        if self.trial:
+            self.trial = self.store.trial_assignment(session_id)
         self.runtime = None
         self._session_signal()
         self.status_changed.emit("本次会话已结束；采集和推理进程已退出，设备已释放")
@@ -649,6 +748,7 @@ class Controller(QObject):
         profile_id, profile_name, selected_mode = self.current_user_id, self.current_user_name, self.mode
         selected_need, seconds, pre = self.regulation_need, self.regulation_seconds, self.recommendation_pre
         pending_avoids = self._pending_avoids(profile_id)
+        condition = self.trial["condition"] if active and self.trial else None
 
         def read():
             self._write(lambda: None).result(timeout=10)
@@ -658,6 +758,7 @@ class Controller(QObject):
             pending = self.store.list_pending_followups(profile_id, selected_mode) if profile_id else []
             excluded = self.store.historical_discomfort(profile_id, selected_mode) if len(history) >= 200 else set()
             items, decision = contextual_decision(history, selected_need, seconds, pre, preferences, selected_mode, excluded)
+            items, decision = trial_order(items,decision,condition)
             payload = {"need": selected_need, "available_seconds": seconds,
                        "items": items, "decision": decision,
                        "stats": summarize_feedback(history, selected_mode), "preferences": preferences,
@@ -846,6 +947,7 @@ class Controller(QObject):
             preferences.update(dict.fromkeys(pending_avoids, "avoid"))
             excluded = self.store.historical_discomfort(self.current_user_id, self.mode) if len(history) >= 200 else set()
             candidates, decision = contextual_decision(history, need, seconds, pre, preferences, self.mode, excluded)
+            candidates, decision = trial_order(candidates,decision,self.trial["condition"] if self.trial else None)
             recommendation = next(item for item in candidates if item["activity"] == activity)
             if recommendation.get("blocked") or activity in self._known_discomfort:
                 raise ValueError("此方法已因偏好或不适反馈排除，请选择其他活动或调整偏好")
@@ -1261,7 +1363,9 @@ class Controller(QObject):
             self.runtime.stop()
             self.runtime = None
         if self.session_id and self.state in ("running", "paused"):
-            self._write(self.store.finish_session, self.session_id)
+            exposure = self._freeze_trial_exposure()
+            args = (self.session_id,) if exposure is None else (self.session_id,exposure)
+            self._write(self.store.finish_session, *args)
         self.state = "stopped"
         self.background.shutdown(wait=True, cancel_futures=True)
         self.writer.shutdown(wait=True)
