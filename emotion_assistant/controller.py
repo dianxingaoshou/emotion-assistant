@@ -83,6 +83,7 @@ class Controller(QObject):
         self.trial = None
         self._trial_active_since = None
         self._trial_seconds = 0.
+        self._trial_capture_started = False
         self._trial_unwanted_at = None
         self.state = "idle"
         self.mode = "real"
@@ -301,7 +302,9 @@ class Controller(QObject):
         if self._trial_active_since is not None:
             self._trial_seconds += max(0.0, time.monotonic() - self._trial_active_since)
             self._trial_active_since = None
-        return self._trial_seconds if self.trial else None
+        # A failed device startup consumes the assigned period, but contributes
+        # no completed period or exposure to the crossover analysis.
+        return self._trial_seconds if self.trial and self._trial_capture_started else None
 
     def start_session(self, user_name, camera_index, mic_index, consent, mode="real"):
         if self.state in ("running", "paused", "stopping", "stop_failed"):
@@ -354,6 +357,7 @@ class Controller(QObject):
         self.state = "running"
         self.started = time.monotonic()
         self._trial_seconds = 0.
+        self._trial_capture_started = self.mode == "simulation"
         self._trial_active_since = self.started if self.trial else None
         self._trial_unwanted_at = None
         self.fusion = FusionEngine.from_project(DATA, baseline_version=self.frozen_reference["version"], strategy=strategy)
@@ -402,11 +406,12 @@ class Controller(QObject):
             self._simulation_timer.start()
             self.status_changed.emit("模拟回放已启动：全部线索为测试输入，不是摄像头/麦克风实测")
         else:
-            self.runtime = CaptureRuntime(self.session_id, int(camera_index if camera_index is not None else -1),
-                                          mic_index, MODELS, self.frame_ready.emit,
-                                          self._event_received.emit, consent["transcript"], config=capture_config)
             try:
+                self.runtime = CaptureRuntime(self.session_id, int(camera_index if camera_index is not None else -1),
+                                              mic_index, MODELS, self.frame_ready.emit,
+                                              self._event_received.emit, consent["transcript"], config=capture_config)
                 self.runtime.start()
+                self._trial_capture_started = True
                 self.status_changed.emit("本地会话已开始；模型加载期间只显示可用输入。随时可暂停或结束")
             except Exception as exc:
                 self.status_changed.emit(f"设备启动失败：{type(exc).__name__}")
@@ -1352,6 +1357,9 @@ class Controller(QObject):
     def shutdown(self):
         if self.closed:
             return
+        # Freeze at the user's exit, before saving/cancelling an activity and
+        # waiting for device workers to release resources.
+        exposure = self._freeze_trial_exposure()
         self._simulation_timer.stop()
         self._activity_timer.stop()
         self._resource_timer.stop()
@@ -1363,7 +1371,6 @@ class Controller(QObject):
             self.runtime.stop()
             self.runtime = None
         if self.session_id and self.state in ("running", "paused"):
-            exposure = self._freeze_trial_exposure()
             args = (self.session_id,) if exposure is None else (self.session_id,exposure)
             self._write(self.store.finish_session, *args)
         self.state = "stopped"

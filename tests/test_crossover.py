@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import time
+from types import SimpleNamespace
 
 import pytest
 
@@ -110,6 +112,67 @@ def fixture(uid, arm, wanted=True, completed=True, post=2, followup="completed",
             }
         ],
     }
+
+
+def test_failed_capture_consumes_period_without_making_a_completed_pair(tmp_path, monkeypatch):
+    app = QApplication.instance() or QApplication([])
+
+    class FailedCapture:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def start(self):
+            raise RuntimeError("test device startup failed")
+
+        def stop(self):
+            pass
+
+    monkeypatch.setattr("emotion_assistant.controller.CaptureRuntime", FailedCapture)
+    ctrl = Controller(tmp_path / "failed.db")
+    try:
+        for _ in range(2):
+            ctrl.start_session("P", 0, None, OPT, "real")
+            deadline = time.monotonic() + 5
+            while ctrl.state != "stopped" and time.monotonic() < deadline:
+                app.processEvents()
+                time.sleep(.005)
+            assert ctrl.state == "stopped"
+        report = ctrl.trial_results("real")
+        assert report["periods_assigned"] == report["periods_incomplete"] == 2
+        assert report["periods_completed"] == report["paired_participants"] == 0
+        assert ctrl.trial_status("P", "real")["status"] == "incomplete"
+        assert all(s["ended_at"] for s in ctrl.store.list_sessions())
+    finally:
+        ctrl.shutdown()
+
+
+def test_close_excludes_worker_teardown_from_trial_exposure(tmp_path, monkeypatch):
+    app = QApplication.instance() or QApplication([])
+    clock = [100.]
+    monkeypatch.setattr("emotion_assistant.controller.time", SimpleNamespace(monotonic=lambda: clock[0]))
+
+    class SlowStop:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def start(self):
+            pass
+
+        def stop(self):
+            clock[0] += 30.
+
+    db = tmp_path / "teardown.db"
+    monkeypatch.setattr("emotion_assistant.controller.CaptureRuntime", SlowStop)
+    ctrl = Controller(db)
+    try:
+        ctrl.start_session("P", 0, None, OPT, "real")
+        assert ctrl.state == "running"
+        clock[0] += 120.
+    finally:
+        ctrl.shutdown()
+    report = Store.read_trial_report(db, "real")
+    assert report["periods_completed"] == 1
+    assert sum(v["active_hours"] for v in report["by_condition"].values()) == pytest.approx(120. / 3600)
 
 
 def test_paired_and_weighted_metrics_zero_versus_missing():
