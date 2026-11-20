@@ -1,0 +1,709 @@
+{
+  "protocol": "ravdess-half-second-clip-v1",
+  "dataset_doi": "10.5281/zenodo.1188976",
+  "ratings_doi": "10.1371/journal.pone.0196391.s008",
+  "unit": "one paired audio-video release clip; no live device or VAD segmentation",
+  "primary_label": "unique plurality of collapsed audiovisual human rater votes; ties excluded",
+  "sensitivity_label": "actor's intended expression, using the unchanged rater-trained model",
+  "scope": "actor disjoint for this project's fit, policy and test; upstream model training overlap unknown",
+  "bootstrap": {
+    "unit": "test actor, paired with replacement",
+    "replicates": 2000,
+    "seed": 20261120
+  },
+  "model_versions": {
+    "face": "YuNet-2023mar@48b10fa505ae",
+    "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+    "audio": "emotion2vec_plus_seed@7be9a30d52bd"
+  },
+  "selected_media_sha256": "9753d59df1386aa7728bb18f229ed2241005c4fa5c8aec9e40e9e14cc273e93e",
+  "rating_workbook_sha256": "b304b75a1a1a8928be557b0fe6a248c40db193e95e4d5b02073dce8dd034fcee",
+  "scoring_versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.15.3"
+  },
+  "class_order": [
+    "positive",
+    "neutral",
+    "negative",
+    "uncertain"
+  ],
+  "splits": {
+    "fit": {
+      "actors": [
+        1,
+        2,
+        7,
+        8,
+        13,
+        14,
+        19,
+        20
+      ],
+      "selected": 64,
+      "tied": 1,
+      "unique_below_60pct": 1,
+      "no_evidence": 0,
+      "both_modalities": 63,
+      "visual_eligible": 64,
+      "audio_eligible": 63
+    },
+    "policy": {
+      "actors": [
+        3,
+        4,
+        9,
+        10,
+        15,
+        16,
+        21,
+        22
+      ],
+      "selected": 64,
+      "tied": 2,
+      "unique_below_60pct": 2,
+      "no_evidence": 0,
+      "both_modalities": 59,
+      "visual_eligible": 64,
+      "audio_eligible": 59
+    },
+    "test": {
+      "actors": [
+        5,
+        6,
+        11,
+        12,
+        17,
+        18,
+        23,
+        24
+      ],
+      "selected": 64,
+      "tied": 1,
+      "unique_below_60pct": 1,
+      "no_evidence": 0,
+      "both_modalities": 63,
+      "visual_eligible": 63,
+      "audio_eligible": 64
+    }
+  },
+  "calibration_version": "c814382199df5ddaac1b7c812fddb3291991808048a7ef187b7f753671dce964",
+  "fitting_counts": {
+    "fit": 63,
+    "policy": 62
+  },
+  "primary_common_clips": {
+    "n": 62,
+    "actors": 8,
+    "support": {
+      "neutral": 17,
+      "positive": 14,
+      "negative": 15,
+      "uncertain": 16
+    },
+    "top70_n": 43,
+    "matched_accepted_n": 41,
+    "methods": {
+      "visual_only": {
+        "macro_f1": 0.4447142144910908,
+        "brier": 0.6309315602404468,
+        "risk_at_70pct": 0.3953488372093023,
+        "ci95_actor": {
+          "macro_f1": [
+            0.3022936976722326,
+            0.6037868200322433
+          ],
+          "brier": [
+            0.5491862667377441,
+            0.6983258921732153
+          ],
+          "risk_at_70pct": [
+            0.25,
+            0.5365853658536586
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            11,
+            0,
+            3,
+            0
+          ],
+          [
+            1,
+            4,
+            12,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1
+          ]
+        ],
+        "accepted_n": 61,
+        "accepted_errors": 32,
+        "fallbacks": null,
+        "matched_accepted_errors": 17
+      },
+      "audio_only": {
+        "macro_f1": 0.98380355276907,
+        "brier": 0.04443164104457346,
+        "risk_at_70pct": 0.0,
+        "ci95_actor": {
+          "macro_f1": [
+            0.9507936507936507,
+            1.0
+          ],
+          "brier": [
+            0.005998129604582473,
+            0.10838320989306696
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.046511627906976744
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            14,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16
+          ]
+        ],
+        "accepted_n": 46,
+        "accepted_errors": 1,
+        "fallbacks": null,
+        "matched_accepted_errors": 1
+      },
+      "quality_v2": {
+        "macro_f1": 0.9363603709508883,
+        "brier": 0.19651482329560277,
+        "risk_at_70pct": 0.023255813953488372,
+        "ci95_actor": {
+          "macro_f1": [
+            0.8746694273112516,
+            1.0
+          ],
+          "brier": [
+            0.12952543482530698,
+            0.27153014547291354
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.09090909090909091
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            14,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            14
+          ]
+        ],
+        "accepted_n": 43,
+        "accepted_errors": 3,
+        "fallbacks": null,
+        "matched_accepted_errors": 3
+      },
+      "calibrated_fusion": {
+        "macro_f1": 0.98380355276907,
+        "brier": 0.15204510028121382,
+        "risk_at_70pct": 0.0,
+        "ci95_actor": {
+          "macro_f1": [
+            0.9507936507936507,
+            1.0
+          ],
+          "brier": [
+            0.10157000366112462,
+            0.21340232892655375
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.023809523809523808
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            14,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16
+          ]
+        ],
+        "accepted_n": 41,
+        "accepted_errors": 1,
+        "fallbacks": 0,
+        "matched_accepted_errors": 1
+      }
+    },
+    "paired_calibrated_minus_quality": {
+      "macro_f1": 0.047443181818181746,
+      "brier": -0.04446972301438895,
+      "risk_at_70pct": -0.023255813953488372
+    },
+    "paired_calibrated_minus_quality_ci95_actor": {
+      "macro_f1": [
+        0.0,
+        0.1088736519771002
+      ],
+      "brier": [
+        -0.08824184493308328,
+        -0.0033949810373823035
+      ],
+      "risk_at_70pct": [
+        -0.07142857142857142,
+        0.0
+      ]
+    },
+    "paired_calibrated_minus_each": {
+      "visual_only": {
+        "difference": {
+          "macro_f1": 0.5390893382779793,
+          "brier": -0.478886459959233,
+          "risk_at_70pct": -0.3953488372093023
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.38765015042879336,
+            0.6798241649807971
+          ],
+          "brier": [
+            -0.5628476890666221,
+            -0.38616061975248045
+          ],
+          "risk_at_70pct": [
+            -0.5365853658536586,
+            -0.25
+          ]
+        }
+      },
+      "audio_only": {
+        "difference": {
+          "macro_f1": 0.0,
+          "brier": 0.10761345923664037,
+          "risk_at_70pct": 0.0
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.0,
+            0.0
+          ],
+          "brier": [
+            0.07537970188049598,
+            0.13765268249215873
+          ],
+          "risk_at_70pct": [
+            -0.045454545454545456,
+            0.023255813953488372
+          ]
+        }
+      },
+      "quality_v2": {
+        "difference": {
+          "macro_f1": 0.047443181818181746,
+          "brier": -0.04446972301438895,
+          "risk_at_70pct": -0.023255813953488372
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.0,
+            0.1088736519771002
+          ],
+          "brier": [
+            -0.08824184493308328,
+            -0.0033949810373823035
+          ],
+          "risk_at_70pct": [
+            -0.07142857142857142,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "intended_common_clips": {
+    "n": 63,
+    "actors": 8,
+    "support": {
+      "neutral": 16,
+      "positive": 16,
+      "negative": 15,
+      "uncertain": 16
+    },
+    "top70_n": 44,
+    "matched_accepted_n": 42,
+    "methods": {
+      "visual_only": {
+        "macro_f1": 0.4501904794647257,
+        "brier": 0.6198550257159425,
+        "risk_at_70pct": 0.36363636363636365,
+        "ci95_actor": {
+          "macro_f1": [
+            0.2989028944911298,
+            0.6073223448938552
+          ],
+          "brier": [
+            0.5395896926239159,
+            0.6913479931502033
+          ],
+          "risk_at_70pct": [
+            0.22727272727272727,
+            0.5348837209302325
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            12,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            4,
+            12,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1
+          ]
+        ],
+        "accepted_n": 62,
+        "accepted_errors": 32,
+        "fallbacks": null,
+        "matched_accepted_errors": 16
+      },
+      "audio_only": {
+        "macro_f1": 1.0,
+        "brier": 0.011992125451426016,
+        "risk_at_70pct": 0.0,
+        "ci95_actor": {
+          "macro_f1": [
+            1.0,
+            1.0
+          ],
+          "brier": [
+            0.0031046386535830213,
+            0.02399610795150956
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.0
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            16,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16
+          ]
+        ],
+        "accepted_n": 47,
+        "accepted_errors": 0,
+        "fallbacks": null,
+        "matched_accepted_errors": 0
+      },
+      "quality_v2": {
+        "macro_f1": 0.9525415444770284,
+        "brier": 0.17481273681579054,
+        "risk_at_70pct": 0.0,
+        "ci95_actor": {
+          "macro_f1": [
+            0.8911263480228998,
+            1.0
+          ],
+          "brier": [
+            0.12471449917508093,
+            0.21988314292461822
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.045454545454545456
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            15,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            14
+          ]
+        ],
+        "accepted_n": 44,
+        "accepted_errors": 2,
+        "fallbacks": null,
+        "matched_accepted_errors": 2
+      },
+      "calibrated_fusion": {
+        "macro_f1": 1.0,
+        "brier": 0.134177854261176,
+        "risk_at_70pct": 0.0,
+        "ci95_actor": {
+          "macro_f1": [
+            1.0,
+            1.0
+          ],
+          "brier": [
+            0.10035254163819672,
+            0.16651706998043303
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.0
+          ]
+        },
+        "confusion_true_by_predicted": [
+          [
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            16,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16
+          ]
+        ],
+        "accepted_n": 42,
+        "accepted_errors": 0,
+        "fallbacks": 0,
+        "matched_accepted_errors": 0
+      }
+    },
+    "paired_calibrated_minus_quality": {
+      "macro_f1": 0.047458455522971565,
+      "brier": -0.04063488255461453,
+      "risk_at_70pct": 0.0
+    },
+    "paired_calibrated_minus_quality_ci95_actor": {
+      "macro_f1": [
+        0.0,
+        0.1088736519771002
+      ],
+      "brier": [
+        -0.08366665087682137,
+        -0.0027374214591669144
+      ],
+      "risk_at_70pct": [
+        -0.045454545454545456,
+        0.0
+      ]
+    },
+    "paired_calibrated_minus_each": {
+      "visual_only": {
+        "difference": {
+          "macro_f1": 0.5498095205352743,
+          "brier": -0.4856771714547665,
+          "risk_at_70pct": -0.36363636363636365
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.3926776551061448,
+            0.7010971055088699
+          ],
+          "brier": [
+            -0.575872292064625,
+            -0.38985067145133534
+          ],
+          "risk_at_70pct": [
+            -0.5348837209302325,
+            -0.22727272727272727
+          ]
+        }
+      },
+      "audio_only": {
+        "difference": {
+          "macro_f1": 0.0,
+          "brier": 0.12218572880975,
+          "risk_at_70pct": 0.0
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.0,
+            0.0
+          ],
+          "brier": [
+            0.08238634529479218,
+            0.15908687587827874
+          ],
+          "risk_at_70pct": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "quality_v2": {
+        "difference": {
+          "macro_f1": 0.047458455522971565,
+          "brier": -0.04063488255461453,
+          "risk_at_70pct": 0.0
+        },
+        "ci95_actor": {
+          "macro_f1": [
+            0.0,
+            0.1088736519771002
+          ],
+          "brier": [
+            -0.08366665087682137,
+            -0.0027374214591669144
+          ],
+          "risk_at_70pct": [
+            -0.045454545454545456,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "all_primary_test_clips": {
+    "visual_only": {
+      "all_unique_test_labels": 63,
+      "scored": 62,
+      "accepted": 61,
+      "accepted_errors": 32
+    },
+    "audio_only": {
+      "all_unique_test_labels": 63,
+      "scored": 63,
+      "accepted": 47,
+      "accepted_errors": 1
+    },
+    "quality_v2": {
+      "all_unique_test_labels": 63,
+      "scored": 63,
+      "accepted": 44,
+      "accepted_errors": 3
+    },
+    "calibrated_fusion": {
+      "all_unique_test_labels": 63,
+      "scored": 63,
+      "accepted": 42,
+      "accepted_errors": 1
+    }
+  }
+}

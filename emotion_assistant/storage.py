@@ -7,11 +7,13 @@ import math
 import json
 from pathlib import Path
 import sqlite3
+import secrets
 import threading
 import uuid
 
 from .core import interval_duration, interval_union, utc_now
 from .personalization import FeedbackRecord, build_reference, comparison_key, matches_final_revision
+from .crossover import arm_for
 
 
 class Store:
@@ -82,6 +84,20 @@ class Store:
                 created_at TEXT NOT NULL, payload_json TEXT NOT NULL
             );
             CREATE INDEX IF NOT EXISTS feedback_session ON observation_feedback(session_id, reference_candidate);
+            CREATE TABLE IF NOT EXISTS trial_enrollments (
+                user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                mode TEXT NOT NULL, sequence TEXT, allocated INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY(user_id,mode)
+            );
+            CREATE TABLE IF NOT EXISTS trial_periods (
+                session_id TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+                period INTEGER NOT NULL CHECK(period IN (1,2)), active_seconds REAL
+            );
+            CREATE TABLE IF NOT EXISTS trial_ratings (
+                session_id TEXT NOT NULL REFERENCES trial_periods(session_id) ON DELETE CASCADE,
+                decision_id TEXT NOT NULL, wanted INTEGER NOT NULL CHECK(wanted IN (0,1)),
+                PRIMARY KEY(session_id,decision_id)
+            );
         """)
         # Enforce the same opt-in inside SQLite as well as in the Python writer.
         # This guards future code paths that accidentally bypass _safe_payload.
@@ -174,9 +190,199 @@ class Store:
         with self._lock, self._db:
             if self._db.execute("SELECT 1 FROM users WHERE id = ?", (user_id,)).fetchone() is None:
                 raise ValueError("profile does not exist")
-            self._db.execute("INSERT INTO sessions VALUES (?, ?, ?, NULL, ?, ?)",
-                             (session_id, user_id, utc_now(), self._json(consent), mode))
+            flags = dict(consent)
+            trial = flags.pop("crossover_trial", False) is True
+            self._db.execute(
+                "INSERT INTO sessions VALUES (?, ?, ?, NULL, ?, ?)",
+                (session_id, user_id, utc_now(), self._json(flags), mode),
+            )
+            if trial:
+                if flags.get("collection") is not True or mode not in ("real", "simulation"):
+                    raise ValueError("实验需本人明确同意采集并选择真实或模拟来源")
+                entry = self._db.execute(
+                    "SELECT sequence,allocated FROM trial_enrollments WHERE user_id=? AND mode=?",
+                    (user_id, mode),
+                ).fetchone()
+                if entry and (entry["sequence"] is None or entry["allocated"] >= 2):
+                    raise ValueError("该档案在此来源已退出或已分配两场实验；请取消实验勾选开始普通会话")
+                if not entry:
+                    self._db.execute(
+                        "INSERT INTO trial_enrollments VALUES (?,?,?,0)",
+                        (user_id, mode, secrets.choice(("AB", "BA"))),
+                    )
+                period = entry["allocated"] + 1 if entry else 1
+                self._db.execute("INSERT INTO trial_periods VALUES (?,?,NULL)", (session_id, period))
+                self._db.execute(
+                    "UPDATE trial_enrollments SET allocated=? WHERE user_id=? AND mode=?",
+                    (period, user_id, mode),
+                )
         return session_id
+
+    def trial_assignment(self, session_id):
+        with self._lock:
+            row = self._db.execute(
+                """SELECT p.period,e.sequence,p.active_seconds FROM trial_periods p
+                JOIN sessions s ON s.id=p.session_id JOIN trial_enrollments e USING(user_id,mode)
+                WHERE p.session_id=?""",
+                (session_id,),
+            ).fetchone()
+            if not row:
+                return None
+            return {
+                "sequence": row["sequence"],
+                "period": row["period"],
+                "condition": arm_for(row["sequence"], row["period"]),
+                "status": "assigned" if row["active_seconds"] is None else "complete",
+            }
+
+    def trial_status(self, user_id, mode):
+        with self._lock:
+            row = self._db.execute(
+                "SELECT * FROM trial_enrollments WHERE user_id=? AND mode=?", (user_id, mode)
+            ).fetchone()
+            if not row:
+                return {"status": "new", "next_period": 1}
+            if row["sequence"] is None:
+                return {"status": "withdrawn", "next_period": None}
+            n = row["allocated"]
+            finished = self._db.execute(
+                """SELECT count(*) FROM trial_periods p JOIN sessions s ON s.id=p.session_id
+                WHERE s.user_id=? AND s.mode=? AND p.active_seconds IS NOT NULL""",
+                (user_id, mode),
+            ).fetchone()[0]
+            return {
+                "status": ("next" if n == 1 else "complete" if finished == 2 else "incomplete"),
+                "next_period": 2 if n == 1 else None,
+                "allocated": n,
+                "completed": finished,
+                "incomplete_periods": n - finished,
+                "sequence": row["sequence"],
+            }
+
+    def withdraw_trial(self, user_id, mode):
+        with self._lock, self._db:
+            updated = self._db.execute(
+                """UPDATE trial_enrollments SET sequence=NULL, allocated=0
+                WHERE user_id=? AND mode=? AND sequence IS NOT NULL""",
+                (user_id, mode),
+            ).rowcount
+            self._db.execute(
+                """DELETE FROM trial_periods WHERE session_id IN
+                (SELECT id FROM sessions WHERE user_id=? AND mode=?)""",
+                (user_id, mode),
+            )
+            return bool(updated)
+
+    def rate_trial_prompt(self, session_id, decision_id, wanted):
+        with self._lock, self._db:
+            if not decision_id or type(wanted) is not bool:
+                return False
+            return bool(
+                self._db.execute(
+                    """INSERT OR IGNORE INTO trial_ratings
+                SELECT session_id,?,? FROM trial_periods WHERE session_id=? AND active_seconds IS NULL
+                AND EXISTS(SELECT 1 FROM events WHERE session_id=? AND kind='prompt_asked'
+                    AND json_extract(payload_json,'$.decision_id')=?)""",
+                    (decision_id, int(wanted), session_id, session_id, decision_id),
+                ).rowcount
+            )
+
+    def trial_periods(self, mode):
+        # Only the fields used by the statistical protocol; never read text, names, or raw observations.
+        with self._lock:
+            rows = self._db.execute(
+                """SELECT p.*,s.mode,s.user_id,e.sequence FROM trial_periods p
+                JOIN sessions s ON p.session_id=s.id JOIN trial_enrollments e USING(user_id,mode)
+                WHERE s.mode=? AND e.sequence IS NOT NULL ORDER BY s.user_id,p.period""",
+                (mode,),
+            ).fetchall()
+            result = []
+            for row in rows:
+                p = dict(row)
+                sid = p.pop("session_id")
+                p["condition"] = arm_for(p["sequence"], p["period"])
+                p["events"] = [
+                    (
+                        e[0],
+                        {
+                            "decision_id": e[1],
+                            "accepted": bool(e[2]) if e[2] is not None else None,
+                            "ranking_changed": bool(e[3]),
+                        },
+                    )
+                    for e in self._db.execute(
+                        """SELECT kind,json_extract(payload_json,'$.decision_id'),
+                    json_extract(payload_json,'$.accepted'),
+                    json_extract(payload_json,'$.shadow.ranking') != COALESCE(json_extract(payload_json,'$.baseline_ranking'),
+                    json_extract(payload_json,'$.ranking')) FROM events WHERE session_id=? AND kind IN
+                    ('prompt_asked','prompt_decision','intervention_confirmation','recommendation_offered') ORDER BY id""",
+                        (sid,),
+                    )
+                ]
+                intervals = [
+                    (r[0], r[1])
+                    for r in self._db.execute(
+                        """SELECT t_start,t_end FROM observations
+                    WHERE session_id=? AND modality IN ('visual','audio') AND valid=1
+                    AND json_extract(payload_json,'$.quality')>=0.2""",
+                        (sid,),
+                    )
+                ]
+                p["observed_seconds"] = interval_duration(intervals)
+                p["activities"] = [
+                    dict(a)
+                    for a in self._db.execute(
+                        """SELECT
+                    json_extract(payload_json,'$.activity') AS activity, json_extract(payload_json,'$.status') AS status,
+                    json_extract(payload_json,'$.pre') AS pre,json_extract(payload_json,'$.post') AS post,
+                    json_extract(payload_json,'$.followup.status') AS followup_status,
+                    json_extract(payload_json,'$.followup.distress') AS followup_distress
+                    FROM interventions WHERE session_id=?""",
+                        (sid,),
+                    )
+                ]
+                p["ratings"] = {
+                    r[0]: bool(r[1])
+                    for r in self._db.execute(
+                        "SELECT decision_id,wanted FROM trial_ratings WHERE session_id=?", (sid,)
+                    )
+                }
+                result.append(p)
+            return result
+
+    def trial_flow(self, mode):
+        with self._lock:
+            row = self._db.execute(
+                """SELECT COUNT(*) AS randomized, COUNT(*) FILTER(WHERE sequence IS NULL)
+                AS withdrawn,COALESCE(SUM(allocated),0) AS periods_allocated FROM trial_enrollments WHERE mode=?""",
+                (mode,),
+            ).fetchone()
+            return dict(row)
+
+    def analyze_trial(self, mode):
+        from .crossover import analyze
+
+        # One coherent snapshot, including paired outcome/withdrawal and followup revisions.
+        with self._lock:
+            self._db.execute("BEGIN")
+            try:
+                periods, flow = self.trial_periods(mode), self.trial_flow(mode)
+            finally:
+                self._db.rollback()
+        return analyze(periods, mode, flow)
+
+    @classmethod
+    def read_trial_report(cls, database, mode):
+        """Open an existing study database read-only (never create tables or run migrations)."""
+        uri = Path(database).resolve().as_uri() + "?mode=ro"
+        reader = cls.__new__(cls)
+        reader._lock = threading.RLock()
+        reader._db = sqlite3.connect(uri, uri=True)
+        reader._db.row_factory = sqlite3.Row
+        try:
+            return reader.analyze_trial(mode)
+        finally:
+            reader._db.close()
 
     def save_observation(self, session_id, observation):
         event_id = observation.get("event_id")
@@ -591,11 +797,14 @@ class Store:
             self._db.execute("INSERT INTO events(session_id,kind,created_at,payload_json) VALUES (?, ?, ?, ?)",
                              (session_id, kind, utc_now(), self._json(safe)))
 
-    def finish_session(self, session_id):
+    def finish_session(self, session_id, trial_active_seconds=None):
         with self._lock, self._db:
             self._session(session_id)
             self._db.execute("UPDATE sessions SET ended_at=COALESCE(ended_at, ?) WHERE id = ?",
                              (utc_now(), session_id))
+            if trial_active_seconds is not None:
+                self._db.execute("UPDATE trial_periods SET active_seconds=COALESCE(active_seconds,?) WHERE session_id=?",
+                                 (max(0.,float(trial_active_seconds)),session_id))
 
     def list_sessions(self, user_id=None) -> list[dict]:
         from .regulation import _discomfort

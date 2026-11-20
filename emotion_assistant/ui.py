@@ -31,6 +31,7 @@ from .ui_theme import APP_STYLE, COLORS, SPACE, TYPE, RADIUS
 from .ui_widgets import TrendChart, SignalDistribution, StepIndicator, ChartLegend
 from .regulation import ACTIVITIES as ACTIVITY_LIBRARY, NEEDS
 from .regulation_widgets import RecommendationCards, OutcomeCard
+from .trial_widgets import PromptTimingFeedback, TrialPage
 
 
 LABELS = {
@@ -379,6 +380,7 @@ class MainWindow(QMainWindow):
         self._activity_preferences = {}
         self._recommendation_user_name = None
         self._recommendation_mode = None
+        self._active_trial = None
         self.setWindowTitle("情绪线索 · 桌面观察助手")
         self.resize(1440, 920)
         self.setMinimumSize(1040, 700)
@@ -433,7 +435,7 @@ class MainWindow(QMainWindow):
         side_l.addWidget(caption)
         side_l.addSpacing(7)
         self.nav_buttons = []
-        for index, label in enumerate(("实时观察", "调节与复测", "历史记录", "使用说明")):
+        for index, label in enumerate(("实时观察", "调节与复测", "历史记录", "使用说明", "对照实验")):
             button = _button(f"0{index + 1}    {label}")
             button.setObjectName("navButton")
             button.setCheckable(True)
@@ -574,6 +576,9 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self._activity_page(), "调节与复测")
         self.tabs.addTab(self._history_page(), "历史记录")
         self.tabs.addTab(self._about_page(), "使用说明")
+        self.trial_page = TrialPage()
+        self.trial_page.reset_report(self.mode_combo.currentData())
+        self.tabs.addTab(self.trial_page, "对照实验")
         self.tabs.tabBar().hide()
         self.tabs.currentChanged.connect(self._on_page_changed)
         main_l.addWidget(self.tabs, 1)
@@ -611,13 +616,19 @@ class MainWindow(QMainWindow):
         titles = (("实时观察", "查看表情与语音线索，按自己的节奏暂停或调节。"),
                   ("调节与复测", "先确认自己的需要，再选择一次适合当下的活动。"),
                   ("历史记录", "回看每次观察与反馈，保留对自己有用的信息。"),
-                  ("使用说明", "了解观察方式、数据保存和你的自主选择。"))
+                  ("使用说明", "了解观察方式、数据保存和你的自主选择。"),
+                  ("对照实验", "自愿参加两场会话，比较不同安排下的提示体验和调节反馈。"))
         title, subtitle = titles[index]
         self.page_title.setText(title)
         self.page_subtitle.setText(subtitle)
         for i, button in enumerate(self.nav_buttons):
             button.setChecked(i == index)
+        self.start_button.setVisible(index != 4 and self.session_state not in ("running", "paused", "starting", "stopping", "stop_failed"))
         self._sync_action_hierarchy()
+        if index == 4:
+            self.settings_toggle.setChecked(False)
+            self._toggle_settings(False)
+            self._refresh_trial_context()
 
     def _sync_action_hierarchy(self):
         """Refactoring UI §2.8: emphasize the current task, not all actions."""
@@ -629,7 +640,7 @@ class MainWindow(QMainWindow):
                        and self.activity_current.get("save_status") not in ("pending", "failed"))
         personal_page = (self.tabs.currentIndex() == 1 and hasattr(self, "regulation_tabs")
                          and self.regulation_tabs.currentIndex() != 0)
-        roles = ((self.start_button, "ghost" if history_page or personal_page else "primary"),
+        roles = ((self.start_button, "ghost" if history_page or personal_page or self.tabs.currentIndex() == 4 else "primary"),
                  (self.history_export, "primary" if history_page and self._selected_session() else "secondary"),
                  (self.retry_save_button, "primary" if self.activity_current.get("save_status") == "failed" else "secondary"),
                  (self.request_button, "primary" if can_request else "ghost"),
@@ -859,6 +870,8 @@ class MainWindow(QMainWindow):
         self.reject_button = _button("暂时不需要")
         confirm_row.addWidget(self.accept_button)
         confirm_row.addWidget(self.reject_button)
+        self.trial_prompt_feedback = PromptTimingFeedback()
+        setup_l.addWidget(self.trial_prompt_feedback)
         setup_l.addWidget(self.confirm_widget)
         self.activity_summary = QLabel()
         self.activity_summary.setObjectName("infoStrip")
@@ -1370,6 +1383,14 @@ class MainWindow(QMainWindow):
         self.camera_combo.currentTextChanged.connect(self.camera_combo.setToolTip)
         self.mic_combo.currentTextChanged.connect(self.mic_combo.setToolTip)
         self.user_name.textChanged.connect(self._set_session_controls)
+        self.trial_page.consent.toggled.connect(self._set_session_controls)
+        self.trial_page.prepare.connect(self._prepare_trial)
+        self.trial_page.withdraw.connect(self._withdraw_trial)
+        self.trial_page.refresh.connect(self._show_trial_report)
+        self.trial_page.export.connect(self._export_trial_report)
+        self.trial_prompt_feedback.rated.connect(self._rate_trial_prompt)
+        self.user_name.textChanged.connect(self._trial_identity_changed)
+        self.mode_combo.currentIndexChanged.connect(self._trial_identity_changed)
         self.request_button.clicked.connect(self._request_activity)
         if hasattr(self.controller, "set_prompt_availability"):
             self.prompt_availability.currentIndexChanged.connect(
@@ -1418,6 +1439,86 @@ class MainWindow(QMainWindow):
         self.mode_combo.currentIndexChanged.connect(self._invalidate_personal_view)
         self.mode_combo.currentIndexChanged.connect(self._refresh_recommendations)
 
+    def _refresh_trial_context(self):
+        name, mode = self.user_name.text().strip(), self.mode_combo.currentData()
+        active = self.session_state in ("running", "paused", "starting", "stopping", "stop_failed")
+        try:
+            state = self.controller.trial_status(name, mode) if name and hasattr(self.controller, "trial_status") else {}
+        except Exception as exc:
+            self.trial_page.consent.setChecked(False)
+            self.trial_page.consent.setEnabled(False)
+            self.trial_page.withdraw_button.hide()
+            self.trial_page.setup_button.hide()
+            self.trial_page.progress.setText("暂时无法读取实验进度")
+            self.trial_page.step.setText(str(exc))
+            return
+        self.trial_page.set_context(name, mode, state, active=active, enrolled=self._active_trial if active else None)
+
+    def _trial_identity_changed(self, *_args):
+        self.trial_page.consent.setChecked(False)
+        self.trial_page.reset_report(self.mode_combo.currentData())
+        if self.tabs.currentIndex() == 4:
+            self._refresh_trial_context()
+
+    def _prepare_trial(self):
+        if self.user_name.text().strip() in ("", "默认用户"):
+            self.settings_toggle.setChecked(True)
+            self._toggle_settings(True)
+            self.user_name.setFocus()
+            self.user_name.selectAll()
+            return
+        if not self.trial_page.consent.isChecked():
+            self.trial_page.consent.setFocus()
+            self.statusBar().showMessage("参加实验需先勾选本场实验授权；日常会话可直接从「实时观察」开始。")
+            return
+        self._show_session_setup()
+        self.consent.setFocus()
+        self.statusBar().showMessage("本场已选择对照实验。请检查设备并同意本次记录，再点击「开始实验会话」。")
+
+    def _rate_trial_prompt(self, wanted):
+        if self.controller.rate_trial_prompt(wanted):
+            self.trial_prompt_feedback.submitted(wanted)
+        else:
+            self.statusBar().showMessage("这条提示当前无法保存评价。")
+
+    def _withdraw_trial(self):
+        answer = QMessageBox.question(
+            self, "退出对照实验",
+            "将这个档案在当前来源下的两场记录从实验统计中移除，不能恢复。普通会话记录保留，可在「历史记录」中单独删除。确定退出吗？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        if self.controller.withdraw_trial(self.user_name.text().strip(), self.mode_combo.currentData()):
+            self._active_trial = None
+            self.trial_page.consent.setChecked(False)
+            self.trial_prompt_feedback.hide()
+            self.trial_page.reset_report(self.mode_combo.currentData())
+            self._refresh_trial_context()
+            self._set_session_controls()
+            self.statusBar().showMessage("已退出对照实验。")
+        else:
+            self.statusBar().showMessage("退出未完成，请刷新进度并重试。")
+
+    def _show_trial_report(self):
+        try:
+            data = self.controller.trial_results(self.mode_combo.currentData())
+            self.trial_page.show_report(data)
+        except Exception as exc:
+            self.trial_page.results.hide()
+            self.trial_page.summary.setText(f"无法读取实验汇总：{exc}")
+
+    def _export_trial_report(self):
+        mode = self.mode_combo.currentData()
+        path, _ = QFileDialog.getSaveFileName(self, "导出当前来源的本机实验汇总",
+                                              f"crossover-{mode}.json", "JSON (*.json)")
+        if path:
+            try:
+                self.controller.export_trial_results(path, mode=mode)
+            except Exception as exc:
+                self.statusBar().showMessage(f"实验汇总导出失败：{exc}")
+            else:
+                self.statusBar().showMessage(f"实验汇总已导出至：{path}")
+
     def _set_session_controls(self, *_args) -> None:
         active = self.session_state in ("running", "paused", "starting", "stopping", "stop_failed")
         for widget in (self.user_name, self.mode_combo, self.camera_combo, self.mic_combo,
@@ -1428,7 +1529,7 @@ class MainWindow(QMainWindow):
                      or self.mic_combo.currentData() is not None)
         self.start_button.setEnabled(not active and self.consent.isChecked() and (simulated or has_input)
                                     and self.activity_current.get("save_status") not in ("pending", "failed"))
-        self.start_button.setVisible(not active)
+        self.start_button.setVisible(not active and self.tabs.currentIndex() != 4)
         self.pause_button.setVisible(active)
         self.stop_button.setVisible(active)
         self.pause_button.setEnabled(self.session_state in ("running", "paused"))
@@ -1453,6 +1554,12 @@ class MainWindow(QMainWindow):
             self.start_button.setToolTip("开始本次会话")
         source = "模拟回放 · 非实测" if simulated else "真实设备采集"
         summary = f"{self.user_name.text().strip() or '个人档案'}  /  {source}"
+        preparing = self.trial_page.consent.isChecked()
+        self.start_button.setText("开始实验会话" if preparing else "开始会话")
+        if active and self._active_trial:
+            summary += f"  /  实验第 {self._active_trial['period']} 场"
+        elif not active and preparing:
+            summary += "  /  已选择对照实验"
         self.session_summary.setText(summary)
         self.session_summary.setToolTip(summary)
         self.transcript.setVisible(self.transcript_consent.isChecked())
@@ -1498,6 +1605,7 @@ class MainWindow(QMainWindow):
             self.mic_combo.currentData(),
             {"collection": self.consent.isChecked(), "transcript": self.transcript_consent.isChecked(),
              "personal_learning": self.learning_consent.isChecked(), "raw_media": False,
+             "crossover_trial": self.trial_page.consent.isChecked(),
              "fusion_strategy": self.fusion_strategy.currentData(),
              "device_names": {"visual": self.camera_combo.currentText(), "audio": self.mic_combo.currentText()}},
             mode=mode,
@@ -1510,6 +1618,13 @@ class MainWindow(QMainWindow):
         self._clear_context_hint()
         previous_id = self.session_id
         self.session_state = str(result.get("state", self.session_state))
+        trial = result.get("trial", getattr(self.controller, "trial", None))
+        self._active_trial = (trial if self.session_state in ("starting", "running", "paused", "stopping", "stop_failed")
+                              and trial and trial.get("status") != "withdrawn" else None)
+        if self.session_state in ("running", "stopped"):
+            self.trial_page.consent.setChecked(False)
+        if not self._active_trial:
+            self.trial_prompt_feedback.hide()
         self.session_id = result.get("session_id", self.session_id)
         self._session_mode = result.get("mode", self._session_mode)
         mode_index = self.mode_combo.findData(self._session_mode)
@@ -1563,6 +1678,8 @@ class MainWindow(QMainWindow):
             self.helpfulness_combo.setCurrentIndex(0)
             self.activity_result.setText("活动后请以自己的感受为准。缺少复测时将记录为无法评价。")
         self._set_session_controls()
+        if self.tabs.currentIndex() == 4:
+            self._refresh_trial_context()
 
     def _on_devices(self, devices: dict) -> None:
         current_cam = self.camera_combo.currentData()
@@ -2118,6 +2235,11 @@ class MainWindow(QMainWindow):
         if self.activity_state != "running" or old_state != "running":
             self._retest_open = False
         state = self.activity_state
+        is_auto_trial = (self._active_trial is not None and state == "confirming"
+                         and result.get("source") in ("sustained_observation", "clarify_conflict"))
+        if is_auto_trial and old_state != "confirming":
+            self.trial_prompt_feedback.reset()
+        self.trial_prompt_feedback.setVisible(is_auto_trial)
         labels = {
             "observing": "目前没有活动。你可以随时主动请求，不需要模型批准。",
             "confirming": "是否需要一次短时调整？是否接受、选择什么活动，都由你决定。",

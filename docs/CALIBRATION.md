@@ -30,6 +30,8 @@
 
 输出的 `evaluation.json` 含总体和分模态组合的固定四类 Macro-F1、对数损失、多类 Brier 分数、可靠性分箱、按置信阈值计算的覆盖率与错误率，以及实际策略的接受覆盖率和错误率。`reliability.svg` 将测试集中各箱的平均最高类别置信度与其中的实际正确比例绘制在同一张图上。遇到接受集合为空时，错误率记录为 null。
 
+四种识别方案在真实同步音视频和独立观察者标签上的测试，另见[识别对照实验](RECOGNITION_EXPERIMENT.md)。该实验报告包含按演员重采样的区间、分母和相同覆盖下的错误数。
+
 ## 在桌面端启用
 
 审核演算结果后，将输出的 `calibration.json` 复制到本地 `data/calibration.json`，在 `data/fusion-policy.json` 写入下列配置并开始新会话。
