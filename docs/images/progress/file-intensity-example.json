@@ -1,0 +1,47 @@
+{
+  "source": "附件1英文原视频，本地文件入口、实际自动转写与程序窗口；本次报告编排沿用此前真实运行截图。",
+  "viewport": "原始 Qt 窗口右侧检测结果，省去左侧人物、文件名和下方转写原文。",
+  "original_size": [
+    1150,
+    800
+  ],
+  "crop_xywh": [
+    770,
+    165,
+    347,
+    450
+  ],
+  "original_capture_mtime_local": "2026-11-24T00:02:30.490601+08:00",
+  "source_image_sha256": "6d7f7d3bc5a4d3a2d4f3ebb5eb4586433a0bea2faa4aca8a484f920edd261d78",
+  "source_export_sha256": "857c15df30fdb37c6481ce763ac9d6c74df7cc0ef5c39cee9fd751e118dfddd0",
+  "figure_sha256": "a964ecb0edcefedd85029fff8eb4f4e45ecbc35c08ae901feb492608ee5ccbc1",
+  "observed_at": "2026-11-23T16:02:26.935+00:00",
+  "interval": [
+    0.0,
+    5.399
+  ],
+  "decision": "estimate",
+  "used_modalities": [
+    "text"
+  ],
+  "main_label": "positive",
+  "main_scores": {
+    "negative": 0.10361833707401415,
+    "neutral": 0.28278092160194446,
+    "positive": 0.6136007413240414
+  },
+  "candidate_label": "positive",
+  "candidate_scores": {
+    "negative": 0.13499596043638945,
+    "neutral": 0.3479679870142838,
+    "positive": 0.5170360525493267
+  },
+  "candidate_weights": {
+    "audio": 0.08380168712932773,
+    "visual": 0.09859416656152001,
+    "text": 0.8176041463091522
+  },
+  "signed_intensity": 0.5730864182308066,
+  "intensity_version": "en-intensity-tfidf-ridge-v1-19bb2657c1f39159",
+  "intensity_observed_seconds": 5.399
+}

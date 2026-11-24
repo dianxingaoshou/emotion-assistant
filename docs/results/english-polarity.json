@@ -1,0 +1,306 @@
+{
+  "protocol": "attachment2-english-text-v1",
+  "workbook_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+  "source": "E题 附件2-数据集特征文件/label.xlsx; text and official annotation, video_id, clip_id and mode only",
+  "model_version": "competition-en-polarity-tfidf-bd32f1fcf8b18d64",
+  "artifact_uncompressed_sha256": "59729a29dfbc7c31bd594a0b4ad564bdd3274bc341912e621f68953bf65a9c73",
+  "method": "Lowercase English words and adjacent pairs, min train document frequency 3, up to 5000 terms, sublinear TF, smoothed IDF and L2 normalization. Class-balanced three-way multinomial logistic regression, C=4. Scores are softmax model outputs. No feature, IDF, coefficient or threshold uses validation or test.",
+  "abstention": "Need >=80% ASCII English alphabetic characters, >=2 tokens, >=25% known tokens, >=1 feature with learned class coefficient spread >=0.35 and maximum score >=0.40. All gates fixed before evaluation.",
+  "scope": "Sentiment expressed by English transcript. Local standalone text or separately opted-in transcript; no raw text is bundled. No Chinese classifier; no inference of the speaker's own state.",
+  "n_terms": 5000,
+  "class_order": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "train_majority": "positive",
+  "counts": {
+    "train": {
+      "positive": 1670,
+      "negative": 967,
+      "neutral": 758
+    },
+    "valid": {
+      "positive": 338,
+      "neutral": 184,
+      "negative": 206
+    },
+    "test": {
+      "positive": 362,
+      "negative": 207,
+      "neutral": 158
+    }
+  },
+  "video_overlap_counts": {
+    "train_valid": 0,
+    "train_test": 0,
+    "valid_test": 0
+  },
+  "normalized_text_overlap_distinct": {
+    "train_valid": 2,
+    "train_test": 0,
+    "valid_test": 0
+  },
+  "repeated_normalized_text_within_split": {
+    "train": 13,
+    "valid": 0,
+    "test": 0
+  },
+  "official": {
+    "valid": {
+      "n": 728,
+      "videos": 239,
+      "coverage": 0.9587912087912088,
+      "confusion_rows_truth_columns_negative_neutral_positive_abstain": [
+        [
+          110,
+          38,
+          48,
+          10
+        ],
+        [
+          24,
+          57,
+          89,
+          14
+        ],
+        [
+          69,
+          59,
+          204,
+          6
+        ]
+      ],
+      "including_abstention_as_miss": {
+        "n": 728,
+        "accuracy": 0.5096153846153846,
+        "macro_f1": 0.49201968981745575,
+        "per_class_recall": {
+          "negative": 0.5339805825242718,
+          "neutral": 0.30978260869565216,
+          "positive": 0.6035502958579881
+        },
+        "per_class_f1": {
+          "negative": 0.5378973105134475,
+          "neutral": 0.33727810650887574,
+          "positive": 0.6008836524300442
+        }
+      },
+      "conditional_on_score": {
+        "n": 698,
+        "accuracy": 0.5315186246418339,
+        "macro_f1": 0.5031570037305029,
+        "per_class_recall": {
+          "negative": 0.5612244897959183,
+          "neutral": 0.3352941176470588,
+          "positive": 0.6144578313253012
+        },
+        "per_class_f1": {
+          "negative": 0.5513784461152882,
+          "neutral": 0.35185185185185186,
+          "positive": 0.6062407132243685
+        }
+      },
+      "majority_all": {
+        "n": 728,
+        "accuracy": 0.4642857142857143,
+        "macro_f1": 0.21138211382113822,
+        "per_class_recall": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 1.0
+        },
+        "per_class_f1": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 0.6341463414634146
+        }
+      },
+      "majority_on_model_scored": {
+        "n": 698,
+        "accuracy": 0.47564469914040114,
+        "macro_f1": 0.21488673139158576,
+        "per_class_recall": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 1.0
+        },
+        "per_class_f1": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 0.6446601941747573
+        }
+      }
+    },
+    "test": {
+      "n": 727,
+      "videos": 381,
+      "coverage": 0.9711141678129298,
+      "confusion_rows_truth_columns_negative_neutral_positive_abstain": [
+        [
+          116,
+          24,
+          58,
+          9
+        ],
+        [
+          31,
+          47,
+          77,
+          3
+        ],
+        [
+          56,
+          77,
+          220,
+          9
+        ]
+      ],
+      "including_abstention_as_miss": {
+        "n": 727,
+        "accuracy": 0.5268225584594223,
+        "macro_f1": 0.4955704207956839,
+        "per_class_recall": {
+          "negative": 0.5603864734299517,
+          "neutral": 0.2974683544303797,
+          "positive": 0.6077348066298343
+        },
+        "per_class_f1": {
+          "negative": 0.5658536585365853,
+          "neutral": 0.30718954248366015,
+          "positive": 0.6136680613668062
+        }
+      },
+      "conditional_on_score": {
+        "n": 706,
+        "accuracy": 0.5424929178470255,
+        "macro_f1": 0.5034178552053609,
+        "per_class_recall": {
+          "negative": 0.5858585858585859,
+          "neutral": 0.3032258064516129,
+          "positive": 0.623229461756374
+        },
+        "per_class_f1": {
+          "negative": 0.5785536159600998,
+          "neutral": 0.3102310231023102,
+          "positive": 0.6214689265536724
+        }
+      },
+      "majority_all": {
+        "n": 727,
+        "accuracy": 0.49793672627235214,
+        "macro_f1": 0.22161003979185798,
+        "per_class_recall": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 1.0
+        },
+        "per_class_f1": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 0.6648301193755739
+        }
+      },
+      "majority_on_model_scored": {
+        "n": 706,
+        "accuracy": 0.5,
+        "macro_f1": 0.2222222222222222,
+        "per_class_recall": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 1.0
+        },
+        "per_class_f1": {
+          "negative": 0.0,
+          "neutral": 0.0,
+          "positive": 0.6666666666666666
+        }
+      }
+    }
+  },
+  "test_excluding_text_or_video_seen_in_train_or_valid": {
+    "n": 727,
+    "videos": 381,
+    "coverage": 0.9711141678129298,
+    "confusion_rows_truth_columns_negative_neutral_positive_abstain": [
+      [
+        116,
+        24,
+        58,
+        9
+      ],
+      [
+        31,
+        47,
+        77,
+        3
+      ],
+      [
+        56,
+        77,
+        220,
+        9
+      ]
+    ],
+    "including_abstention_as_miss": {
+      "n": 727,
+      "accuracy": 0.5268225584594223,
+      "macro_f1": 0.4955704207956839,
+      "per_class_recall": {
+        "negative": 0.5603864734299517,
+        "neutral": 0.2974683544303797,
+        "positive": 0.6077348066298343
+      },
+      "per_class_f1": {
+        "negative": 0.5658536585365853,
+        "neutral": 0.30718954248366015,
+        "positive": 0.6136680613668062
+      }
+    },
+    "conditional_on_score": {
+      "n": 706,
+      "accuracy": 0.5424929178470255,
+      "macro_f1": 0.5034178552053609,
+      "per_class_recall": {
+        "negative": 0.5858585858585859,
+        "neutral": 0.3032258064516129,
+        "positive": 0.623229461756374
+      },
+      "per_class_f1": {
+        "negative": 0.5785536159600998,
+        "neutral": 0.3102310231023102,
+        "positive": 0.6214689265536724
+      }
+    },
+    "majority_all": {
+      "n": 727,
+      "accuracy": 0.49793672627235214,
+      "macro_f1": 0.22161003979185798,
+      "per_class_recall": {
+        "negative": 0.0,
+        "neutral": 0.0,
+        "positive": 1.0
+      },
+      "per_class_f1": {
+        "negative": 0.0,
+        "neutral": 0.0,
+        "positive": 0.6648301193755739
+      }
+    },
+    "majority_on_model_scored": {
+      "n": 706,
+      "accuracy": 0.5,
+      "macro_f1": 0.2222222222222222,
+      "per_class_recall": {
+        "negative": 0.0,
+        "neutral": 0.0,
+        "positive": 1.0
+      },
+      "per_class_f1": {
+        "negative": 0.0,
+        "neutral": 0.0,
+        "positive": 0.6666666666666666
+      }
+    }
+  }
+}

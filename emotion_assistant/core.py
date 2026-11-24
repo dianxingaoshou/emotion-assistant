@@ -115,9 +115,9 @@ class FusionEngine:
         issue = None
         try:
             options = read_json((directory / "fusion-policy.json").read_text(encoding="utf-8-sig"))
-            settings = FusionConfig(**options)
+            settings = FusionConfig(**{"adapt_single_modality": True, **options})
         except FileNotFoundError:
-            settings = FusionConfig()
+            settings = FusionConfig(adapt_single_modality=True)
         except (TypeError, ValueError, OSError):
             settings = FusionConfig()
             issue = "invalid_policy_configuration"

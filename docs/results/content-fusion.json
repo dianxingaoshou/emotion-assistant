@@ -1,0 +1,2574 @@
+{
+  "protocol": "aligned-utterance-content-audit-v1",
+  "model": {
+    "model_version": "aligned-utterance-polarity-v1",
+    "av_cap": 0.25,
+    "policy": "text_first",
+    "english_classifier_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+    "development_source_ids": [
+      "077cda22a6c66670",
+      "07f6a3cafd17df51",
+      "205b61599cf7a208",
+      "5b37fd250c43dca7",
+      "5eb32a525abb1355",
+      "61632c1f4d934b25",
+      "64dd6be6fc28e559",
+      "663ab5b94a9aad12",
+      "92ce8477bd782a02",
+      "936bbd43ecddb01d",
+      "9858a6dd676a3e02",
+      "9cac345300acd257",
+      "b3e1adc30a732cf7",
+      "c02cc77a3deccdb7",
+      "c5a823dbc758375d",
+      "d242d31ee4bc4c88",
+      "d689db97e63aca21",
+      "e1d0f50da03949f6"
+    ],
+    "surrogate_text_model": "competition-en-polarity-tfidf-2773dcaf2b5e4e72",
+    "rule": "Select blend only for source-balanced development macro-F1 improvement >= .01 with no accuracy or coverage loss."
+  },
+  "features_sha256": "7440c10e3dc3c9cfeb1d3995e24e73455a3349489f7e6583936f0cd905a3c58b",
+  "feature_metadata": {
+    "protocol": "content-features-v1",
+    "runtime": {
+      "fusion": {
+        "strategy": "quality_v2",
+        "min_quality": 0.2,
+        "visual_weight": 1.0,
+        "audio_weight": 1.0,
+        "conflict_js_threshold": 0.18,
+        "conflict_dominance": 0.6,
+        "opposite_threshold": 0.5,
+        "mapping_version": "canonical-emotieff-emotion2vec-v1",
+        "version": "aligned-cue-policy-v1",
+        "adapt_single_modality": true,
+        "calibration_version": null,
+        "calibration_load_status": "unfitted",
+        "configuration_issue": null,
+        "single_cue_version": "7591b2a854c2dbb38c74f922acd07c11485b128adbe7d5f3aab90f1df7cf1393",
+        "baseline_version": null
+      },
+      "model_versions": {
+        "face": "YuNet-2023mar@48b10fa505ae",
+        "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+        "audio": "emotion2vec_plus_seed@7be9a30d52bd"
+      }
+    },
+    "asr": "SenseVoiceSmall@3847d57b6bdf",
+    "text_artifact_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+    "surrogate_text_model": "competition-en-polarity-tfidf-2773dcaf2b5e4e72",
+    "surrogate_train_clips": 3374,
+    "surrogate_train_sources": 1512,
+    "surrogate_excludes_raw_sources": 37,
+    "official_split_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+    "input_code_sha256": {
+      "file_tracks.py": "9b218cce3708680a0ad755e0d9d87f8ed369dc56978b072732cbaeb3cc860cb8",
+      "models.py": "b0a047863a34978a9eb593fa79680b44f6224013e84d565f607340a6feab8b85",
+      "english_polarity.py": "fbaa2538a5859662f776616bc24f5d4eeb668e1308371618b9abea515c2844d0",
+      "core.py": "9752a96286db43f02572a3765c9ad3e3ecc38569c502a65c6bdfa22135e813be",
+      "fusion_policy.py": "c4368521f899c0707cdce0c539c851c262f59ece0f1549a3e08d95c13ff2bd1f"
+    },
+    "holdout_reference_texts_repeated_in_base_train_valid": 0,
+    "timeline_code_sha256": "9f09cd8c285a678f3da4f803eb33cd3f813cb1ef543bc832c0f370c677bb903c",
+    "output_sha256": "7440c10e3dc3c9cfeb1d3995e24e73455a3349489f7e6583936f0cd905a3c58b",
+    "partitions": {
+      "development": {
+        "clips": 57,
+        "sources": 18
+      },
+      "holdout": {
+        "clips": 43,
+        "sources": 19
+      }
+    }
+  },
+  "class_order": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "target": "Official positive/neutral/negative expressed sentiment of the entire clip, based on actual ASR utterance timelines. No individual-window ground truth or reference transcripts as inputs.",
+  "splits": "57 clips, 18 base-train/validation-overlapping sources form development only. Development text is scored by a shadow base trained without any of the 37 attachment-1 source IDs and normalized reference duplicates. 43 clips from 19 other sources are held out from both policy selection and frozen English base train/validation. This cohort was previously assessed for other systems and is not a newly collected blind cohort.",
+  "candidate": "Linear late fusion on aligned utterances. Reject dominant unmapped or invalid A/V data, renormalize known mass; each usable cue adds <=12.5% auxiliary weight scaled by signal quality, coverage and mapped mass. Text required for an endorsed semantic label. Disagreement is reported. Aggregate by actual nonoverlapping duration on text-supported scored intervals, abstain below .40.",
+  "metrics": "Accuracy and three-class macro-F1 include abstentions as misses; conditional accuracy and coverage reported separately. Split selection weights every source equally. Holdout result is clip-weighted. Masks rerun content fusion after omitting the indicated extracted channels; audio removal preserves cached ASR only to simulate a provided transcript. A/V proxy is an exploratory semantic comparison, never an endorsed interpretation of someone's subjective mood.",
+  "selection": {
+    "development_source_balanced_text": {
+      "clips": 57,
+      "sources": 18,
+      "coverage": 0.9314814814814816,
+      "accuracy_all": 0.6260582010582012,
+      "accuracy_scored": 0.6721101959670549,
+      "macro_f1_all": 0.596810228700624,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          2.5,
+          0.75,
+          0.9857142857142855,
+          0.0
+        ],
+        [
+          1.45,
+          1.7,
+          1.6928571428571426,
+          0.4
+        ],
+        [
+          0.14285714285714285,
+          0.47619047619047616,
+          7.069047619047618,
+          0.8333333333333333
+        ]
+      ]
+    },
+    "development_source_balanced_candidate": {
+      "clips": 57,
+      "sources": 18,
+      "coverage": 0.9249999999999999,
+      "accuracy_all": 0.5705026455026455,
+      "accuracy_scored": 0.6167596167596168,
+      "macro_f1_all": 0.561426124233635,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          2.25,
+          0.75,
+          0.9857142857142855,
+          0.25
+        ],
+        [
+          1.25,
+          1.95,
+          1.4428571428571426,
+          0.6000000000000001
+        ],
+        [
+          0.14285714285714285,
+          1.8095238095238095,
+          6.069047619047618,
+          0.5
+        ]
+      ]
+    },
+    "development_clip_weighted": {
+      "av_proxy": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 0.9122807017543859,
+        "accuracy_all": 0.2807017543859649,
+        "accuracy_scored": 0.3076923076923077,
+        "macro_f1_all": 0.25614754098360654,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            2.0,
+            8.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            12.0,
+            0.0,
+            3.0
+          ],
+          [
+            2.0,
+            25.0,
+            2.0,
+            1.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 0.9122807017543859,
+        "accuracy_all": 0.2807017543859649,
+        "accuracy_scored": 0.3076923076923077,
+        "macro_f1_all": 0.25614754098360654,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            2.0,
+            8.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            12.0,
+            0.0,
+            3.0
+          ],
+          [
+            2.0,
+            25.0,
+            2.0,
+            1.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 0.9298245614035088,
+        "accuracy_all": 0.5614035087719298,
+        "accuracy_scored": 0.6037735849056604,
+        "macro_f1_all": 0.5088141025641025,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            5.0,
+            2.0,
+            4.0,
+            0.0
+          ],
+          [
+            3.0,
+            4.0,
+            7.0,
+            2.0
+          ],
+          [
+            1.0,
+            4.0,
+            23.0,
+            2.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 0.9122807017543859,
+        "accuracy_all": 0.543859649122807,
+        "accuracy_scored": 0.5961538461538461,
+        "macro_f1_all": 0.4996498166687266,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            4.0,
+            2.0,
+            4.0,
+            1.0
+          ],
+          [
+            2.0,
+            5.0,
+            6.0,
+            3.0
+          ],
+          [
+            1.0,
+            6.0,
+            22.0,
+            1.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 0.9298245614035088,
+        "accuracy_all": 0.5614035087719298,
+        "accuracy_scored": 0.6037735849056604,
+        "macro_f1_all": 0.5088141025641025,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            5.0,
+            2.0,
+            4.0,
+            0.0
+          ],
+          [
+            3.0,
+            4.0,
+            7.0,
+            2.0
+          ],
+          [
+            1.0,
+            4.0,
+            23.0,
+            2.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 57,
+        "sources": 18,
+        "coverage": 1.0,
+        "accuracy_all": 0.5263157894736842,
+        "accuracy_scored": 0.5263157894736842,
+        "macro_f1_all": 0.2298850574712644,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            11.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            16.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            30.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 1,
+        "joint_losses": 2,
+        "same_correctness": 54,
+        "accuracy_difference_95pct_source_bootstrap": [
+          -0.0862256371814093,
+          0.04
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 25,
+        "joint_losses": 10,
+        "same_correctness": 22,
+        "accuracy_difference_95pct_source_bootstrap": [
+          -0.022234848484848482,
+          0.5277908805031447
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 51,
+        "text": 0.5371792316239685,
+        "joint_candidate": 0.542883579649373
+      }
+    }
+  },
+  "holdout": {
+    "av_proxy": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 0.9534883720930233,
+      "accuracy_all": 0.2558139534883721,
+      "accuracy_scored": 0.2682926829268293,
+      "macro_f1_all": 0.1940333568240545,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          7.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          6.0,
+          1.0,
+          2.0
+        ],
+        [
+          1.0,
+          21.0,
+          5.0,
+          0.0
+        ]
+      ]
+    },
+    "av_during_text": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 0.8837209302325582,
+      "accuracy_all": 0.23255813953488372,
+      "accuracy_scored": 0.2631578947368421,
+      "macro_f1_all": 0.18125960061443933,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          6.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          6.0,
+          0.0,
+          3.0
+        ],
+        [
+          1.0,
+          21.0,
+          4.0,
+          1.0
+        ]
+      ]
+    },
+    "text": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 0.9069767441860465,
+      "accuracy_all": 0.4418604651162791,
+      "accuracy_scored": 0.48717948717948717,
+      "macro_f1_all": 0.30860771981748675,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          1.0,
+          5.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          4.0,
+          3.0
+        ],
+        [
+          3.0,
+          6.0,
+          17.0,
+          1.0
+        ]
+      ]
+    },
+    "joint_candidate": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 0.7906976744186046,
+      "accuracy_all": 0.4186046511627907,
+      "accuracy_scored": 0.5294117647058824,
+      "macro_f1_all": 0.3213907785336357,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          3.0,
+          4.0
+        ],
+        [
+          1.0,
+          6.0,
+          16.0,
+          4.0
+        ]
+      ]
+    },
+    "deployed": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 0.9069767441860465,
+      "accuracy_all": 0.4418604651162791,
+      "accuracy_scored": 0.48717948717948717,
+      "macro_f1_all": 0.30860771981748675,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          1.0,
+          5.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          4.0,
+          3.0
+        ],
+        [
+          3.0,
+          6.0,
+          17.0,
+          1.0
+        ]
+      ]
+    },
+    "train_majority": {
+      "clips": 43,
+      "sources": 19,
+      "coverage": 1.0,
+      "accuracy_all": 0.627906976744186,
+      "accuracy_scored": 0.627906976744186,
+      "macro_f1_all": 0.2571428571428572,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          0.0,
+          7.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          27.0,
+          0.0
+        ]
+      ]
+    },
+    "paired_candidate_vs_text": {
+      "joint_wins": 0,
+      "joint_losses": 1,
+      "same_correctness": 42,
+      "accuracy_difference_95pct_source_bootstrap": [
+        -0.08333333333333333,
+        0.0
+      ]
+    },
+    "paired_candidate_vs_av_proxy": {
+      "joint_wins": 14,
+      "joint_losses": 7,
+      "same_correctness": 22,
+      "accuracy_difference_95pct_source_bootstrap": [
+        -0.05,
+        0.40912004662004675
+      ]
+    },
+    "paired_brier_on_common_scored": {
+      "n": 34,
+      "text": 0.6346860030912352,
+      "joint_candidate": 0.6485553461346365
+    }
+  },
+  "holdout_natively_three_channels_in_same_window": {
+    "av_proxy": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 1.0,
+      "accuracy_all": 0.29411764705882354,
+      "accuracy_scored": 0.29411764705882354,
+      "macro_f1_all": 0.20833333333333334,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          10.0,
+          3.0,
+          0.0
+        ]
+      ]
+    },
+    "av_during_text": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 1.0,
+      "accuracy_all": 0.29411764705882354,
+      "accuracy_scored": 0.29411764705882354,
+      "macro_f1_all": 0.20833333333333334,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          10.0,
+          3.0,
+          0.0
+        ]
+      ]
+    },
+    "text": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 0.9411764705882353,
+      "accuracy_all": 0.7058823529411765,
+      "accuracy_scored": 0.75,
+      "macro_f1_all": 0.5777777777777778,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          1.0,
+          10.0,
+          0.0
+        ]
+      ]
+    },
+    "joint_candidate": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 0.8235294117647058,
+      "accuracy_all": 0.7058823529411765,
+      "accuracy_scored": 0.8571428571428571,
+      "macro_f1_all": 0.6454106280193237,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          10.0,
+          2.0
+        ]
+      ]
+    },
+    "deployed": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 0.9411764705882353,
+      "accuracy_all": 0.7058823529411765,
+      "accuracy_scored": 0.75,
+      "macro_f1_all": 0.5777777777777778,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          1.0,
+          10.0,
+          0.0
+        ]
+      ]
+    },
+    "train_majority": {
+      "clips": 17,
+      "sources": 13,
+      "coverage": 1.0,
+      "accuracy_all": 0.7647058823529411,
+      "accuracy_scored": 0.7647058823529411,
+      "macro_f1_all": 0.2888888888888889,
+      "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+        [
+          0.0,
+          0.0,
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          13.0,
+          0.0
+        ]
+      ]
+    },
+    "paired_candidate_vs_text": {
+      "joint_wins": 0,
+      "joint_losses": 0,
+      "same_correctness": 17,
+      "accuracy_difference_95pct_source_bootstrap": [
+        0.0,
+        0.0
+      ]
+    },
+    "paired_candidate_vs_av_proxy": {
+      "joint_wins": 8,
+      "joint_losses": 1,
+      "same_correctness": 8,
+      "accuracy_difference_95pct_source_bootstrap": [
+        0.12481617647058829,
+        0.7142857142857143
+      ]
+    },
+    "paired_brier_on_common_scored": {
+      "n": 14,
+      "text": 0.35810210746535903,
+      "joint_candidate": 0.403763443985552
+    }
+  },
+  "holdout_whole_asr_text_prior_pipeline": {
+    "clips": 43,
+    "sources": 19,
+    "coverage": 0.8604651162790697,
+    "accuracy_all": 0.4186046511627907,
+    "accuracy_scored": 0.4864864864864865,
+    "macro_f1_all": 0.30392156862745096,
+    "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+      [
+        1.0,
+        1.0,
+        4.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        4.0,
+        3.0
+      ],
+      [
+        3.0,
+        6.0,
+        16.0,
+        2.0
+      ]
+    ]
+  },
+  "holdout_old_file_av_mapped_prior_pipeline": {
+    "clips": 43,
+    "sources": 19,
+    "coverage": 0.9069767441860465,
+    "accuracy_all": 0.2558139534883721,
+    "accuracy_scored": 0.28205128205128205,
+    "macro_f1_all": 0.19624819624819625,
+    "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+      [
+        0.0,
+        6.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        6.0,
+        1.0,
+        2.0
+      ],
+      [
+        0.0,
+        21.0,
+        5.0,
+        1.0
+      ]
+    ]
+  },
+  "holdout_channel_mask_sensitivity": {
+    "drop_audio": {
+      "av_proxy": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.6046511627906976,
+        "accuracy_all": 0.16279069767441862,
+        "accuracy_scored": 0.2692307692307692,
+        "macro_f1_all": 0.16009557945041816,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            3.0,
+            2.0,
+            0.0,
+            2.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0,
+            5.0
+          ],
+          [
+            13.0,
+            0.0,
+            4.0,
+            10.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.4418604651162791,
+        "accuracy_all": 0.13953488372093023,
+        "accuracy_scored": 0.3157894736842105,
+        "macro_f1_all": 0.1466275659824047,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            2.0,
+            0.0,
+            0.0,
+            5.0
+          ],
+          [
+            2.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            11.0,
+            0.0,
+            4.0,
+            12.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.8837209302325582,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.5,
+        "macro_f1_all": 0.3127199597787833,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            4.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 1.0,
+        "accuracy_all": 0.627906976744186,
+        "accuracy_scored": 0.627906976744186,
+        "macro_f1_all": 0.2571428571428572,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            27.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 0,
+        "joint_losses": 0,
+        "same_correctness": 43,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 15,
+        "joint_losses": 3,
+        "same_correctness": 25,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.1111111111111111,
+          0.48717948717948717
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 38,
+        "text": 0.6282157849417863,
+        "joint_candidate": 0.6306738918881402
+      }
+    },
+    "drop_visual": {
+      "av_proxy": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.20930232558139536,
+        "accuracy_scored": 0.23076923076923078,
+        "macro_f1_all": 0.15542521994134897,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            6.0,
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            6.0,
+            1.0,
+            2.0
+          ],
+          [
+            0.0,
+            23.0,
+            3.0,
+            1.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.8604651162790697,
+        "accuracy_all": 0.18604651162790697,
+        "accuracy_scored": 0.21621621621621623,
+        "macro_f1_all": 0.13688610240334378,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            6.0,
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            6.0,
+            0.0,
+            3.0
+          ],
+          [
+            0.0,
+            23.0,
+            2.0,
+            2.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.7906976744186046,
+        "accuracy_all": 0.4186046511627907,
+        "accuracy_scored": 0.5294117647058824,
+        "macro_f1_all": 0.3213907785336357,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            2.0,
+            3.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0,
+            3.0,
+            4.0
+          ],
+          [
+            1.0,
+            6.0,
+            16.0,
+            4.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 1.0,
+        "accuracy_all": 0.627906976744186,
+        "accuracy_scored": 0.627906976744186,
+        "macro_f1_all": 0.2571428571428572,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            27.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 0,
+        "joint_losses": 1,
+        "same_correctness": 42,
+        "accuracy_difference_95pct_source_bootstrap": [
+          -0.08333333333333333,
+          0.0
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 15,
+        "joint_losses": 6,
+        "same_correctness": 22,
+        "accuracy_difference_95pct_source_bootstrap": [
+          -0.021739130434782608,
+          0.4473684210526316
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 34,
+        "text": 0.6346860030912352,
+        "joint_candidate": 0.6481033281099048
+      }
+    },
+    "drop_text": {
+      "av_proxy": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9534883720930233,
+        "accuracy_all": 0.2558139534883721,
+        "accuracy_scored": 0.2682926829268293,
+        "macro_f1_all": 0.1940333568240545,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            7.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            6.0,
+            1.0,
+            2.0
+          ],
+          [
+            1.0,
+            21.0,
+            5.0,
+            0.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 1.0,
+        "accuracy_all": 0.627906976744186,
+        "accuracy_scored": 0.627906976744186,
+        "macro_f1_all": 0.2571428571428572,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            27.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 0,
+        "joint_losses": 0,
+        "same_correctness": 43,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 0,
+        "joint_losses": 11,
+        "same_correctness": 32,
+        "accuracy_difference_95pct_source_bootstrap": [
+          -0.4313836898395722,
+          -0.09523809523809523
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 0,
+        "text": null,
+        "joint_candidate": null
+      }
+    },
+    "drop_audio_visual": {
+      "av_proxy": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.9069767441860465,
+        "accuracy_all": 0.4418604651162791,
+        "accuracy_scored": 0.48717948717948717,
+        "macro_f1_all": 0.30860771981748675,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            1.0,
+            1.0,
+            5.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            4.0,
+            3.0
+          ],
+          [
+            3.0,
+            6.0,
+            17.0,
+            1.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 1.0,
+        "accuracy_all": 0.627906976744186,
+        "accuracy_scored": 0.627906976744186,
+        "macro_f1_all": 0.2571428571428572,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            27.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 0,
+        "joint_losses": 0,
+        "same_correctness": 43,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 19,
+        "joint_losses": 0,
+        "same_correctness": 24,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.2708333333333333,
+          0.6388888888888888
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 39,
+        "text": 0.6348118503556764,
+        "joint_candidate": 0.6348118503556764
+      }
+    },
+    "drop_text_audio_visual": {
+      "av_proxy": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "av_during_text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "text": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "joint_candidate": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "deployed": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 0.0,
+        "accuracy_all": 0.0,
+        "accuracy_scored": null,
+        "macro_f1_all": 0.0,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            7.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            9.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            27.0
+          ]
+        ]
+      },
+      "train_majority": {
+        "clips": 43,
+        "sources": 19,
+        "coverage": 1.0,
+        "accuracy_all": 0.627906976744186,
+        "accuracy_scored": 0.627906976744186,
+        "macro_f1_all": 0.2571428571428572,
+        "confusion_truth_negative_neutral_positive_by_pred_including_abstain": [
+          [
+            0.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            27.0,
+            0.0
+          ]
+        ]
+      },
+      "paired_candidate_vs_text": {
+        "joint_wins": 0,
+        "joint_losses": 0,
+        "same_correctness": 43,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_candidate_vs_av_proxy": {
+        "joint_wins": 0,
+        "joint_losses": 0,
+        "same_correctness": 43,
+        "accuracy_difference_95pct_source_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_brier_on_common_scored": {
+        "n": 0,
+        "text": null,
+        "joint_candidate": null
+      }
+    }
+  },
+  "clips": [
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "source": "0131fb814f44bb9b",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.36658490839742364,
+        "joint_candidate": 0.48094040246837466
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "027e9bba48f886ed/07e1fb7a6685e1ee",
+      "source": "027e9bba48f886ed",
+      "truth": "positive",
+      "text": null,
+      "joint_candidate": null,
+      "av_proxy": "positive",
+      "av_during_text": null,
+      "brier": {
+        "text": null,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": null,
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "027e9bba48f886ed/45c3cba5c05ce37f",
+      "source": "027e9bba48f886ed",
+      "truth": "neutral",
+      "text": null,
+      "joint_candidate": null,
+      "av_proxy": "positive",
+      "av_during_text": null,
+      "brier": {
+        "text": null,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": null,
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "027e9bba48f886ed/bdc5552e9c7bc5d7",
+      "source": "027e9bba48f886ed",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.17503926180889604,
+        "joint_candidate": 0.27704101569082784
+      },
+      "has_joint": true,
+      "n_intervals": 2,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "1aa8528533c5fd58/198998687644acf6",
+      "source": "1aa8528533c5fd58",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.3132015623481357,
+        "joint_candidate": 1.3823980316095226
+      },
+      "has_joint": false,
+      "n_intervals": 6,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "1aa8528533c5fd58/463c8c58227d153d",
+      "source": "1aa8528533c5fd58",
+      "truth": "positive",
+      "text": "negative",
+      "joint_candidate": "negative",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.1046474773546355,
+        "joint_candidate": 1.0809896311867375
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "negative",
+      "train_majority": "positive",
+      "whole_asr_text": "negative",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "1aa8528533c5fd58/769827a47a9caf07",
+      "source": "1aa8528533c5fd58",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.49424569421531406,
+        "joint_candidate": 0.523904032675574
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "1f6d1bb337e28dfe/3fb0fb03b005356e",
+      "source": "1f6d1bb337e28dfe",
+      "truth": "neutral",
+      "text": "positive",
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.8182613561186606,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 5,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "1f6d1bb337e28dfe/a4f90f239090bc81",
+      "source": "1f6d1bb337e28dfe",
+      "truth": "positive",
+      "text": "negative",
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.5469657538524639,
+        "joint_candidate": null
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "negative",
+      "train_majority": "positive",
+      "whole_asr_text": "negative",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "287b60f81cfd5d72/c0f7b19c40bae049",
+      "source": "287b60f81cfd5d72",
+      "truth": "negative",
+      "text": "positive",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.8854623360834984,
+        "joint_candidate": 0.8686258869247088
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "37a6eeffd27c89a6/d2f9392f1c558302",
+      "source": "37a6eeffd27c89a6",
+      "truth": "negative",
+      "text": "positive",
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.7257220764181432,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 5,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "37a6eeffd27c89a6/f79b5ec44812073b",
+      "source": "37a6eeffd27c89a6",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.17265936376764834,
+        "joint_candidate": 0.24940307853444307
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "50ee595f6744db07/389043f22a9e4b14",
+      "source": "50ee595f6744db07",
+      "truth": "positive",
+      "text": "negative",
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.553220515449799,
+        "joint_candidate": null
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "negative",
+      "train_majority": "positive",
+      "whole_asr_text": "negative",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "6bdb9c5e021e8a90/6278c40fad440a2d",
+      "source": "6bdb9c5e021e8a90",
+      "truth": "negative",
+      "text": "negative",
+      "joint_candidate": "negative",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.30979696556698644,
+        "joint_candidate": 0.36122246846068257
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "negative",
+      "train_majority": "positive",
+      "whole_asr_text": "negative",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "6bdb9c5e021e8a90/8c8fc0f93637e71f",
+      "source": "6bdb9c5e021e8a90",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.20251640893306005,
+        "joint_candidate": 0.30423127612430323
+      },
+      "has_joint": true,
+      "n_intervals": 5,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "7a917fffe77e927f/a9fa10a7db6e4d2e",
+      "source": "7a917fffe77e927f",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.1755214507675362,
+        "joint_candidate": 1.2294775951463828
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/6d8020abed7297f7",
+      "source": "91b9a8e6a0c7cb91",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.5341683569303132,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 7,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/fa3cb7a0f9b4b391",
+      "source": "91b9a8e6a0c7cb91",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "negative",
+      "av_during_text": "negative",
+      "brier": {
+        "text": 0.9979721003994019,
+        "joint_candidate": 0.9872517707548788
+      },
+      "has_joint": false,
+      "n_intervals": 5,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": null
+    },
+    {
+      "id": "b467037e45a8aca6/71a44eab6419ef3f",
+      "source": "b467037e45a8aca6",
+      "truth": "neutral",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.37246327550897085,
+        "joint_candidate": 0.330281634930517
+      },
+      "has_joint": true,
+      "n_intervals": 5,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "b5b19dfb1d5a644e/0f89819f9db72637",
+      "source": "b5b19dfb1d5a644e",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.22250875656113736,
+        "joint_candidate": 0.29643533658546495
+      },
+      "has_joint": true,
+      "n_intervals": 2,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "b5b19dfb1d5a644e/3108f90639d2e2a6",
+      "source": "b5b19dfb1d5a644e",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "positive",
+      "av_during_text": "positive",
+      "brier": {
+        "text": 0.4151100606855097,
+        "joint_candidate": 0.3504390714712087
+      },
+      "has_joint": true,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "b5b19dfb1d5a644e/4ab79474b2f5d4bf",
+      "source": "b5b19dfb1d5a644e",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "positive",
+      "av_during_text": "positive",
+      "brier": {
+        "text": 0.12551289243735564,
+        "joint_candidate": 0.13705305123401051
+      },
+      "has_joint": true,
+      "n_intervals": 4,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "b5b19dfb1d5a644e/7aab1a118d8d84dc",
+      "source": "b5b19dfb1d5a644e",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "positive",
+      "av_during_text": "positive",
+      "brier": {
+        "text": 1.0650008225448175,
+        "joint_candidate": 1.002639073184783
+      },
+      "has_joint": false,
+      "n_intervals": 5,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "b5b19dfb1d5a644e/c6c89b28fd6b53b6",
+      "source": "b5b19dfb1d5a644e",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "positive",
+      "av_during_text": "positive",
+      "brier": {
+        "text": 0.08418167231549732,
+        "joint_candidate": 0.11328706731706234
+      },
+      "has_joint": true,
+      "n_intervals": 2,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "positive"
+    },
+    {
+      "id": "bca5ae7f7084ca4a/e4f2fc92a4c106e1",
+      "source": "bca5ae7f7084ca4a",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.12850790062386813,
+        "joint_candidate": 0.2299388077262388
+      },
+      "has_joint": true,
+      "n_intervals": 4,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/06e2f12f659abbc6",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.5560590769493928,
+        "joint_candidate": 0.6248227315042507
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/34216c571d880471",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "neutral",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": null,
+      "av_during_text": null,
+      "brier": {
+        "text": 1.0694266421095688,
+        "joint_candidate": 1.0694266421095688
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": null
+    },
+    {
+      "id": "bdecbe00adaa2c2b/6a7e6dd10425ada3",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "negative",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.8278152007290062,
+        "joint_candidate": 0.8653508497577354
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b7943f9bde96157d",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "neutral",
+      "text": "negative",
+      "joint_candidate": "negative",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.2456285157783442,
+        "joint_candidate": 1.0716169063799703
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "negative",
+      "train_majority": "positive",
+      "whole_asr_text": "negative",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b8b483ebccae9ead",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "positive",
+      "text": "neutral",
+      "joint_candidate": "neutral",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.9756767853336753,
+        "joint_candidate": 1.02060040776627
+      },
+      "has_joint": false,
+      "n_intervals": 2,
+      "deployed": "neutral",
+      "train_majority": "positive",
+      "whole_asr_text": "neutral",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/c277902fc714df2c",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "negative",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.8507785748279233,
+        "joint_candidate": 0.8440574528494946
+      },
+      "has_joint": false,
+      "n_intervals": 4,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "bdecbe00adaa2c2b/fea20adad61a4e56",
+      "source": "bdecbe00adaa2c2b",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.007135684354755294,
+        "joint_candidate": 0.03226611233974319
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "be6ff21d93fcdecc/348f87be7bb4c8b2",
+      "source": "be6ff21d93fcdecc",
+      "truth": "neutral",
+      "text": null,
+      "joint_candidate": null,
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": null,
+        "joint_candidate": null
+      },
+      "has_joint": true,
+      "n_intervals": 13,
+      "deployed": null,
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "be6ff21d93fcdecc/629e892c1fed0b4d",
+      "source": "be6ff21d93fcdecc",
+      "truth": "neutral",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.9154758055247731,
+        "joint_candidate": 0.797383453084996
+      },
+      "has_joint": false,
+      "n_intervals": 8,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "be6ff21d93fcdecc/dd9a07c9c5c047d8",
+      "source": "be6ff21d93fcdecc",
+      "truth": "negative",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.4302340274656844,
+        "joint_candidate": 1.3848488725323067
+      },
+      "has_joint": false,
+      "n_intervals": 7,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "c618ec8c07982e4a/f7c9161ad1328ef3",
+      "source": "c618ec8c07982e4a",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.32234160356033714,
+        "joint_candidate": 0.42957801117055777
+      },
+      "has_joint": true,
+      "n_intervals": 5,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "c7463432572a4594/9e6466902ccd8eaf",
+      "source": "c7463432572a4594",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.29673221335122807,
+        "joint_candidate": 0.391141670438458
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "c7463432572a4594/aaead252507336ab",
+      "source": "c7463432572a4594",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.12982358365762173,
+        "joint_candidate": 0.17334784795981553
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "c7463432572a4594/ea9c23628f683f7d",
+      "source": "c7463432572a4594",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.010625393745923344,
+        "joint_candidate": 0.05177791209276782
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "cb2ca0575c191f43/94bf1d0904f4a196",
+      "source": "cb2ca0575c191f43",
+      "truth": "neutral",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 1.689729823057355,
+        "joint_candidate": 1.3472436673361388
+      },
+      "has_joint": false,
+      "n_intervals": 3,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    },
+    {
+      "id": "cdef65b68a59d56f/110cb248f4d3977d",
+      "source": "cdef65b68a59d56f",
+      "truth": "neutral",
+      "text": null,
+      "joint_candidate": null,
+      "av_proxy": null,
+      "av_during_text": null,
+      "brier": {
+        "text": null,
+        "joint_candidate": null
+      },
+      "has_joint": false,
+      "n_intervals": 6,
+      "deployed": null,
+      "train_majority": "positive",
+      "whole_asr_text": null,
+      "old_clip_av": null
+    },
+    {
+      "id": "cdef65b68a59d56f/80cc4e83add19db8",
+      "source": "cdef65b68a59d56f",
+      "truth": "negative",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": null,
+      "brier": {
+        "text": 1.5406870388896585,
+        "joint_candidate": 1.5406870388896585
+      },
+      "has_joint": false,
+      "n_intervals": 11,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": null
+    },
+    {
+      "id": "cdef65b68a59d56f/ed32b423dfd9772d",
+      "source": "cdef65b68a59d56f",
+      "truth": "positive",
+      "text": "positive",
+      "joint_candidate": "positive",
+      "av_proxy": "neutral",
+      "av_during_text": "neutral",
+      "brier": {
+        "text": 0.10022122544705939,
+        "joint_candidate": 0.20117296034018847
+      },
+      "has_joint": true,
+      "n_intervals": 2,
+      "deployed": "positive",
+      "train_majority": "positive",
+      "whole_asr_text": "positive",
+      "old_clip_av": "neutral"
+    }
+  ]
+}

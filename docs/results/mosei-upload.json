@@ -1,0 +1,1535 @@
+{
+  "dataset": "CMU-MOSEI competition E, attachment 1, all 100 labeled raw videos",
+  "scope": "Frozen production importer without ASR; three-way whole-clip sentiment targets. Media and transcripts are not distributed; no model or threshold fitted to these clips.",
+  "metric": "Top canonical score from file summary; missing and unmapped count as wrong. Coverage = clips returning any scores. Not prompt accuracy, self-reported mood, or treatment effect.",
+  "baseline_file_module_sha256": "65dfea7fc0360bdd3f0cbed9772e30cfdc3a112219165b305c0c188b84a1caf3",
+  "n_source_videos": 37,
+  "label_counts": {
+    "positive": 57,
+    "neutral": 25,
+    "negative": 18
+  },
+  "old_status_counts": {
+    "video_metadata_early_eof": 84,
+    "scored": 12,
+    "no_valid_visual": 4
+  },
+  "new_input_modes": {
+    "audio+visual": 68,
+    "audio": 24,
+    "none": 6,
+    "visual": 2
+  },
+  "new_errors": 0,
+  "all_clips": {
+    "old_file": {
+      "n": 100,
+      "scored": 12,
+      "mapped_argmax": 11,
+      "correct": 5,
+      "unmapped_argmax": 1,
+      "accuracy_all": 0.05,
+      "accuracy_scored": 0.4166666666666667,
+      "macro_f1_all": 0.0846153846153846
+    },
+    "same_frames_visual": {
+      "n": 100,
+      "scored": 74,
+      "mapped_argmax": 67,
+      "correct": 18,
+      "unmapped_argmax": 7,
+      "accuracy_all": 0.18,
+      "accuracy_scored": 0.24324324324324326,
+      "macro_f1_all": 0.16969208013984136
+    },
+    "new_file": {
+      "n": 100,
+      "scored": 94,
+      "mapped_argmax": 88,
+      "correct": 25,
+      "unmapped_argmax": 6,
+      "accuracy_all": 0.25,
+      "accuracy_scored": 0.26595744680851063,
+      "macro_f1_all": 0.18608058608058609
+    }
+  },
+  "with_both_old_and_new_scores": {
+    "old_file": {
+      "n": 12,
+      "scored": 12,
+      "mapped_argmax": 11,
+      "correct": 5,
+      "unmapped_argmax": 1,
+      "accuracy_all": 0.4166666666666667,
+      "accuracy_scored": 0.4166666666666667,
+      "macro_f1_all": 0.3333333333333333
+    },
+    "new_file": {
+      "n": 12,
+      "scored": 12,
+      "mapped_argmax": 12,
+      "correct": 6,
+      "unmapped_argmax": 0,
+      "accuracy_all": 0.5,
+      "accuracy_scored": 0.5,
+      "macro_f1_all": 0.3666666666666667
+    }
+  },
+  "with_both_current_visual_and_new_scores": {
+    "same_frames_visual": {
+      "n": 74,
+      "scored": 74,
+      "mapped_argmax": 67,
+      "correct": 18,
+      "unmapped_argmax": 7,
+      "accuracy_all": 0.24324324324324326,
+      "accuracy_scored": 0.24324324324324326,
+      "macro_f1_all": 0.18880534670008353
+    },
+    "new_file": {
+      "n": 74,
+      "scored": 74,
+      "mapped_argmax": 68,
+      "correct": 18,
+      "unmapped_argmax": 6,
+      "accuracy_all": 0.24324324324324326,
+      "accuracy_scored": 0.24324324324324326,
+      "macro_f1_all": 0.18530510585305104
+    }
+  },
+  "accuracy_delta_95pct_source_cluster_bootstrap": {
+    "method": "2000 paired percentile draws of source-video IDs, seed=20261123; baseline-relative, clip weighted",
+    "new_minus_old_file": [
+      0.08401610644257704,
+      0.3333333333333333
+    ],
+    "new_minus_same_frames_visual": [
+      -0.0707070707070707,
+      0.2258335592301435
+    ]
+  },
+  "new_by_observed_input": {
+    "no_scored_visual_frame": {
+      "n": 26,
+      "scored": 20,
+      "mapped_argmax": 20,
+      "correct": 7,
+      "unmapped_argmax": 0,
+      "accuracy_all": 0.2692307692307692,
+      "accuracy_scored": 0.35,
+      "macro_f1_all": 0.14583333333333334
+    },
+    "no_acoustic_contribution": {
+      "n": 8,
+      "scored": 2,
+      "mapped_argmax": 1,
+      "correct": 1,
+      "unmapped_argmax": 1,
+      "accuracy_all": 0.125,
+      "accuracy_scored": 0.5,
+      "macro_f1_all": 0.2222222222222222
+    },
+    "both_contribute": {
+      "n": 68,
+      "scored": 68,
+      "mapped_argmax": 63,
+      "correct": 16,
+      "unmapped_argmax": 5,
+      "accuracy_all": 0.23529411764705882,
+      "accuracy_scored": 0.23529411764705882,
+      "macro_f1_all": 0.17496229260935145
+    }
+  },
+  "runtime_configuration": {
+    "fusion": {
+      "strategy": "quality_v2",
+      "min_quality": 0.2,
+      "visual_weight": 1.0,
+      "audio_weight": 1.0,
+      "conflict_js_threshold": 0.18,
+      "conflict_dominance": 0.6,
+      "opposite_threshold": 0.5,
+      "mapping_version": "canonical-emotieff-emotion2vec-v1",
+      "version": "aligned-cue-policy-v1",
+      "adapt_single_modality": true,
+      "calibration_version": null,
+      "calibration_load_status": "unfitted",
+      "configuration_issue": null,
+      "single_cue_version": "7591b2a854c2dbb38c74f922acd07c11485b128adbe7d5f3aab90f1df7cf1393",
+      "baseline_version": null
+    },
+    "model_versions": {
+      "face": "YuNet-2023mar@48b10fa505ae",
+      "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+      "audio": "emotion2vec_plus_seed@7be9a30d52bd"
+    }
+  },
+  "always_positive_comparison": {
+    "n": 100,
+    "scored": 100,
+    "mapped_argmax": 100,
+    "correct": 57,
+    "unmapped_argmax": 0,
+    "accuracy_all": 0.57,
+    "accuracy_scored": 0.57,
+    "macro_f1_all": 0.24203821656050953
+  },
+  "clips": [
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "sha256": "6d3af064c060dad3816a9e1dfa00101faebd8b7da7d8ceea85b0bc0fca70abd6",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/07e1fb7a6685e1ee",
+      "sha256": "29a1fd181293cdbe24e50edcad51e3cc0f27a5824d840bcc39d453b272fb6e3c",
+      "label": "positive",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "positive",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/45c3cba5c05ce37f",
+      "sha256": "fe04a26710e85c58bdaad5a48618c7e0f742d82b0d920eb4a046c8f14a6921dc",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "positive",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/bdc5552e9c7bc5d7",
+      "sha256": "6140d031e614b62a5d8df73346fef2417c28cee3501310aa95aa40d358b4b256",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "077cda22a6c66670/075909d63f678097",
+      "sha256": "46a5e523b5dd00364c99a3bcbc6fae4c80e1382a84b5b5e681c46eb074ed10f7",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "077cda22a6c66670/922fe9d3866b8e5c",
+      "sha256": "b5ffdc98a4a98b8f0aae55dee5fed66a43bcb129f47a250a004c1cc74e572595",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "077cda22a6c66670/aab5000fd5bb1f74",
+      "sha256": "04bd0be907fb46c613f926fe1b06bc2c3b30881c293156510baa34a4105ade55",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "no_valid_visual",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "077cda22a6c66670/e62d4d9b216fccc3",
+      "sha256": "55c1ff86729ab21da743a5107ed07b220e41b4193cd1c0ba9f009e65c3ab0513",
+      "label": "positive",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "07f6a3cafd17df51/949ab59362f9aa65",
+      "sha256": "ff5da5afb551001d58100ed2471caea51c741046d5396957efbf40082307ca18",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "07f6a3cafd17df51/be8c2a99efe31883",
+      "sha256": "3b74de8d0e66fd754594f05985e5af3480adcc03555f79225d3b727cb4bed043",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "no_valid_visual",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/198998687644acf6",
+      "sha256": "54e2097f7bdb455d243e72254e5af7ed16160739f2f3cfd22f57d2729ec1acbe",
+      "label": "positive",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/463c8c58227d153d",
+      "sha256": "80c5d996e5d7b61c58e1fe32d706efcaf80c8c8cddb5c37a5c66d527786c2a44",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/769827a47a9caf07",
+      "sha256": "40716dc7402fd6398038eded58ce939ec76be6afbeea346b968bf4c427088f3a",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "1f6d1bb337e28dfe/3fb0fb03b005356e",
+      "sha256": "defc62e1530d9b0cd27f2acfe042b71dd84d7e8c85f1df261f04912091976088",
+      "label": "neutral",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "1f6d1bb337e28dfe/a4f90f239090bc81",
+      "sha256": "e304c03fac1f477823fe0926c4fb421b9c4e4091f85718b729afe856c24a7d3e",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "205b61599cf7a208/6366e2a146ee15b4",
+      "sha256": "00282df9a314394f19d616d561bd1916d1d30dca4c814dfb43630ca164f4c719",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "287b60f81cfd5d72/c0f7b19c40bae049",
+      "sha256": "59b77a0f873b7fa95e7327b93d64bb5a4bdae84039321988ef70bba8e63ee1ae",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "37a6eeffd27c89a6/d2f9392f1c558302",
+      "sha256": "41c76b8a733ecb780d56348f55d00f0ba0c07f44f46e93044e62d876710180b7",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "37a6eeffd27c89a6/f79b5ec44812073b",
+      "sha256": "6713a983112173204502dc5adbb886bc6c38554b4627698611931420c47663a8",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "50ee595f6744db07/389043f22a9e4b14",
+      "sha256": "edb0fa22fdfbd990c8174764af78670bd2ecad799240d35d96a1124a3cd9dc0c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5b37fd250c43dca7/57443bf5d07650c3",
+      "sha256": "35a6c2464ffd68dd96411edb5dc2763f0efb59f264c1d8b737e616fa6b0d1d5b",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5b37fd250c43dca7/6311aec7f63600ad",
+      "sha256": "efaa55ee6394032c867046690a92c29edfd825005f0a090cca5ccb763b227f64",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5b37fd250c43dca7/ede1a2a8c327423a",
+      "sha256": "e2f148f4f2e74724dc13b3ce870a0ce6a06740cfc224f5a9b3d0a870b196e7d4",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5eb32a525abb1355/1cee2b4a078ed175",
+      "sha256": "df3442f3ed8f894b507923e87e426ae9636790a4a502d00c350a215270cc3e47",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5eb32a525abb1355/45925c617e5102f4",
+      "sha256": "c41790f8b75f886bd1f5d6d72cbab1985306d0b715e5ae47203f3d0c8a3e7b28",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "no_speech",
+      "used_modalities": []
+    },
+    {
+      "id": "5eb32a525abb1355/468b4a51425a5a80",
+      "sha256": "c8e3acb4ca08679796c4c8cdfcd8c2b3cffc0465015efaffa1eccdb55ff4f45b",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "no_speech",
+      "used_modalities": []
+    },
+    {
+      "id": "5eb32a525abb1355/614d4343dcd8e5ae",
+      "sha256": "6af6614c9838417a48c4817f4dd5bf1e6669eb5f78f983e9a68adc113fcdc7cc",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "5eb32a525abb1355/d3581ed4dd342740",
+      "sha256": "134a3a4ebbc423760133b0da0e90cfe84d75ea85df3968000afd84153c5d828d",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "61632c1f4d934b25/759166c3578e328c",
+      "sha256": "6f6e674bbba4353399e9e7825217f37e6d8ca1adf9675f33cf37106f31c55548",
+      "label": "negative",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "64dd6be6fc28e559/87257c6a51ee5215",
+      "sha256": "a54a5c144a64f5abd26b19aafa6cea8142ee08e9385fa508fa70c934f6b616c1",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "64dd6be6fc28e559/ef7b3494acddac68",
+      "sha256": "d8fcf16c6eb51c56947ec3d0549c6f3bc7a0cf1fc5f5d89e8b38d4249a08db4f",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "no_speech",
+      "used_modalities": []
+    },
+    {
+      "id": "663ab5b94a9aad12/3fba269a951b51ed",
+      "sha256": "eddb408f25bdc13e6de2fb74caeed709cb7a8f00640e7897135330437f66a2aa",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "663ab5b94a9aad12/4fc0163b1730d15c",
+      "sha256": "f578b305d53bc152702f5e771de0fcd12d1e9aaefc5cefce3d2082a417aab7c8",
+      "label": "positive",
+      "old_file": "positive",
+      "old_status": "scored",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "663ab5b94a9aad12/8b1049eeeb368b20",
+      "sha256": "d5bbda38fcec15817d2b87bab5dcc559d6d425f7d28a82e6c32d13f14b48650c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "663ab5b94a9aad12/d52e715175056ea8",
+      "sha256": "f0131ac00e44410fbd32c547a0d421c2791172434fc0203bb969abe14a530532",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "neutral",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "6bdb9c5e021e8a90/6278c40fad440a2d",
+      "sha256": "8453a966d4bd1f0179eb86a35cd34c0864a3a3bc2fa86f37783060cc0d14f5df",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "6bdb9c5e021e8a90/8c8fc0f93637e71f",
+      "sha256": "a015f02ae51d74c42ad27e2a0831263a303f0658ac8d984819e27ad61342b23e",
+      "label": "positive",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "7a917fffe77e927f/a9fa10a7db6e4d2e",
+      "sha256": "fde46f5222cf5cfec7af9c93214c972ce2d686b0bf9c90a291021601968986f9",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/6d8020abed7297f7",
+      "sha256": "997f6808ac3973ddd71800e91c8e10755c10b5037186d84348a79e00d672fdc7",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/fa3cb7a0f9b4b391",
+      "sha256": "0ec6fb76226315d3fafbb483e3500e60cc8a6729617b10e4b4b76163595080fb",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "92ce8477bd782a02/15ad2fc79184f92f",
+      "sha256": "e3c7f9cd67ad2d20fef997696dc278361f97f027db58762e22104e5720d509d5",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "92ce8477bd782a02/b36ca089fbf268c9",
+      "sha256": "eece70451e9c37a4b5f375bf646f66e09113fe3467f35bf1720cc14d986c1776",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "92ce8477bd782a02/cb39320e7f7b2a58",
+      "sha256": "8b3f82f9628792eebaf8c227becc2ebeba59bb8abb668bcca86e07fb1a992a93",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "92ce8477bd782a02/d19fd2e0b84234e1",
+      "sha256": "758183192cbd5f0f20823d26ece3ddee40dec0aadec35247b2495510a53f52f8",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "92ce8477bd782a02/d6baf95de2040f12",
+      "sha256": "6dc09d02467baaef67594ff32cffb01f8ed1565cda4c5abd161b8261a51e2e5d",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "936bbd43ecddb01d/0226b46d367638f6",
+      "sha256": "00312e0602dbeac970de5d7dd0e8a970e514fe45d7fe6625b4f454b299e36360",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "936bbd43ecddb01d/633b62a53f173c0c",
+      "sha256": "a7f2ab0d6ee2e2a2d5cd4239f03e6cac67c618ddb744891323df3ff87e29af84",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "9858a6dd676a3e02/95ee40eec26fe034",
+      "sha256": "696576dcbd0dc42cb678fa40d8a0f0f419a3072bfa7662d653756ab29bba4c46",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "9858a6dd676a3e02/b1ab9e18783766d8",
+      "sha256": "90c18e627f27a12c14e21ba24c79edf3008762b4ac26874b490ad3f888381702",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "9858a6dd676a3e02/bdf7cb3a410efadc",
+      "sha256": "920a1052c09ebd1eedba6dd1ccfecd80f56f6f0fdcdd1f6dd32b0d90bcb89358",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "unusable",
+      "used_modalities": []
+    },
+    {
+      "id": "9858a6dd676a3e02/d9a10d8c02452d91",
+      "sha256": "8d61b7f5840a8bd403d9bc6c3cd49029ffc4e304cf9c7834735c1a6bb5fd369d",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "9cac345300acd257/18c5392abb443c33",
+      "sha256": "15d029fc15f50b268b98f1e8abc65e45582e638c13a018d7aa74a18373275946",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "no_valid_visual",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "b3e1adc30a732cf7/60b7efa4bc6ccc72",
+      "sha256": "ab19bf4a761d3919b7113b1104ccaadbbf0c4e7b45694904d094280a2c329c8b",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "b467037e45a8aca6/71a44eab6419ef3f",
+      "sha256": "3f9792888ec8e969f61cfb6cb4de7bdf7ef8944afe0a9d2a9d13586e1f13b898",
+      "label": "neutral",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/0f89819f9db72637",
+      "sha256": "030b0b8d8d4ae47799432ab71b66fcc881f077c5b0feef892c1f146dc0a592e3",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/3108f90639d2e2a6",
+      "sha256": "39c547acd1a8da2ebc6c6ab008191a5676420398a974cd9611cad087f0ccec50",
+      "label": "positive",
+      "old_file": "positive",
+      "old_status": "scored",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/4ab79474b2f5d4bf",
+      "sha256": "72a49e3da2862addcde033bd2fbae957d086533664ca4dcbccd3a851bcd50412",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/7aab1a118d8d84dc",
+      "sha256": "352bdcc73d3622d6abac1b09f2039b211d15b9bf7acee66f0b07783c9b7a4c74",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "unusable",
+      "used_modalities": [
+        "visual"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/c6c89b28fd6b53b6",
+      "sha256": "cc7b1c7a06ec41d72007b5c42fb8036f30b66d5cf76e3f093160c22fc5e38081",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "positive",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "bca5ae7f7084ca4a/e4f2fc92a4c106e1",
+      "sha256": "04a73d73fd150b07edab8e652fd14c9cb4a0f6e017ea97b17e8146e377b9fae7",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/06e2f12f659abbc6",
+      "sha256": "5301f4403cf7cd299cc525d2f443392ac70fd70c3c9cd4a09406f2ba4df6734d",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/34216c571d880471",
+      "sha256": "40b684fd1b4559f0f82e72f9b47f4ce7c5e15059fe8d0d8ab112637cd3386451",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "unusable",
+      "used_modalities": []
+    },
+    {
+      "id": "bdecbe00adaa2c2b/6a7e6dd10425ada3",
+      "sha256": "f2324dbc6debe0d1e4254e6f943523373e3cbb30d8d0555413ce3a7b370a4af5",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "no_valid_visual",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b7943f9bde96157d",
+      "sha256": "76e0672ffce5857a789b41fb10606402f7da58c33579b1032a8282f86fb35bc9",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b8b483ebccae9ead",
+      "sha256": "1de4d91bd9d9fb508a3779658747da88460db0bdb1beefe7ea5b2c77edfd2239",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/c277902fc714df2c",
+      "sha256": "bd35eb8de64ce1f8b27921294598f7cf5bb971255738f51d06458c7096c58eae",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/fea20adad61a4e56",
+      "sha256": "a33e8f82a185bcb7648b523927308cdc2142e3076479ba2b45cd0e828636fc09",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/348f87be7bb4c8b2",
+      "sha256": "2f16da1baa8660e5bfc608f5237cdd59725d16e57a19bc02c4556cd2c7129a46",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/629e892c1fed0b4d",
+      "sha256": "b51eb9ad06de804934cb6a315de591ba9ff7f8aa71bffff7f8001ab29945d989",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/dd9a07c9c5c047d8",
+      "sha256": "6d6145293cf84d1fc8324dfa8d39465e2d7fc07affb67ff68deeabf6e3c410d9",
+      "label": "negative",
+      "old_file": "negative",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/318e2597d84b801e",
+      "sha256": "1825fb37db2e914fb616cd80aebd613afd873eecb7edd4d0b53158bfda0e522a",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/32051824eea2925e",
+      "sha256": "c5535859f129ce04da5f5b5104d02d4168057b9d947a5349d423278ad4f3d8e8",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/5ab8fe6b8e877e5c",
+      "sha256": "ea917c506bc9fa39460f2b722f7c416f646312bb17cd74baa618905b54837bce",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/6319dece1e72016b",
+      "sha256": "6c6a8a4cba654b25190ab1793bfae81c3d2159ecd6cbc02d3fcbd598543acce0",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/8f141b78cac42f41",
+      "sha256": "b76f70fe783ee76bf1b637137226c98e67d13a6b15ec725894175b36cd76a136",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/8fd8ab8fefe25e16",
+      "sha256": "cbf9cac1048ce191aef781d0c4563eb97f9f3ddd52eb1f9551fa78d31d70e7cd",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c02cc77a3deccdb7/a1295bcb101080c1",
+      "sha256": "1cc21b4432e2f4b592284ee40558a18acc7d208019117aebdb2f6a1b67ea198d",
+      "label": "positive",
+      "old_file": "positive",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "positive",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c5a823dbc758375d/e2d200904e4ad8bf",
+      "sha256": "0b6389f45bb966113c65a11998c6e7facdd24c8c42acf2e8cf32e0f2139402e1",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c618ec8c07982e4a/f7c9161ad1328ef3",
+      "sha256": "e09034b30bb4f8fb9f9c2568afc20f2a764e327fe6ef4e13f21804eaac51bb7b",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/9e6466902ccd8eaf",
+      "sha256": "5e428ee22de58c9d6561b9b4353bef9dfb811a5841d9ab07b5bc453d697ad17f",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/aaead252507336ab",
+      "sha256": "ed8c672c532b8c7d1c830c82d6e2c14fcb3bbd3dc1a86670a03a6c8e83c02f3c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/ea9c23628f683f7d",
+      "sha256": "96e481cd732001239639c8cb4e7f94e570925e5a15940920ffab0cec1f13f904",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "cb2ca0575c191f43/94bf1d0904f4a196",
+      "sha256": "7ea53ad502b77be7d2ee4494dc23a9478c897792203cf887d546e83d584c1728",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": null,
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio"
+      ]
+    },
+    {
+      "id": "cdef65b68a59d56f/110cb248f4d3977d",
+      "sha256": "93021c70c8fad20ad3fded80e7fc790a2f9c96835de58a3b694c6906de42684b",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": null,
+      "same_frames_visual": null,
+      "audio_status": "no_speech",
+      "used_modalities": []
+    },
+    {
+      "id": "cdef65b68a59d56f/80cc4e83add19db8",
+      "sha256": "f5993ce3a6ee56298462c08692a96f78c7d914d7264257ed401de7d6e17fd148",
+      "label": "negative",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "uncertain",
+      "same_frames_visual": "negative",
+      "audio_status": "unusable",
+      "used_modalities": [
+        "visual"
+      ]
+    },
+    {
+      "id": "cdef65b68a59d56f/ed32b423dfd9772d",
+      "sha256": "2a5e4319bf592a18c8eb5117f7c7ec30c6c79528f9eac9fe4fb85bf70f277736",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/2ed86c766a0b4f8f",
+      "sha256": "bcd643f328616312eae9b28e6c9aabbe8acaec3e4c4be58daeb45e3eee4d973c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/3c602a3614663d55",
+      "sha256": "cbd627c225ebca37521ae238cb9ec254cad236822f4f37ebfbb039e6c56aea4c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/4bc260daf44a258d",
+      "sha256": "fd4bc95a6adfb16a9588b7ed65cc2812186ce3d607804dc76f4486312951ef90",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/c2d2d6e61aa98aea",
+      "sha256": "f967e81e0edd51c3700671721afb3fbecbbc32652f27d2db40ea444e8d80c68f",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/c904c9c7f45524e5",
+      "sha256": "4c015f85e3bd901ecedde8c0c2ca4a756d9a77dfe4177625c481581f2037ff9c",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/d49c1bbb507df01f",
+      "sha256": "589a7989b1b4888568c31614a2d6beefba88fb87289c85b94df2d8051500403b",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/dc36bb78fc9723d1",
+      "sha256": "11f78aed680ea9c5862a15e04ff6c1f8776c46d29c98b68d28773ff39d959685",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/e716e182e3e8fa3a",
+      "sha256": "719ef133920e74b3ea33925d2bca0270b062199116867568f88ac83cadcd74e8",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d242d31ee4bc4c88/f0456b2e5476a7c0",
+      "sha256": "2e88a00d5e55863aa956b4b0949fc0e4f2975ccfd83b3194957f6fca86ecfce0",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "d689db97e63aca21/77602878e9068c69",
+      "sha256": "cdeba953bba30907814acf72f3e35582dec263eaa25bdd922dad7fafe02e4dda",
+      "label": "neutral",
+      "old_file": "uncertain",
+      "old_status": "scored",
+      "new_file": "neutral",
+      "same_frames_visual": "uncertain",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "e1d0f50da03949f6/12f3c7ee52cb2ea2",
+      "sha256": "0619c01f137d017c15c058176f18a575919189c7e81ebd2bfb993afdb86f3de7",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "e1d0f50da03949f6/780f904d8c0b29de",
+      "sha256": "aeb47627f59dce3d0a85a44ef35e4a3bc18211498e98c8c11cf60269646df24f",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "e1d0f50da03949f6/dc6fc6001160c39f",
+      "sha256": "b962573b12ed1f06d5533f6427c80dce2bae3a99dd332f6d3fcb32c579f3f016",
+      "label": "positive",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    },
+    {
+      "id": "e1d0f50da03949f6/e3162d1fe2e3ca6f",
+      "sha256": "eff8cfefba2425155f2b72656829b34b23be8bfe1dcbece384154f56818aa26d",
+      "label": "neutral",
+      "old_file": null,
+      "old_status": "video_metadata_early_eof",
+      "new_file": "neutral",
+      "same_frames_visual": "negative",
+      "audio_status": "ok",
+      "used_modalities": [
+        "audio",
+        "visual"
+      ]
+    }
+  ]
+}

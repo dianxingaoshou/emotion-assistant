@@ -32,6 +32,10 @@ from .ui_widgets import TrendChart, SignalDistribution, StepIndicator, ChartLege
 from .regulation import ACTIVITIES as ACTIVITY_LIBRARY, NEEDS
 from .regulation_widgets import RecommendationCards, OutcomeCard
 from .trial_widgets import PromptTimingFeedback, TrialPage
+from .local_media_widgets import LocalMediaPage
+from .content_widgets import ContentReadout
+from .fusion_explanation import evidence_text
+from .text_file import text_polarity_summary
 
 
 LABELS = {
@@ -435,7 +439,7 @@ class MainWindow(QMainWindow):
         side_l.addWidget(caption)
         side_l.addSpacing(7)
         self.nav_buttons = []
-        for index, label in enumerate(("实时观察", "调节与复测", "历史记录", "使用说明", "对照实验")):
+        for index, label in enumerate(("实时观察", "调节与复测", "历史记录", "使用说明", "对照实验", "本地文件检测")):
             button = _button(f"0{index + 1}    {label}")
             button.setObjectName("navButton")
             button.setCheckable(True)
@@ -480,7 +484,7 @@ class MainWindow(QMainWindow):
         heading.addWidget(self.session_badge)
         main_l.addLayout(heading)
 
-        controls = QFrame()
+        self.session_panel = controls = QFrame()
         controls.setObjectName("sessionPanel")
         controls_l = QVBoxLayout(controls)
         controls_l.setContentsMargins(SPACE["lg"], SPACE["md"], SPACE["lg"], SPACE["md"])
@@ -579,6 +583,9 @@ class MainWindow(QMainWindow):
         self.trial_page = TrialPage()
         self.trial_page.reset_report(self.mode_combo.currentData())
         self.tabs.addTab(self.trial_page, "对照实验")
+        self.local_media_page = LocalMediaPage(strategy_provider=self.fusion_strategy.currentData)
+        self.local_media_page.ready_to_close.connect(self.close)
+        self.tabs.addTab(self.local_media_page, "本地文件检测")
         self.tabs.tabBar().hide()
         self.tabs.currentChanged.connect(self._on_page_changed)
         main_l.addWidget(self.tabs, 1)
@@ -617,18 +624,26 @@ class MainWindow(QMainWindow):
                   ("调节与复测", "先确认自己的需要，再选择一次适合当下的活动。"),
                   ("历史记录", "回看每次观察与反馈，保留对自己有用的信息。"),
                   ("使用说明", "了解观察方式、数据保存和你的自主选择。"),
-                  ("对照实验", "自愿参加两场会话，比较不同安排下的提示体验和调节反馈。"))
+                  ("对照实验", "自愿参加两场会话，比较不同安排下的提示体验和调节反馈。"),
+                  ("本地文件检测", "导入照片、视频、音频或文本，查看有效线索和各时段的判断依据。"))
         title, subtitle = titles[index]
         self.page_title.setText(title)
         self.page_subtitle.setText(subtitle)
         for i, button in enumerate(self.nav_buttons):
             button.setChecked(i == index)
-        self.start_button.setVisible(index != 4 and self.session_state not in ("running", "paused", "starting", "stopping", "stop_failed"))
+        self._sync_session_visibility()
         self._sync_action_hierarchy()
         if index == 4:
             self.settings_toggle.setChecked(False)
             self._toggle_settings(False)
             self._refresh_trial_context()
+
+    def _sync_session_visibility(self):
+        active = self.session_state in ("running", "paused", "starting", "stopping", "stop_failed")
+        file_page = self.tabs.currentWidget() is self.local_media_page
+        for widget in (self.session_panel, self.session_clock, self.session_badge):
+            widget.setVisible(active or not file_page)
+        self.start_button.setVisible(not active and not file_page and self.tabs.currentWidget() is not self.trial_page)
 
     def _sync_action_hierarchy(self):
         """Refactoring UI §2.8: emphasize the current task, not all actions."""
@@ -718,7 +733,14 @@ class MainWindow(QMainWindow):
         self.fusion_weights = QLabel("视觉权重 —　·　语音权重 —　·　未映射 —")
         self.fusion_weights.setObjectName("smallMuted")
         self.fusion_weights.setWordWrap(True)
-        fusion_l.addWidget(self.fusion_weights)
+        weight_row = QHBoxLayout()
+        weight_row.addWidget(self.fusion_weights, 1)
+        self.fusion_details_button = _button("查看判断依据")
+        self.fusion_details_button.setObjectName("ghost")
+        self.fusion_details_button.hide()
+        self.fusion_details_button.clicked.connect(self._show_fusion_details)
+        weight_row.addWidget(self.fusion_details_button)
+        fusion_l.addLayout(weight_row)
         self.evidence_progress = QLabel("自动询问需要累计 20 秒有效证据；缺口不计时，等待迟到结果后再判断。")
         self.evidence_progress.setObjectName("smallMuted")
         self.evidence_progress.setWordWrap(True)
@@ -747,7 +769,7 @@ class MainWindow(QMainWindow):
         self.preview_state.setWordWrap(True)
         preview_l.addWidget(self.preview_state)
         right.addWidget(preview_card, 5)
-        transcript_card, transcript_l = _card("语音片段", "中文转写需单独开启。")
+        transcript_card, transcript_l = _card("语音片段", "授权转写后，可查看与说话时段对齐的英文表达倾向。")
         self.transcript = QPlainTextEdit()
         self.transcript.setReadOnly(True)
         self.transcript.setPlaceholderText("暂未开启转写\n开启后，识别文字会显示在这里。")
@@ -756,6 +778,9 @@ class MainWindow(QMainWindow):
         self.transcript.setMaximumHeight(105)
         self.transcript.setStyleSheet("background:#F8FAF8; border:0; padding:8px;")
         transcript_l.addWidget(self.transcript)
+        self.live_content = ContentReadout()
+        self._content_end = -1.
+        transcript_l.addWidget(self.live_content)
         self._context_hint = None
         self._last_context_end = -1.
         self.context_button = _button("")
@@ -1365,6 +1390,8 @@ class MainWindow(QMainWindow):
             self.controller.recommendations_ready.connect(self._on_recommendations)
         if hasattr(self.controller, "evidence_changed"):
             self.controller.evidence_changed.connect(self._on_evidence)
+        if hasattr(self.controller, "content_ready"):
+            self.controller.content_ready.connect(self._on_content)
         self.revoke_transcript_button.clicked.connect(self._revoke_transcript)
         if hasattr(self.controller, "transcript_cleanup_changed"):
             self.controller.transcript_cleanup_changed.connect(self._set_session_controls)
@@ -1529,7 +1556,7 @@ class MainWindow(QMainWindow):
                      or self.mic_combo.currentData() is not None)
         self.start_button.setEnabled(not active and self.consent.isChecked() and (simulated or has_input)
                                     and self.activity_current.get("save_status") not in ("pending", "failed"))
-        self.start_button.setVisible(not active and self.tabs.currentIndex() != 4)
+        self._sync_session_visibility()
         self.pause_button.setVisible(active)
         self.stop_button.setVisible(active)
         self.pause_button.setEnabled(self.session_state in ("running", "paused"))
@@ -1626,6 +1653,8 @@ class MainWindow(QMainWindow):
         if not self._active_trial:
             self.trial_prompt_feedback.hide()
         self.session_id = result.get("session_id", self.session_id)
+        if self.session_state != "running" or self.session_id != previous_id:
+            self._on_content({})
         self._session_mode = result.get("mode", self._session_mode)
         mode_index = self.mode_combo.findData(self._session_mode)
         if mode_index >= 0 and mode_index != self.mode_combo.currentIndex():
@@ -1671,6 +1700,7 @@ class MainWindow(QMainWindow):
             self.fusion_mode.setText("尚无模态参与")
             self.fusion_interval.setText("尚无观察区间")
             self.fusion_weights.setText("视觉相对权重 —　·　语音相对权重 —　·　未映射 —")
+            self.fusion_details_button.hide()
             self.fusion_reason.setText("新会话尚无有效结果；表情与声音只提供可观察线索。")
             self.fusion_reason.setStyleSheet("")
             self.post_combo.setCurrentIndex(0)
@@ -1756,6 +1786,8 @@ class MainWindow(QMainWindow):
         self._fusion_display_end = end
         self._fusion_display_priority = priority
         self._fusion_display_event = result.get("event_id")
+        self._fusion_explanation = evidence_text(result.get("evidence_explanation"))
+        self.fusion_details_button.setVisible(bool(self._fusion_explanation))
         reference = result.get("personal_reference") or {}
         message = reference.get("message", "")
         self.personal_reference_label.setText(message)
@@ -1798,6 +1830,8 @@ class MainWindow(QMainWindow):
                            "missing_modality": "缺少对应参数，使用质量加权"}
             action = {"abstain": "暂缓判断", "observe_only": "仅观察", "ask": "可累计询问证据"}
             state = calibration.get(result.get("calibration_status"), "校准参数不可用")
+            if result.get("strategy_used") == "single_cue_calibration":
+                state = "已按单路标注校准"
             self.fusion_weights.setText(f"视觉权重 {_percent(visual_weight)}　·　语音权重 {_percent(audio_weight)}\n"
                                         f"{state} · {action.get(result['decision'], '仅观察')}")
             diagnostics = result.get("predictive_uncertainty") or {}
@@ -1815,6 +1849,10 @@ class MainWindow(QMainWindow):
                 if explanation:
                     self.fusion_reason.setText(explanation)
 
+    def _show_fusion_details(self):
+        QMessageBox.information(self, "本时段的判断依据", self.fusion_interval.text() + "\n\n" +
+                                self._fusion_explanation + "\n\n" + self.fusion_reason.text())
+
     def _on_evidence(self, result):
         seconds = _number(result.get("effective_seconds", result.get("negative_seconds")), 0)
         density = result.get("coverage_density", result.get("density"))
@@ -1826,11 +1864,27 @@ class MainWindow(QMainWindow):
             self.evidence_progress.setText(self.evidence_progress.text() + " · " + timing[result["timing_reason"]])
 
     def _revoke_transcript(self):
+        self._on_content({})
         self._clear_context_hint()
         self._revoked_session = self.session_id
         self.controller.set_transcript_allowed(False)
         self.transcript_consent.setChecked(False)
         self._set_session_controls()
+
+    def _on_content(self, result: dict):
+        if not result:
+            self._content_end = -1.
+            self.live_content.set_result(None)
+            return
+        if (self.session_state != "running" or result.get("session_id") != self.session_id
+                or not self.transcript_consent.isChecked()):
+            return
+        end = _number(result.get("t_end"))
+        start = _number(result.get("t_start"))
+        if start is None or end is None or end < self._content_end:
+            return
+        self._content_end = end
+        self.live_content.set_result(result, f"发言内容 {start:.1f}–{end:.1f} 秒", automatic_transcript=True)
 
     def _on_transcript(self, result: dict) -> None:
         if (self.session_state != "running" or not self.transcript_consent.isChecked()
@@ -1843,6 +1897,9 @@ class MainWindow(QMainWindow):
             prefix += f"{stamp:.1f}s  "
         if text:
             self.transcript.appendPlainText(prefix + text)
+            polarity = text_polarity_summary(result.get("semantic_context"))
+            if polarity:
+                self.transcript.appendPlainText(polarity)
             end = _number(result.get("t_end"))
             if end is None or end < self._last_context_end:
                 return
@@ -2485,6 +2542,9 @@ class MainWindow(QMainWindow):
             self.controller.delete_session(session_id)
 
     def closeEvent(self, event) -> None:
+        if not self.local_media_page.stop_for_close():
+            event.ignore()
+            return
         self.breathing.set_running(False)
         self.controller.shutdown()
         event.accept()

@@ -1,0 +1,28 @@
+{
+  "model_version": "aligned-utterance-polarity-v1",
+  "av_cap": 0.25,
+  "policy": "text_first",
+  "english_classifier_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "development_source_ids": [
+    "077cda22a6c66670",
+    "07f6a3cafd17df51",
+    "205b61599cf7a208",
+    "5b37fd250c43dca7",
+    "5eb32a525abb1355",
+    "61632c1f4d934b25",
+    "64dd6be6fc28e559",
+    "663ab5b94a9aad12",
+    "92ce8477bd782a02",
+    "936bbd43ecddb01d",
+    "9858a6dd676a3e02",
+    "9cac345300acd257",
+    "b3e1adc30a732cf7",
+    "c02cc77a3deccdb7",
+    "c5a823dbc758375d",
+    "d242d31ee4bc4c88",
+    "d689db97e63aca21",
+    "e1d0f50da03949f6"
+  ],
+  "surrogate_text_model": "competition-en-polarity-tfidf-2773dcaf2b5e4e72",
+  "rule": "Select blend only for source-balanced development macro-F1 improvement >= .01 with no accuracy or coverage loss."
+}

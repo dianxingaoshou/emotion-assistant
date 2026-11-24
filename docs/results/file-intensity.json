@@ -1,0 +1,372 @@
+{
+  "scope": "Previously assessed attachment 1 holdout, disjoint sources from attachment 2 fit/selection. Actual local file inference with opt-in ASR and duration-weighted intensity on scored speech. Official transcripts used only for separate text-only comparison.",
+  "source_count": 19,
+  "model_sha256": "e3d20b8d43b19267fd9b461963339ca59dcd54aa703123cb9b2a5f96452f0804",
+  "workbook_sha256": "827334f782b1f242c84ad944a657bc7f7c63643f71ae9c977811a3eecdd3ab33",
+  "asr_version": "SenseVoiceSmall@3847d57b6bdf",
+  "train_median": 0.0,
+  "file": {
+    "total": 43,
+    "scored": 42,
+    "abstained": 1,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5779549796241249,
+      "pearson": 0.03788225183604755
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.14467783374535187,
+        0.08872645684499038
+      ],
+      "pearson_95pct": [
+        -0.2979671769722083,
+        0.335786718373686
+      ]
+    }
+  },
+  "official_text": {
+    "total": 43,
+    "scored": 43,
+    "abstained": 0,
+    "prediction": {
+      "n": 43,
+      "mae": 0.4956286127608845,
+      "pearson": 0.35337282554662486
+    },
+    "train_median_same_clips": {
+      "n": 43,
+      "mae": 0.6046511724937794,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.18434251519632397,
+        -0.01862314917658625
+      ],
+      "pearson_95pct": [
+        0.09959127252663455,
+        0.6185666898912947
+      ]
+    }
+  },
+  "clips": [
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "target": 0.3333333432674408,
+      "file": 0.24818767420299007,
+      "official_text": 0.21953942083821387
+    },
+    {
+      "id": "027e9bba48f886ed/07e1fb7a6685e1ee",
+      "target": 1.0,
+      "file": -0.1560316259416096,
+      "official_text": -0.016166027918156023
+    },
+    {
+      "id": "027e9bba48f886ed/45c3cba5c05ce37f",
+      "target": 0.0,
+      "file": 0.2741677818549356,
+      "official_text": 0.28675367474269636
+    },
+    {
+      "id": "027e9bba48f886ed/bdc5552e9c7bc5d7",
+      "target": 1.6666666269302368,
+      "file": 0.40464774762087,
+      "official_text": 0.40464774762087
+    },
+    {
+      "id": "1aa8528533c5fd58/198998687644acf6",
+      "target": 0.3333333432674408,
+      "file": 0.14642331490516516,
+      "official_text": 0.14642331490516516
+    },
+    {
+      "id": "1aa8528533c5fd58/463c8c58227d153d",
+      "target": 0.3333333432674408,
+      "file": -0.022946716428182495,
+      "official_text": -0.17142720988422336
+    },
+    {
+      "id": "1aa8528533c5fd58/769827a47a9caf07",
+      "target": 1.3333333730697632,
+      "file": 0.06515620867398429,
+      "official_text": 0.10310610887720745
+    },
+    {
+      "id": "1f6d1bb337e28dfe/3fb0fb03b005356e",
+      "target": 0.0,
+      "file": 0.20863470725088296,
+      "official_text": 0.2960827294656766
+    },
+    {
+      "id": "1f6d1bb337e28dfe/a4f90f239090bc81",
+      "target": 0.3333333432674408,
+      "file": 0.30777523071217583,
+      "official_text": 0.44845494239585804
+    },
+    {
+      "id": "287b60f81cfd5d72/c0f7b19c40bae049",
+      "target": -1.0,
+      "file": 0.23328458027710422,
+      "official_text": 0.15952029945820742
+    },
+    {
+      "id": "37a6eeffd27c89a6/d2f9392f1c558302",
+      "target": -0.6666666865348816,
+      "file": 0.0628731725549557,
+      "official_text": 0.042326692143325254
+    },
+    {
+      "id": "37a6eeffd27c89a6/f79b5ec44812073b",
+      "target": 0.6666666865348816,
+      "file": 0.47520190987081784,
+      "official_text": 0.4752019098708178
+    },
+    {
+      "id": "50ee595f6744db07/389043f22a9e4b14",
+      "target": 0.6666666865348816,
+      "file": -0.09673068528709003,
+      "official_text": -0.16941994647145717
+    },
+    {
+      "id": "6bdb9c5e021e8a90/6278c40fad440a2d",
+      "target": -0.6666666865348816,
+      "file": 0.10391077523220715,
+      "official_text": 0.10391077523220715
+    },
+    {
+      "id": "6bdb9c5e021e8a90/8c8fc0f93637e71f",
+      "target": 0.6666666865348816,
+      "file": 0.3586596030815601,
+      "official_text": 0.4412034095893037
+    },
+    {
+      "id": "7a917fffe77e927f/a9fa10a7db6e4d2e",
+      "target": 0.3333333432674408,
+      "file": -0.011191633145567178,
+      "official_text": 0.26867953924089016
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/6d8020abed7297f7",
+      "target": 1.0,
+      "file": 0.04555791140731795,
+      "official_text": 0.4749056130266789
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/fa3cb7a0f9b4b391",
+      "target": 0.6666666865348816,
+      "file": 0.17261581109312576,
+      "official_text": 0.29200698322069785
+    },
+    {
+      "id": "b467037e45a8aca6/71a44eab6419ef3f",
+      "target": 0.0,
+      "file": 0.46899389867910934,
+      "official_text": 0.41798440558426864
+    },
+    {
+      "id": "b5b19dfb1d5a644e/0f89819f9db72637",
+      "target": 0.3333333432674408,
+      "file": 0.7729794803460541,
+      "official_text": 0.38570132432972104
+    },
+    {
+      "id": "b5b19dfb1d5a644e/3108f90639d2e2a6",
+      "target": 0.6666666865348816,
+      "file": 0.39831228150433384,
+      "official_text": 0.13264858766628956
+    },
+    {
+      "id": "b5b19dfb1d5a644e/4ab79474b2f5d4bf",
+      "target": 1.0,
+      "file": 0.3487304490073212,
+      "official_text": 0.21784393999176851
+    },
+    {
+      "id": "b5b19dfb1d5a644e/7aab1a118d8d84dc",
+      "target": 1.3333333730697632,
+      "file": 0.090744035,
+      "official_text": 0.22471283619333815
+    },
+    {
+      "id": "b5b19dfb1d5a644e/c6c89b28fd6b53b6",
+      "target": 0.6666666865348816,
+      "file": 0.4158992295557993,
+      "official_text": 0.3130308975465875
+    },
+    {
+      "id": "bca5ae7f7084ca4a/e4f2fc92a4c106e1",
+      "target": 0.3333333432674408,
+      "file": 0.5175230566409005,
+      "official_text": 0.5175230566409005
+    },
+    {
+      "id": "bdecbe00adaa2c2b/06e2f12f659abbc6",
+      "target": 1.0,
+      "file": 0.6294365836402713,
+      "official_text": 0.5667022311512248
+    },
+    {
+      "id": "bdecbe00adaa2c2b/34216c571d880471",
+      "target": 0.0,
+      "file": 0.20117126304547525,
+      "official_text": -0.20373033752232725
+    },
+    {
+      "id": "bdecbe00adaa2c2b/6a7e6dd10425ada3",
+      "target": -0.3333333432674408,
+      "file": -0.1704460223119905,
+      "official_text": -0.13452857545328575
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b7943f9bde96157d",
+      "target": 0.0,
+      "file": 0.2835362104399862,
+      "official_text": 0.02888173700217042
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b8b483ebccae9ead",
+      "target": 1.3333333730697632,
+      "file": 0.14999004742169222,
+      "official_text": 0.39037141023446864
+    },
+    {
+      "id": "bdecbe00adaa2c2b/c277902fc714df2c",
+      "target": -2.0,
+      "file": 0.42202319940583877,
+      "official_text": 0.42202319940583877
+    },
+    {
+      "id": "bdecbe00adaa2c2b/fea20adad61a4e56",
+      "target": 0.6666666865348816,
+      "file": 0.7662743415811668,
+      "official_text": 0.4539514081565095
+    },
+    {
+      "id": "be6ff21d93fcdecc/348f87be7bb4c8b2",
+      "target": 0.0,
+      "file": -0.16288015740308814,
+      "official_text": 0.19575335772146005
+    },
+    {
+      "id": "be6ff21d93fcdecc/629e892c1fed0b4d",
+      "target": 0.0,
+      "file": 0.4250104408082424,
+      "official_text": 0.07442826338449168
+    },
+    {
+      "id": "be6ff21d93fcdecc/dd9a07c9c5c047d8",
+      "target": -0.6666666865348816,
+      "file": 0.7974450688989733,
+      "official_text": -0.10460539949545697
+    },
+    {
+      "id": "c618ec8c07982e4a/f7c9161ad1328ef3",
+      "target": 0.6666666865348816,
+      "file": 0.5775218786494304,
+      "official_text": 0.5331871682294932
+    },
+    {
+      "id": "c7463432572a4594/9e6466902ccd8eaf",
+      "target": 0.3333333432674408,
+      "file": 0.09551827258661567,
+      "official_text": 0.09551827258661567
+    },
+    {
+      "id": "c7463432572a4594/aaead252507336ab",
+      "target": 0.3333333432674408,
+      "file": 0.4174353547767846,
+      "official_text": 0.4047019233627719
+    },
+    {
+      "id": "c7463432572a4594/ea9c23628f683f7d",
+      "target": 2.0,
+      "file": 0.8674767506861507,
+      "official_text": 0.8674767506861507
+    },
+    {
+      "id": "cb2ca0575c191f43/94bf1d0904f4a196",
+      "target": 0.0,
+      "file": 0.6861027405328687,
+      "official_text": 0.6861027405328687
+    },
+    {
+      "id": "cdef65b68a59d56f/110cb248f4d3977d",
+      "target": 0.0,
+      "file": null,
+      "official_text": -0.21939359978895248
+    },
+    {
+      "id": "cdef65b68a59d56f/80cc4e83add19db8",
+      "target": -0.3333333432674408,
+      "file": 0.6472311623705926,
+      "official_text": -0.38034308603676437
+    },
+    {
+      "id": "cdef65b68a59d56f/ed32b423dfd9772d",
+      "target": 0.3333333432674408,
+      "file": 0.5040317552200195,
+      "official_text": 0.12497444028338006
+    }
+  ],
+  "official_text_on_common": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5022056368792638,
+      "pearson": 0.3473119743023821
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.19301174905352542,
+        -0.022491394563034825
+      ],
+      "pearson_95pct": [
+        0.0893207378847018,
+        0.6222718078818666
+      ]
+    }
+  },
+  "file_on_common": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5779549796241249,
+      "pearson": 0.03788225183604755
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.14467783374535187,
+        0.08872645684499038
+      ],
+      "pearson_95pct": [
+        -0.2979671769722083,
+        0.335786718373686
+      ]
+    }
+  }
+}

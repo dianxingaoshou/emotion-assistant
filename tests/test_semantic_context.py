@@ -65,6 +65,13 @@ def test_desktop_strategy_selector_and_opt_in_need_hint(tmp_path, monkeypatch):
         assert "未拟合" in window.fusion_weights.text()
         window.prompt_availability.setCurrentIndex(window.prompt_availability.findData("quiet"))
         assert controller.prompt_timing.mode == "quiet"
+        content = {"session_id": controller.session_id, "t_start": 1., "t_end": 2.,
+                   "decision": "estimate", "label": "neutral", "scores": {"neutral": .54},
+                   "used_modalities": ["text"], "available_modalities": ["text"]}
+        window._on_content(content)
+        assert "中性 54.0%" in window.live_content.headline.text()
+        window._on_content(dict(content, t_end=1.5, scores={"neutral": .99}))
+        assert "中性 54.0%" in window.live_content.headline.text()
         text = "我现在很紧张"
         current = window.need_combo.currentData()
         payload = {"session_id": controller.session_id, "t_end": .1, "text": text,
@@ -78,6 +85,8 @@ def test_desktop_strategy_selector_and_opt_in_need_hint(tmp_path, monkeypatch):
         assert window.need_combo.currentData() == "tense"
         controller._handle_event({"kind": "utterance", "utterance": payload})
         window.revoke_transcript_button.click()
+        window._on_content(content)
+        assert window.live_content.isHidden() and not window.live_content.headline.text()
         assert window.context_button.isHidden()
         controller._handle_event({"kind": "utterance", "utterance": payload})
         assert window.context_button.isHidden()

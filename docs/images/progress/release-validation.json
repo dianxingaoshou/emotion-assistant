@@ -1,0 +1,30 @@
+{
+  "at_utc": "2026-11-24T04:48:15.692+00:00",
+  "python": "3.12.6",
+  "commands": [
+    "scripts/verify.py",
+    "scripts/model_smoke.py"
+  ],
+  "qt_platform": "offscreen",
+  "hardware_session_tested": false,
+  "verification_passed": true,
+  "junit": {
+    "tests": 384,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_seconds": 7.091,
+  "official_model_smoke": {
+    "visual_real_inference": true,
+    "visual_refusals": true,
+    "audio_real_inference": true,
+    "asr_real_inference": true,
+    "vad_real_inference_and_segmentation": true
+  },
+  "local_source_sha256": {
+    "tests.xml": "d869976549b7cf0e48782df475d5d03b1409c292ac466ecdfa73bc0082fa3aee",
+    "acceptance.json": "edb0b2ec5410b7ef1aa056b15642a6008b368b7f51b4a641d4a70899c37c8921",
+    "model-smoke.json": "a8ae7a9613b51e614b318fa0b031e93eb3219c74c0e9c224e87a1bcc06dc3c77"
+  }
+}

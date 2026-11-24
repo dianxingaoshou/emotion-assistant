@@ -17,6 +17,7 @@ from PySide6.QtCore import QObject, QTimer, Signal, Slot, Qt
 
 from .capture import CaptureConfig, CaptureRuntime, invalid_observation
 from .core import FusionEngine, InterventionFlow
+from .content_timeline import LiveContentTimeline
 from .paths import DATA, MODELS
 from .storage import Store
 from .regulation import ACTIVITIES, NEEDS, evaluate_outcome, summarize_feedback
@@ -44,6 +45,7 @@ class Controller(QObject):
     observation_ready = Signal(dict)
     fusion_ready = Signal(dict)
     transcript_ready = Signal(dict)
+    content_ready = Signal(dict)
     status_changed = Signal(str)
     session_changed = Signal(dict)
     devices_ready = Signal(dict)
@@ -132,6 +134,7 @@ class Controller(QObject):
         self._write_context = {}
         self._record_write_versions = {}
         self._audio_evidence = OrderedDict()
+        self._content_timeline = LiveContentTimeline()
         self._simulation_timer = QTimer(self)
         self._simulation_timer.setInterval(500)
         self._simulation_timer.timeout.connect(self._simulate_tick)
@@ -364,6 +367,7 @@ class Controller(QObject):
         self.flow = InterventionFlow()
         self.evidence_gate.reset(self.session_id)
         self._audio_evidence.clear()
+        self._clear_content()
         self.conflict_gate.reset(self.session_id)
         since = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat(timespec="milliseconds")
         self.prompt_timing.restore(self.store.recent_prompt_history(user_id, self.mode, since))
@@ -469,10 +473,14 @@ class Controller(QObject):
             self._publish_fusion(result)
         elif kind == "utterance":
             utterance = event["utterance"]
-            if not self.transcript_allowed or utterance.get("session_id") != self.session_id:
+            sid = utterance.get("session_id")
+            if not self.transcript_allowed or sid != self.session_id:
                 return
             self.transcript_ready.emit(utterance)
-            self._write(self.store.save_utterance, self.session_id, utterance, True)
+            if self.state == "running" and self.transcript_allowed and self.session_id == sid:
+                self._emit_content(self._content_timeline.observe_transcript(utterance))
+            if self.state == "running" and self.transcript_allowed and self.session_id == sid:
+                self._write(self.store.save_utterance, sid, utterance, True)
         else:
             self.status_changed.emit(event.get("message", str(kind)))
             self._write(self.store.append_event, self.session_id, kind or "status", event)
@@ -491,7 +499,12 @@ class Controller(QObject):
         reference["applied"] = reference["status"] in ("above_reference", "within_or_below_reference")
         result["personal_reference"] = reference
         self.fusion_ready.emit(result)
-        self._write(self.store.save_observation, self.session_id, result)
+        if self.state != "running" or self.session_id != result["session_id"]:
+            return
+        self._emit_content(self._content_timeline.observe_fusion(result))
+        if self.state != "running" or self.session_id != result["session_id"]:
+            return
+        self._write(self.store.save_observation, result["session_id"], result)
         priority = {"joint": 2, "audio_only": 1, "visual_only": 1, "unavailable": 0}
         previous = self.latest_summary
         if (previous is None or result["t_end"] > previous["t_end"]
@@ -502,6 +515,14 @@ class Controller(QObject):
         self._consider_prompt(result)
         if self.assessment is not None:
             self.assessment.add(result)
+
+    def _clear_content(self, minimum_start=0.):
+        self._content_timeline.reset(minimum_start)
+        self.content_ready.emit({})
+
+    def _emit_content(self, result):
+        if result is not None and self.state == "running":
+            self.content_ready.emit(dict(result, session_id=self.session_id, simulation=self.mode == "simulation"))
 
     def _queue_audio_evidence(self, observation):
         eid = observation.get("event_id")
@@ -527,6 +548,8 @@ class Controller(QObject):
         entry["revision"] += 1
         result.update(event_id="fusion:"+eid, audio_event_id=eid,
                       revision=entry["revision"], revised=entry["published"])
+        if entry["observation"].get("segment_id"):
+            result["segment_id"] = entry["observation"]["segment_id"]
         entry["published"] = True
         self._publish_fusion(result)
 
@@ -541,6 +564,7 @@ class Controller(QObject):
         if allowed is not False or self.state not in ("running", "paused"):
             return
         self.transcript_allowed = False
+        self._clear_content(time.monotonic() - self.started)
         if self.runtime:
             try:
                 self.runtime.set_asr_allowed(False)
@@ -651,6 +675,7 @@ class Controller(QObject):
         self.negative_start = self.negative_end = None
         self.evidence_gate.reset(self.session_id)
         self._audio_evidence.clear()
+        self._clear_content(time.monotonic() - self.started)
         if paused and self.assessment is not None:
             self.skip_assessment(reason="paused")
         self._write(self.store.append_event, self.session_id, "pause" if paused else "resume",
@@ -664,6 +689,7 @@ class Controller(QObject):
         if self.flow.state in ("confirming", "ready", "running"):
             self.cancel_activity(reason="session_stopped")
         self.state = "stopping"
+        self._clear_content()
         self._simulation_timer.stop()
         self._session_signal()
         sid, runtime = self.session_id, self.runtime
@@ -1367,6 +1393,7 @@ class Controller(QObject):
         if self.flow.state in ("confirming", "ready", "running") and self.session_id:
             self.cancel_activity(reason="app_closed")
         self.closed = True
+        self._clear_content()
         if self.runtime:
             self.runtime.stop()
             self.runtime = None

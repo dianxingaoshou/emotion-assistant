@@ -26,10 +26,9 @@
 
 每个片段使用同一份 MP4 的视频轨和音频轨。在每个 0.5 秒窗口的中点取得最近的后一帧，调用项目实际的 YuNet 人脸检测、EmotiEffLib 表情模型；用原有输入质量和时段覆盖规则汇总。音频解码为 16 kHz 单声道，整个已切分语句交给项目的 emotion2vec+ seed 声学模型。本实验没有使用转写、假定的麦克风延迟或真人困扰度，也没有测量实时 VAD 切段、设备延迟或吞吐。四种方法使用相同输入、模型版本和外显四类映射。完整融合仅在拟合组学习温度和可靠性门控，在选阈值组按原有规则选择接受阈值，不调测试演员的参数；不会自动将实验参数装入桌面程序。
 
-从配置过真实模型的项目根目录运行以下命令。PyAV 仅为复现实验解码 MP4 使用，安装在忽略的项目专属目录；日常应用无需此依赖。下载脚本读取官方 ZIP 中的指定成员，逐段核对大小和 CRC，记录 SHA256；数据集采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)，本仓库不分发音视频。
+从配置过真实模型的项目根目录运行以下命令。项目安装脚本会将 PyAV 14.2.0 安装到项目的 `.venv`，用于本地文件检测及本实验中的 MP4 解码。下载脚本读取官方 ZIP 中的指定成员，逐段核对大小和 CRC，记录 SHA256；数据集采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)，本仓库不分发音视频。
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install --only-binary=:all: --target .runtime/ravdess-codecs av==14.2.0
 .\.venv\Scripts\python.exe scripts/ravdess_rater_labels.py --download
 .\.venv\Scripts\python.exe scripts/bench_real_ravdess_data.py
 .\.venv\Scripts\python.exe scripts/bench_real_ravdess_infer.py

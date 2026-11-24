@@ -1,0 +1,144 @@
+{
+  "protocol": "attachment2-english-expressed-intensity-v1",
+  "workbook_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+  "model_version": "en-intensity-tfidf-ridge-v1-19bb2657c1f39159",
+  "artifact_uncompressed_sha256": "771a6b79e75124a66016e2da987fb181d21d204e457dc5bdf90412147714c007",
+  "source": "Attachment 2 label.xlsx, official English transcript and continuous label for each clip, original mode splits.",
+  "target": "Signed expressed sentiment intensity, clipped to [-3,+3]; independent of polarity classification and user self-assessment.",
+  "method": "Train-only English unigram/bigram TF-IDF (train df>=3, at most 5000 terms), sublinear TF, L2 normalization, ridge regression on continuous labels. Entirely local inference.",
+  "selection": "Lowest validation MAE over all clips, imputing train median for abstentions. Fixed grid ordered by alpha. No refit on validation. Test opened for final frozen model evaluation.",
+  "abstention": "Same gates in all splits and desktop: >=80% ASCII English alphabetic characters, >=2 words, >=25% training vocabulary coverage and nonempty TF-IDF. No numerical value on abstention in the UI. The median fallback is used for all-clip comparisons only.",
+  "metrics": "MAE and Pearson on identical denominators; Pearson is null for a constant. Intervals use 2000 paired source-video bootstrap draws, seed 20261123.",
+  "scope": "Reference English transcript experiment, not an acoustic or visual intensity model. Individual clause and ASR-generated transcript intensity need separate evaluation.",
+  "train_median": 0.0,
+  "train_median_by_gold_polarity": {
+    "negative": -1.0,
+    "neutral": 0.0,
+    "positive": 1.0
+  },
+  "prior_classifier_artifact_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "train_clips": 3395,
+  "train_sources": 1528,
+  "source_overlap_across_partitions": 0,
+  "normalized_transcript_overlap_distinct": {
+    "train_valid": 2,
+    "train_test": 0,
+    "valid_test": 0
+  },
+  "valid_selection_grid": [
+    {
+      "alpha": 0.25,
+      "n": 728,
+      "mae": 0.7765976879209538,
+      "pearson": 0.4201245102230275
+    },
+    {
+      "alpha": 1.0,
+      "n": 728,
+      "mae": 0.6972455549367418,
+      "pearson": 0.4796877490222404
+    },
+    {
+      "alpha": 4.0,
+      "n": 728,
+      "mae": 0.687645299621976,
+      "pearson": 0.48328126616733735
+    },
+    {
+      "alpha": 16.0,
+      "n": 728,
+      "mae": 0.7147573562033365,
+      "pearson": 0.453536433654575
+    }
+  ],
+  "chosen_alpha": 4.0,
+  "n_terms": 5000,
+  "official": {
+    "valid": {
+      "clips": 728,
+      "sources": 239,
+      "scored": 722,
+      "abstained": 6,
+      "coverage": 0.9917582417582418,
+      "regressor_scored": {
+        "n": 722,
+        "mae": 0.6928981229661095,
+        "pearson": 0.4833277215942064
+      },
+      "median_on_same_scored": {
+        "n": 722,
+        "mae": 0.7749307527312611,
+        "pearson": null
+      },
+      "regressor_all_with_train_median_fallback": {
+        "n": 728,
+        "mae": 0.687645299621976,
+        "pearson": 0.48328126616733735
+      },
+      "train_median_all": {
+        "n": 728,
+        "mae": 0.7690018362846676,
+        "pearson": null
+      },
+      "existing_polarity_class_to_train_median_all": {
+        "n": 728,
+        "mae": 0.8303571427547998,
+        "pearson": 0.35912437983107737
+      },
+      "all_with_fallback_clustered_intervals": {
+        "draws": 2000,
+        "mae_delta_vs_train_median_95pct": [
+          -0.1159050493614851,
+          -0.04614943258470781
+        ],
+        "pearson_95pct": [
+          0.3965268230617067,
+          0.5574146253941369
+        ]
+      }
+    },
+    "test": {
+      "clips": 727,
+      "sources": 381,
+      "scored": 727,
+      "abstained": 0,
+      "coverage": 1.0,
+      "regressor_scored": {
+        "n": 727,
+        "mae": 0.7869574471071279,
+        "pearson": 0.4922558223525063
+      },
+      "median_on_same_scored": {
+        "n": 727,
+        "mae": 0.8849151799406605,
+        "pearson": null
+      },
+      "regressor_all_with_train_median_fallback": {
+        "n": 727,
+        "mae": 0.7869574471071279,
+        "pearson": 0.4922558223525063
+      },
+      "train_median_all": {
+        "n": 727,
+        "mae": 0.8849151799406605,
+        "pearson": null
+      },
+      "existing_polarity_class_to_train_median_all": {
+        "n": 727,
+        "mae": 0.8849151753493811,
+        "pearson": 0.37933562509363533
+      },
+      "all_with_fallback_clustered_intervals": {
+        "draws": 2000,
+        "mae_delta_vs_train_median_95pct": [
+          -0.13397871097103345,
+          -0.06246426760480198
+        ],
+        "pearson_95pct": [
+          0.4120443627980757,
+          0.5620966447136818
+        ]
+      }
+    }
+  }
+}

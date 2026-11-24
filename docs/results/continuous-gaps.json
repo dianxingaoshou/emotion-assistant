@@ -1,0 +1,1433 @@
+{
+  "protocol": "contiguous-raw-stream-gap-v1",
+  "source": "RAVDESS 10.5281/zenodo.1188976, audiovisual human votes PLOS S5",
+  "labels": [
+    "positive",
+    "neutral",
+    "negative",
+    "uncertain"
+  ],
+  "heldout_unique_clips": 62,
+  "heldout_actor_ids": [
+    5,
+    6,
+    11,
+    12,
+    17,
+    18,
+    23,
+    24
+  ],
+  "class_counts": {
+    "neutral": 17,
+    "positive": 14,
+    "negative": 15,
+    "uncertain": 16
+  },
+  "method": "One fixed 25% or 50% contiguous block at the beginning, middle, or end, in exactly one stream. Visual cue uses the actual PTS of each 0.5s sampled frame; rejected source frames never enter remaining bins. Audio uses physically excised 16 kHz raw samples: run emotion2vec independently on both remaining contiguous pieces, no cross-gap concatenation or whole-utterance reuse. Segments shorter than 2s cannot enter fusion. Same native time intervals, quality gates and duration-weighted clip aggregation for both versions. Fixed project baseline quality_v2 vs bundled single-cue adaptation, no refit.",
+  "scope": "62 paired research clips selected before masking; other covers silence, scripted English utterances and eight acting subjects. No live VAD segmentation; released utterance defines the acoustic segment. Predict whole-clip audiovisual human perception throughout. Averages over repeated masks of the same clips do not constitute independent subjects or new samples.",
+  "metrics": "Accuracy and four-class macro-F1 include unscored clips as missed; Brier only on scored clips. Timeline coverage is duration with a score over entire source duration. Scored labels include descriptive probabilities from decision-level abstentions.",
+  "conditions": {
+    "intact": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 0.0,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9354838709677419,
+        "macro_f1_all": 0.9363603709508883,
+        "brier_scored": 0.19651482329560274,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            14,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9354838709677419,
+        "macro_f1_all": 0.9363603709508883,
+        "brier_scored": 0.19651482329560274,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            14,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_25_early": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 334,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9676897942157954,
+        "brier_scored": 0.15028119674532714,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9676897942157954,
+        "brier_scored": 0.1488723413405759,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_25_early": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 58,
+      "rejected_audio_by_reason": {
+        "below_min_quality": 4
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9879929692062445,
+        "accuracy_all": 0.7903225806451613,
+        "macro_f1_all": 0.7898233809924305,
+        "brier_scored": 0.32660507605494504,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            12,
+            4,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            7,
+            8,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9879929692062445,
+        "accuracy_all": 0.9193548387096774,
+        "macro_f1_all": 0.9191189916405433,
+        "brier_scored": 0.23899783823155593,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            13,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_25_middle": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 357,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9676897942157954,
+        "brier_scored": 0.14747604068321382,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9676897942157954,
+        "brier_scored": 0.146129444684812,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_25_middle": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 124,
+      "eligible_acoustic_chunks": 0,
+      "rejected_audio_by_reason": {
+        "insufficient_speech_duration": 122,
+        "audio_silent_or_too_quiet": 2
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.46774193548387094,
+        "macro_f1_all": 0.4312726157192758,
+        "brier_scored": 0.6337697258165967,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            10,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            1,
+            4,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.7580645161290323,
+        "macro_f1_all": 0.7454166666666666,
+        "brier_scored": 0.404898623216032,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            8,
+            2,
+            0
+          ],
+          [
+            3,
+            2,
+            2,
+            9,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_25_late": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 324,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9838709677419355,
+        "macro_f1_all": 0.98380355276907,
+        "brier_scored": 0.16067311598448278,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9838709677419355,
+        "macro_f1_all": 0.98380355276907,
+        "brier_scored": 0.15930612537212424,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_25_late": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 54.634625,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 58,
+      "rejected_audio_by_reason": {
+        "below_min_quality": 4
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9887925990199673,
+        "accuracy_all": 0.7903225806451613,
+        "macro_f1_all": 0.7935139573070608,
+        "brier_scored": 0.32845083176824746,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            12,
+            4,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            8,
+            8,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9887925990199673,
+        "accuracy_all": 0.9193548387096774,
+        "macro_f1_all": 0.920480476673428,
+        "brier_scored": 0.23655779822242276,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            13,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_50_early": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 246,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9838709677419355,
+        "macro_f1_all": 0.98380355276907,
+        "brier_scored": 0.10557311587019816,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9838709677419355,
+        "macro_f1_all": 0.98380355276907,
+        "brier_scored": 0.10467951287288313,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_50_early": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 4,
+      "rejected_audio_by_reason": {
+        "insufficient_speech_duration": 57,
+        "below_min_quality": 1
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.46774193548387094,
+        "macro_f1_all": 0.4312726157192758,
+        "brier_scored": 0.6293302394235386,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            10,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            1,
+            4,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.7903225806451613,
+        "macro_f1_all": 0.7839351851851852,
+        "brier_scored": 0.38265550801709114,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            10,
+            0,
+            0
+          ],
+          [
+            3,
+            2,
+            2,
+            9,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_50_middle": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 258,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9676897942157954,
+        "brier_scored": 0.10231023415153682,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9516129032258065,
+        "macro_f1_all": 0.9510416666666667,
+        "brier_scored": 0.1172907737493582,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            15,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_50_middle": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 124,
+      "eligible_acoustic_chunks": 0,
+      "rejected_audio_by_reason": {
+        "audio_silent_or_too_quiet": 123,
+        "insufficient_speech_duration": 1
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.46774193548387094,
+        "macro_f1_all": 0.4312726157192758,
+        "brier_scored": 0.6337697258165967,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            10,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            1,
+            4,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9661878992786744,
+        "accuracy_all": 0.7580645161290323,
+        "macro_f1_all": 0.7454166666666666,
+        "brier_scored": 0.404898623216032,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            8,
+            2,
+            0
+          ],
+          [
+            3,
+            2,
+            2,
+            9,
+            0
+          ]
+        ]
+      }
+    },
+    "visual_50_late": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 212,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 62,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.9838709677419355,
+        "macro_f1_all": 0.98380355276907,
+        "brier_scored": 0.10503363594477312,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 1.0000000000000002,
+        "accuracy_all": 0.967741935483871,
+        "macro_f1_all": 0.9671368861024033,
+        "brier_scored": 0.11998199567778385,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            16,
+            0
+          ]
+        ]
+      }
+    },
+    "audio_50_late": {
+      "cases": 62,
+      "total_seconds": 218.538625,
+      "removed_source_seconds": 109.26925,
+      "visual_frames_before": 458,
+      "visual_frames_retained": 458,
+      "raw_audio_chunks_retained": 62,
+      "eligible_acoustic_chunks": 5,
+      "rejected_audio_by_reason": {
+        "insufficient_speech_duration": 57
+      },
+      "before": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.968475824353704,
+        "accuracy_all": 0.4838709677419355,
+        "macro_f1_all": 0.4447142144910908,
+        "brier_scored": 0.6304704113798373,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            11,
+            0,
+            3,
+            0,
+            0
+          ],
+          [
+            1,
+            4,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            14,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            14,
+            1,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 62,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.968475824353704,
+        "accuracy_all": 0.7903225806451613,
+        "macro_f1_all": 0.7839351851851852,
+        "brier_scored": 0.3857424229260951,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            10,
+            0,
+            0
+          ],
+          [
+            3,
+            2,
+            2,
+            9,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "pooled_twelve_masks": {
+    "cases": 744,
+    "total_seconds": 2622.4635,
+    "removed_source_seconds": 983.42325,
+    "visual_frames_before": 5496,
+    "visual_frames_retained": 4479,
+    "raw_audio_chunks_retained": 868,
+    "eligible_acoustic_chunks": 497,
+    "rejected_audio_by_reason": {
+      "below_min_quality": 9,
+      "insufficient_speech_duration": 237,
+      "audio_silent_or_too_quiet": 125
+    },
+    "before": {
+      "scored_clips": 744,
+      "coverage_clips": 1.0,
+      "scored_fraction_of_timeline": 0.9869854242013261,
+      "accuracy_all": 0.7768817204301075,
+      "macro_f1_all": 0.7853064146098425,
+      "brier_scored": 0.32947861246994115,
+      "confusion_truth_by_pred_plus_abstention": [
+        [
+          153,
+          0,
+          15,
+          0,
+          0
+        ],
+        [
+          12,
+          133,
+          59,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          176,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          71,
+          116,
+          0
+        ]
+      ]
+    },
+    "after": {
+      "scored_clips": 744,
+      "coverage_clips": 1.0,
+      "scored_fraction_of_timeline": 0.9869854242013261,
+      "accuracy_all": 0.896505376344086,
+      "macro_f1_all": 0.8965610674778626,
+      "brier_scored": 0.23750091729389725,
+      "confusion_truth_by_pred_plus_abstention": [
+        [
+          168,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          12,
+          187,
+          5,
+          0,
+          0
+        ],
+        [
+          2,
+          20,
+          154,
+          4,
+          0
+        ],
+        [
+          13,
+          9,
+          12,
+          158,
+          0
+        ]
+      ]
+    }
+  },
+  "pooled_by_masked_channel": {
+    "audio": {
+      "cases": 372,
+      "total_seconds": 1311.23175,
+      "removed_source_seconds": 491.711625,
+      "visual_frames_before": 2748,
+      "visual_frames_retained": 2748,
+      "raw_audio_chunks_retained": 496,
+      "eligible_acoustic_chunks": 125,
+      "rejected_audio_by_reason": {
+        "below_min_quality": 9,
+        "insufficient_speech_duration": 237,
+        "audio_silent_or_too_quiet": 125
+      },
+      "before": {
+        "scored_clips": 372,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.973970848402656,
+        "accuracy_all": 0.5779569892473119,
+        "macro_f1_all": 0.5687791773662871,
+        "brier_scored": 0.5303993350432937,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            69,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            6,
+            40,
+            56,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            86,
+            0,
+            0
+          ],
+          [
+            5,
+            0,
+            71,
+            20,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 372,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.973970848402656,
+        "accuracy_all": 0.8225806451612904,
+        "macro_f1_all": 0.8189634911203538,
+        "brier_scored": 0.34229180230487155,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            84,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            94,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            20,
+            66,
+            4,
+            0
+          ],
+          [
+            13,
+            9,
+            12,
+            62,
+            0
+          ]
+        ]
+      }
+    },
+    "visual": {
+      "cases": 372,
+      "total_seconds": 1311.23175,
+      "removed_source_seconds": 491.711625,
+      "visual_frames_before": 2748,
+      "visual_frames_retained": 1731,
+      "raw_audio_chunks_retained": 372,
+      "eligible_acoustic_chunks": 372,
+      "rejected_audio_by_reason": {},
+      "before": {
+        "scored_clips": 372,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9999999999999993,
+        "accuracy_all": 0.9758064516129032,
+        "macro_f1_all": 0.9757424881506284,
+        "brier_scored": 0.12855788989658865,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            84,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            93,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            90,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            96,
+            0
+          ]
+        ]
+      },
+      "after": {
+        "scored_clips": 372,
+        "coverage_clips": 1.0,
+        "scored_fraction_of_timeline": 0.9999999999999993,
+        "accuracy_all": 0.9704301075268817,
+        "macro_f1_all": 0.9701918247498358,
+        "brier_scored": 0.1327100322829229,
+        "confusion_truth_by_pred_plus_abstention": [
+          [
+            84,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            93,
+            3,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            88,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            96,
+            0
+          ]
+        ]
+      }
+    }
+  }
+}

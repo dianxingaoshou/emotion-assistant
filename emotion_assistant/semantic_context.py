@@ -29,6 +29,17 @@ def interpret_context(text):
             if re.search(pattern, line):
                 need = key
                 break
-    return {"version": "zh-context-rules-v1", "subject": subject, "time_scope": scope,
+    context = {"version": "zh-context-rules-v1", "subject": subject, "time_scope": scope,
             "is_quote": quote, "explicit_feeling": feeling.group() if feeling and not denied else None,
             "need_hint": need, "evidence_text": line, "requires_confirmation": True}
+    # Store derived text data under the same consent and deletion boundary as ASR.
+    from .english_polarity import predict_english_polarity
+    from .english_intensity import predict_english_intensity
+
+    polarity = predict_english_polarity(text)
+    if polarity is not None:
+        context["english_polarity"] = polarity
+    intensity = predict_english_intensity(text)
+    if intensity is not None:
+        context["english_intensity"] = intensity
+    return context

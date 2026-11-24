@@ -1,0 +1,67 @@
+{
+  "run_start_utc": "2026-11-24T04:40:08.946802+00:00",
+  "run_end_utc": "2026-11-24T04:40:35.152882+00:00",
+  "timezone_for_figure": "UTC+08:00",
+  "revision": "73917a4a4dc8660c1e70ef50e157b8778170fbd3",
+  "tested_tree": "local working tree",
+  "source_changes_since_revision": true,
+  "runtime_test_sources_sha256": "9975d1e221cc7749d5cd274fd7b0ebf6c20112bcb91ad46c047b00fca0ba6672",
+  "hashed_source_files": 103,
+  "python": "3.12.6",
+  "os": "Windows",
+  "qt_platform": "offscreen",
+  "hardware_session_tested": false,
+  "pytest_stdout_last_line": "383 passed in 12.36s",
+  "junit": {
+    "tests": 383,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_sha256": "547b910e2d208d6931ca527a29c4137ca4a3e7d7bb8774bb32c2187d9e3f52b2",
+  "acceptance": {
+    "passed": true,
+    "pytest": true,
+    "ui_start": true,
+    "simulated_closed_loop": true
+  },
+  "runs": [
+    {
+      "script": "scripts/verify.py",
+      "exit_code": 0,
+      "wall_seconds": 16.132,
+      "source_sha256": "5f20eff90cba4ce8f3699bd45b7e6b600d2f3b4ef5fb7d97a4ea7690238f8dea",
+      "stdout": "PASS: reports/acceptance.json",
+      "check_count": null,
+      "passed": true
+    },
+    {
+      "script": "scripts/ui_smoke.py",
+      "exit_code": 0,
+      "wall_seconds": 6.988,
+      "source_sha256": "5ec43a8be6370612d08b58fbb3f66e623fbb479c7811bf182c079b4969670765",
+      "stdout": "UI smoke passed: 47 checks; screenshots in reports",
+      "check_count": 47,
+      "passed": true
+    },
+    {
+      "script": "scripts/regulation_smoke.py",
+      "exit_code": 0,
+      "wall_seconds": 1.385,
+      "source_sha256": "9851f0d3094e90e661e7aebce20e79471c3b26f40be1f7121c98a8f7acb82751",
+      "stdout": "{\"passed\":true,\"checks\":63,\"report\":\".runtime/progress-20261124-validation/regulation/result.json\",\"error\":null}",
+      "check_count": 63,
+      "passed": true
+    },
+    {
+      "script": "scripts/review_ui_smoke.py",
+      "exit_code": 0,
+      "wall_seconds": 1.701,
+      "source_sha256": "3c77db66cc91c8fe926ea13b695fe347f9ef5c1800717bfd68ea1be5c4b7be02",
+      "stdout": "{\"passed\":true,\"checks\":97,\"snapshots\":14,\"report\":\".runtime/progress-20261124-validation/review/ui-contracts.json\",\"error\":null}",
+      "check_count": 97,
+      "passed": true
+    }
+  ],
+  "note_zh": "本次为离屏软件验证；原始输出中的绝对路径已改为项目相对路径。每个命令的耗时包含启动和验证开销，不是推理延迟。三组 UI 检查不是 pytest 用例数。"
+}

@@ -1,0 +1,171 @@
+{
+  "protocol": "attachment2-shipped-transcript-gaps-v1",
+  "scope": "Actual shipped English text APIs. Full workbook transcripts. Remove ceil(ratio * lexical word count) consecutive words and pass the remaining string as a single transcript. Missing words are invisible to the model, as with an ASR omission. No A/V inputs or reference labels as features. Intensity metrics on scored clips only.",
+  "sources": 381,
+  "workbook_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+  "polarity_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "intensity_sha256": "e3d20b8d43b19267fd9b461963339ca59dcd54aa703123cb9b2a5f96452f0804",
+  "train_median": 0.0,
+  "conditions": {
+    "intact": {
+      "clips": 727,
+      "removed_words": 0,
+      "total_words": 14491,
+      "correct": 383,
+      "incorrect": 323,
+      "abstained": 21,
+      "intensity_scored": 727,
+      "intensity_abstained": 0,
+      "intensity": {
+        "n": 727,
+        "mae": 0.7869574471071279,
+        "pearson": 0.4922558223525063
+      },
+      "train_median_same_clips": {
+        "n": 727,
+        "mae": 0.8849151799406605,
+        "pearson": null
+      }
+    },
+    "drop_25pct_start": {
+      "clips": 727,
+      "removed_words": 3904,
+      "total_words": 14491,
+      "correct": 348,
+      "incorrect": 339,
+      "abstained": 40,
+      "intensity_scored": 723,
+      "intensity_abstained": 4,
+      "intensity": {
+        "n": 723,
+        "mae": 0.813941106458301,
+        "pearson": 0.41683798138515826
+      },
+      "train_median_same_clips": {
+        "n": 723,
+        "mae": 0.8870447244634272,
+        "pearson": null
+      }
+    },
+    "drop_25pct_middle": {
+      "clips": 727,
+      "removed_words": 3904,
+      "total_words": 14491,
+      "correct": 371,
+      "incorrect": 320,
+      "abstained": 36,
+      "intensity_scored": 723,
+      "intensity_abstained": 4,
+      "intensity": {
+        "n": 723,
+        "mae": 0.797230726089162,
+        "pearson": 0.4683521140723352
+      },
+      "train_median_same_clips": {
+        "n": 723,
+        "mae": 0.8870447244634272,
+        "pearson": null
+      }
+    },
+    "drop_25pct_end": {
+      "clips": 727,
+      "removed_words": 3904,
+      "total_words": 14491,
+      "correct": 361,
+      "incorrect": 330,
+      "abstained": 36,
+      "intensity_scored": 723,
+      "intensity_abstained": 4,
+      "intensity": {
+        "n": 723,
+        "mae": 0.8023434619248075,
+        "pearson": 0.46917872096636193
+      },
+      "train_median_same_clips": {
+        "n": 723,
+        "mae": 0.8870447244634272,
+        "pearson": null
+      }
+    },
+    "drop_50pct_start": {
+      "clips": 727,
+      "removed_words": 7423,
+      "total_words": 14491,
+      "correct": 331,
+      "incorrect": 358,
+      "abstained": 38,
+      "intensity_scored": 718,
+      "intensity_abstained": 9,
+      "intensity": {
+        "n": 718,
+        "mae": 0.8257393858362515,
+        "pearson": 0.3914997435565935
+      },
+      "train_median_same_clips": {
+        "n": 718,
+        "mae": 0.8922934110035139,
+        "pearson": null
+      }
+    },
+    "drop_50pct_middle": {
+      "clips": 727,
+      "removed_words": 7423,
+      "total_words": 14491,
+      "correct": 347,
+      "incorrect": 345,
+      "abstained": 35,
+      "intensity_scored": 718,
+      "intensity_abstained": 9,
+      "intensity": {
+        "n": 718,
+        "mae": 0.8104624805351014,
+        "pearson": 0.44600254290114477
+      },
+      "train_median_same_clips": {
+        "n": 718,
+        "mae": 0.8927576635707387,
+        "pearson": null
+      }
+    },
+    "drop_50pct_end": {
+      "clips": 727,
+      "removed_words": 7423,
+      "total_words": 14491,
+      "correct": 349,
+      "incorrect": 349,
+      "abstained": 29,
+      "intensity_scored": 720,
+      "intensity_abstained": 7,
+      "intensity": {
+        "n": 720,
+        "mae": 0.8177495969683437,
+        "pearson": 0.41896277354342554
+      },
+      "train_median_same_clips": {
+        "n": 720,
+        "mae": 0.8902777811719311,
+        "pearson": null
+      }
+    },
+    "drop_all_text": {
+      "clips": 727,
+      "removed_words": 14491,
+      "total_words": 14491,
+      "correct": 0,
+      "incorrect": 0,
+      "abstained": 727,
+      "intensity_scored": 0,
+      "intensity_abstained": 727,
+      "intensity": {
+        "n": 0,
+        "mae": null,
+        "pearson": null
+      },
+      "train_median_same_clips": {
+        "n": 0,
+        "mae": null,
+        "pearson": null
+      }
+    }
+  }
+}

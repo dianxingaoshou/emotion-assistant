@@ -2,6 +2,7 @@ aliyun-python-sdk-core==2.16.1
 aliyun-python-sdk-kms==2.16.5
 antlr4-python3-runtime==4.9.3
 audioread==3.1.0
+av==14.2.0
 certifi==2026.10.23
 cffi==2.1.1
 charset-normalizer==3.5.2

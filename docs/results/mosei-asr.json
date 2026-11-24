@@ -1,0 +1,1432 @@
+{
+  "scope": "Raw E attachment 1, opt-in production VAD + actual SenseVoice ASR + fixed English expressed-content model. Only sources excluded from both attachment 2 train and valid are scored; no thresholds fitted here. Reference-text results are a separate input comparison. Neither semantic score is a visual or acoustic score.",
+  "asr_version": "SenseVoiceSmall@3847d57b6bdf",
+  "english_classifier_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "all_inputs": {
+    "clips": 100,
+    "sources": 37
+  },
+  "files_with_real_transcript": 96,
+  "overlap_with_attachment_2_by_source": {
+    "train": {
+      "clips": 54,
+      "sources": 16
+    },
+    "valid": {
+      "clips": 3,
+      "sources": 2
+    },
+    "test": {
+      "clips": 18,
+      "sources": 6
+    }
+  },
+  "train_valid_disjoint": {
+    "clips": 43,
+    "sources": 19
+  },
+  "held_labels": {
+    "positive": 27,
+    "neutral": 9,
+    "negative": 7
+  },
+  "held_asr_text_available": 42,
+  "train_majority": "positive",
+  "held_metrics": {
+    "asr": {
+      "n": 43,
+      "scored": 37,
+      "mapped_argmax": 37,
+      "correct": 19,
+      "unmapped_argmax": 0,
+      "accuracy_all": 0.4418604651162791,
+      "accuracy_scored": 0.5135135135135135,
+      "macro_f1_all": 0.31777046482928833
+    },
+    "reference_text": {
+      "n": 43,
+      "scored": 42,
+      "mapped_argmax": 42,
+      "correct": 22,
+      "unmapped_argmax": 0,
+      "accuracy_all": 0.5116279069767442,
+      "accuracy_scored": 0.5238095238095238,
+      "macro_f1_all": 0.44885322550072654
+    },
+    "majority": {
+      "n": 43,
+      "scored": 43,
+      "mapped_argmax": 43,
+      "correct": 27,
+      "unmapped_argmax": 0,
+      "accuracy_all": 0.627906976744186,
+      "accuracy_scored": 0.627906976744186,
+      "macro_f1_all": 0.2571428571428572
+    }
+  },
+  "official_split_workbook_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+  "attachment_1_workbook_sha256": "827334f782b1f242c84ad944a657bc7f7c63643f71ae9c977811a3eecdd3ab33",
+  "held_reference_texts_repeated_in_train_valid": 0,
+  "held_delta_vs_majority_95pct_by_source": {
+    "asr": [
+      -0.325,
+      -0.030280748663101726
+    ],
+    "reference_text": [
+      -0.3333333333333333,
+      0.11773618538324372
+    ]
+  },
+  "clips": [
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "027e9bba48f886ed/07e1fb7a6685e1ee",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": null,
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "027e9bba48f886ed/45c3cba5c05ce37f",
+      "label": "neutral",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": null,
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "027e9bba48f886ed/bdc5552e9c7bc5d7",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "077cda22a6c66670/075909d63f678097",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "077cda22a6c66670/922fe9d3866b8e5c",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "077cda22a6c66670/aab5000fd5bb1f74",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "077cda22a6c66670/e62d4d9b216fccc3",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "07f6a3cafd17df51/949ab59362f9aa65",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "07f6a3cafd17df51/be8c2a99efe31883",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "1aa8528533c5fd58/198998687644acf6",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "1aa8528533c5fd58/463c8c58227d153d",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "1aa8528533c5fd58/769827a47a9caf07",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "1f6d1bb337e28dfe/3fb0fb03b005356e",
+      "label": "neutral",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "1f6d1bb337e28dfe/a4f90f239090bc81",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "205b61599cf7a208/6366e2a146ee15b4",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "287b60f81cfd5d72/c0f7b19c40bae049",
+      "label": "negative",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": null,
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "37a6eeffd27c89a6/d2f9392f1c558302",
+      "label": "negative",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "37a6eeffd27c89a6/f79b5ec44812073b",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "50ee595f6744db07/389043f22a9e4b14",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5b37fd250c43dca7/57443bf5d07650c3",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "5b37fd250c43dca7/6311aec7f63600ad",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5b37fd250c43dca7/ede1a2a8c327423a",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5eb32a525abb1355/1cee2b4a078ed175",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "5eb32a525abb1355/45925c617e5102f4",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": false,
+      "segments": 0,
+      "asr": null,
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5eb32a525abb1355/468b4a51425a5a80",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": false,
+      "segments": 0,
+      "asr": null,
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5eb32a525abb1355/614d4343dcd8e5ae",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "5eb32a525abb1355/d3581ed4dd342740",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "61632c1f4d934b25/759166c3578e328c",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "64dd6be6fc28e559/87257c6a51ee5215",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "64dd6be6fc28e559/ef7b3494acddac68",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": false,
+      "segments": 0,
+      "asr": null,
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "663ab5b94a9aad12/3fba269a951b51ed",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "663ab5b94a9aad12/4fc0163b1730d15c",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "663ab5b94a9aad12/8b1049eeeb368b20",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "663ab5b94a9aad12/d52e715175056ea8",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "6bdb9c5e021e8a90/6278c40fad440a2d",
+      "label": "negative",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "6bdb9c5e021e8a90/8c8fc0f93637e71f",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "7a917fffe77e927f/a9fa10a7db6e4d2e",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/6d8020abed7297f7",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/fa3cb7a0f9b4b391",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "92ce8477bd782a02/15ad2fc79184f92f",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "92ce8477bd782a02/b36ca089fbf268c9",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "92ce8477bd782a02/cb39320e7f7b2a58",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "92ce8477bd782a02/d19fd2e0b84234e1",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "92ce8477bd782a02/d6baf95de2040f12",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "936bbd43ecddb01d/0226b46d367638f6",
+      "label": "negative",
+      "source_partitions": [
+        "valid"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "936bbd43ecddb01d/633b62a53f173c0c",
+      "label": "negative",
+      "source_partitions": [
+        "valid"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "9858a6dd676a3e02/95ee40eec26fe034",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "9858a6dd676a3e02/b1ab9e18783766d8",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "9858a6dd676a3e02/bdf7cb3a410efadc",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "9858a6dd676a3e02/d9a10d8c02452d91",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "9cac345300acd257/18c5392abb443c33",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "b3e1adc30a732cf7/60b7efa4bc6ccc72",
+      "label": "positive",
+      "source_partitions": [
+        "valid"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b467037e45a8aca6/71a44eab6419ef3f",
+      "label": "neutral",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b5b19dfb1d5a644e/0f89819f9db72637",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b5b19dfb1d5a644e/3108f90639d2e2a6",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b5b19dfb1d5a644e/4ab79474b2f5d4bf",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b5b19dfb1d5a644e/7aab1a118d8d84dc",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "b5b19dfb1d5a644e/c6c89b28fd6b53b6",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bca5ae7f7084ca4a/e4f2fc92a4c106e1",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/06e2f12f659abbc6",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/34216c571d880471",
+      "label": "neutral",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/6a7e6dd10425ada3",
+      "label": "negative",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b7943f9bde96157d",
+      "label": "neutral",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "negative",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b8b483ebccae9ead",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": "neutral",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/c277902fc714df2c",
+      "label": "negative",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "bdecbe00adaa2c2b/fea20adad61a4e56",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "be6ff21d93fcdecc/348f87be7bb4c8b2",
+      "label": "neutral",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 9,
+      "asr": null,
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "be6ff21d93fcdecc/629e892c1fed0b4d",
+      "label": "neutral",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "be6ff21d93fcdecc/dd9a07c9c5c047d8",
+      "label": "negative",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 4,
+      "asr": "positive",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/318e2597d84b801e",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/32051824eea2925e",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/5ab8fe6b8e877e5c",
+      "label": "negative",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/6319dece1e72016b",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "c02cc77a3deccdb7/8f141b78cac42f41",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/8fd8ab8fefe25e16",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c02cc77a3deccdb7/a1295bcb101080c1",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": true
+    },
+    {
+      "id": "c5a823dbc758375d/e2d200904e4ad8bf",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "negative",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c618ec8c07982e4a/f7c9161ad1328ef3",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 3,
+      "asr": null,
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c7463432572a4594/9e6466902ccd8eaf",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c7463432572a4594/aaead252507336ab",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "c7463432572a4594/ea9c23628f683f7d",
+      "label": "positive",
+      "source_partitions": [
+        "test"
+      ],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "cb2ca0575c191f43/94bf1d0904f4a196",
+      "label": "neutral",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "cdef65b68a59d56f/110cb248f4d3977d",
+      "label": "neutral",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": false,
+      "segments": 0,
+      "asr": null,
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "cdef65b68a59d56f/80cc4e83add19db8",
+      "label": "negative",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "negative",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "cdef65b68a59d56f/ed32b423dfd9772d",
+      "label": "positive",
+      "source_partitions": [],
+      "no_train_valid_source_overlap": true,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": "positive",
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/2ed86c766a0b4f8f",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/3c602a3614663d55",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/4bc260daf44a258d",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/c2d2d6e61aa98aea",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/c904c9c7f45524e5",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/d49c1bbb507df01f",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": null,
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/dc36bb78fc9723d1",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/e716e182e3e8fa3a",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d242d31ee4bc4c88/f0456b2e5476a7c0",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "d689db97e63aca21/77602878e9068c69",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "e1d0f50da03949f6/12f3c7ee52cb2ea2",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "neutral",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "e1d0f50da03949f6/780f904d8c0b29de",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 1,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "e1d0f50da03949f6/dc6fc6001160c39f",
+      "label": "positive",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    },
+    {
+      "id": "e1d0f50da03949f6/e3162d1fe2e3ca6f",
+      "label": "neutral",
+      "source_partitions": [
+        "train"
+      ],
+      "no_train_valid_source_overlap": false,
+      "has_asr_text": true,
+      "segments": 2,
+      "asr": "positive",
+      "reference_text": null,
+      "majority": "positive",
+      "reference_seen_in_train_valid": false
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "schema": "single-cue-log-probability-v1",
+  "target": "external_cue_positive_neutral_negative_unmapped_v1",
+  "mapping_version": "canonical-emotieff-emotion2vec-v1",
+  "label_order": [
+    "positive",
+    "neutral",
+    "negative",
+    "uncertain"
+  ],
+  "training": "RAVDESS/Zenodo 1188976; Livingstone & Russo 2018; CC BY-NC-SA 4.0",
+  "labels": "unique plurality of independent full audiovisual clip ratings (PLOS S5), including after input masking",
+  "fit_actors": [
+    1,
+    2,
+    7,
+    8,
+    13,
+    14,
+    19,
+    20
+  ],
+  "policy_actors": [
+    3,
+    4,
+    9,
+    10,
+    15,
+    16,
+    21,
+    22
+  ],
+  "branches": {
+    "visual": {
+      "coefficients": [
+        [
+          1.2839068408,
+          -0.4690452138,
+          -0.0832091853,
+          0.2683475583,
+          -0.1939974505
+        ],
+        [
+          0.1914262313,
+          1.5357905765,
+          -0.4664839779,
+          -0.2607328298,
+          0.1415779445
+        ],
+        [
+          -0.3017076981,
+          0.204344273,
+          0.8369524517,
+          0.2604109735,
+          -0.4606566502
+        ],
+        [
+          -0.173625374,
+          -0.2710896356,
+          0.7127407116,
+          0.731974298,
+          0.5130761563
+        ]
+      ],
+      "blend": 1.0,
+      "ridge": 4.0,
+      "model_version": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+      "n_fit": 63,
+      "n_policy": 62
+    },
+    "audio": {
+      "coefficients": [
+        [
+          0.5771289382,
+          0.2793999898,
+          0.1502484456,
+          -0.0067773736,
+          -0.3100433022
+        ],
+        [
+          0.177012656,
+          0.6569854195,
+          0.0772072678,
+          0.0887946568,
+          0.748777352
+        ],
+        [
+          0.0032180378,
+          0.0584082017,
+          0.5597694971,
+          0.3786042634,
+          -0.7345608194
+        ],
+        [
+          0.242640368,
+          0.005206389,
+          0.2127747894,
+          0.5393784535,
+          0.2958267697
+        ]
+      ],
+      "blend": 1.0,
+      "ridge": 1.0,
+      "model_version": "emotion2vec_plus_seed@7be9a30d52bd",
+      "n_fit": 62,
+      "n_policy": 57
+    }
+  },
+  "version": "7591b2a854c2dbb38c74f922acd07c11485b128adbe7d5f3aab90f1df7cf1393"
+}

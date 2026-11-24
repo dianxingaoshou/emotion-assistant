@@ -1,0 +1,180 @@
+{
+  "scope": "Real single AV midpoint frames vs ten visual-only ratings of corresponding full silent clips; not frame-level human ground truth. Cases illustrate successes and mismatches, not prevalence.",
+  "selection": "Sort AV IDs lexicographically. Illustrations require valid model, nonempty box, unique human plurality with >=6/10 votes. Pick first happy/happiness fine-grained AND coarse agreement (fallback first same coarse/fine if absent). Among remaining actors select most frequent coarse confusion (lexicographic pair ties), then its first ID. Also show a neutral reference: prefer human neutral/model neutral, then a distinct actor, then first ID.",
+  "cohort": {
+    "all_clip_count": 64,
+    "valid_visual_count": 60,
+    "unique_silent_label_count": 62,
+    "valid_and_unique_count": 59,
+    "valid_and_unique_agree": 27,
+    "majority_eligible_count": 57,
+    "mismatch_other_actor_counts": [
+      {
+        "reference": "negative",
+        "predicted": "neutral",
+        "n": 1
+      },
+      {
+        "reference": "negative",
+        "predicted": "positive",
+        "n": 1
+      },
+      {
+        "reference": "neutral",
+        "predicted": "negative",
+        "n": 12
+      },
+      {
+        "reference": "positive",
+        "predicted": "negative",
+        "n": 3
+      },
+      {
+        "reference": "unmapped",
+        "predicted": "negative",
+        "n": 7
+      },
+      {
+        "reference": "unmapped",
+        "predicted": "positive",
+        "n": 3
+      }
+    ]
+  },
+  "cases": [
+    {
+      "file": "figures/09-表情识别一致.png",
+      "clip_id": "01-01-03-01-01-01-05",
+      "video_only_stimulus": "02-01-03-01-01-01-05",
+      "actor_id": 5,
+      "frame_time_seconds": 2.002,
+      "frame_pts": 60060,
+      "source_media_sha256": "4f9ea2e56dbcc919560e3fb9b7cc7998de64f82d5cdf33ec4dc129882dd127a5",
+      "frame_bgr_sha256": "5a4670e6d623e87ac32ea6ba292d05f8d4fcea7365157fc5fe4d003aed41ac0a",
+      "face_box_xywh": [
+        502,
+        176,
+        328,
+        442
+      ],
+      "raw_top": "happiness",
+      "raw_top_score": 0.5804437431245973,
+      "four_class_top": "positive",
+      "four_class_scores": {
+        "positive": 0.5804437431245973,
+        "neutral": 0.004427900387662866,
+        "negative": 0.16179684520851378,
+        "unmapped": 0.2533315112792261
+      },
+      "human_label": "positive",
+      "human_n": 10,
+      "human_votes": {
+        "negative": 1,
+        "neutral": 0,
+        "positive": 9,
+        "unmapped": 0
+      },
+      "human_fine_votes": {
+        "happy": 9,
+        "sad": 1
+      },
+      "agreement": true,
+      "sha256": "fc7e7b33b407f30def5aaf8b54ff0f3aa92b2386d1c81c62911d82761e05913e",
+      "image_pixels": [
+        1800,
+        1080
+      ]
+    },
+    {
+      "file": "figures/10-表情识别不一致.png",
+      "clip_id": "01-01-01-01-01-01-06",
+      "video_only_stimulus": "02-01-01-01-01-01-06",
+      "actor_id": 6,
+      "frame_time_seconds": 1.6683333333333332,
+      "frame_pts": 50050,
+      "source_media_sha256": "3e9ae1632dac4a59df171603922b72a12af07ef1eb672d00a5bdff5c2a2bb033",
+      "frame_bgr_sha256": "8dcb1dad702775b6bd0c26b042d5ea2697f060278f34dd701f102fe102b510e0",
+      "face_box_xywh": [
+        473,
+        139,
+        315,
+        432
+      ],
+      "raw_top": "neutral",
+      "raw_top_score": 0.2919093839686842,
+      "four_class_top": "negative",
+      "four_class_scores": {
+        "positive": 0.10902877668314029,
+        "neutral": 0.2919093839686842,
+        "negative": 0.5262795618995042,
+        "unmapped": 0.0727822774486712
+      },
+      "human_label": "neutral",
+      "human_n": 10,
+      "human_votes": {
+        "negative": 4,
+        "neutral": 6,
+        "positive": 0,
+        "unmapped": 0
+      },
+      "human_fine_votes": {
+        "angry": 1,
+        "neutral": 6,
+        "sad": 3
+      },
+      "agreement": false,
+      "sha256": "12d2c6a71b087f2ef7f6264833661fd94b79bec786a4efba21b3d63f0d3e4f11",
+      "image_pixels": [
+        1800,
+        1080
+      ]
+    },
+    {
+      "file": "figures/11-中性表情参照.png",
+      "clip_id": "01-01-01-01-01-01-12",
+      "video_only_stimulus": "02-01-01-01-01-01-12",
+      "actor_id": 12,
+      "frame_time_seconds": 1.8351666666666666,
+      "frame_pts": 55055,
+      "source_media_sha256": "7216370de953796e93dc37a043a0867f0e5c1b56febed84017a71910f27af854",
+      "frame_bgr_sha256": "b87d4c83044a5011a9b4b5830ed4799404a7117c0c3e05fe9e0eff63491b1113",
+      "face_box_xywh": [
+        465,
+        149,
+        318,
+        444
+      ],
+      "raw_top": "neutral",
+      "raw_top_score": 0.47576709435793624,
+      "four_class_top": "neutral",
+      "four_class_scores": {
+        "positive": 0.1410565921405712,
+        "neutral": 0.47576709435793624,
+        "negative": 0.36120360559974685,
+        "unmapped": 0.021972707901745655
+      },
+      "human_label": "neutral",
+      "human_n": 10,
+      "human_votes": {
+        "negative": 0,
+        "neutral": 10,
+        "positive": 0,
+        "unmapped": 0
+      },
+      "human_fine_votes": {
+        "calm": 5,
+        "neutral": 5
+      },
+      "agreement": true,
+      "sha256": "bf43238b6f1f1effeb6195db011859e348eff47d96eadfe37b3e6190a84ec0bf",
+      "image_pixels": [
+        1800,
+        1080
+      ]
+    }
+  ],
+  "original": "Livingstone & Russo 2018, RAVDESS (https://doi.org/10.5281/zenodo.1188976)",
+  "rater_source": "https://doi.org/10.1371/journal.pone.0196391.s008",
+  "illustration_license": "CC BY-NC-SA 4.0; https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "modifications": "Midpoint extracted, scaled, and annotated with true model output and published observer data."
+}

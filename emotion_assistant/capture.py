@@ -144,18 +144,24 @@ class SpeechSegmenter:
             self.last_voice = end
         if ((self.last_voice is not None and end - self.last_voice >= self.silence)
                 or end - self.start >= self.maximum):
-            result = (np.concatenate(self.blocks), self.start, end)
-            metrics = {"speech_ratio": self.voice_samples/len(result[0]), "voiced_seconds": self.voice_samples/16000,
-                       "background_rms": None, "estimated_snr_db": None}
-            if self.noise_samples >= 1536 and self.voice_samples:
-                noise_power = self.noise_energy/self.noise_samples
-                speech_power = max(1e-10, self.voice_energy/self.voice_samples-noise_power)
-                metrics.update(background_rms=math.sqrt(noise_power),
-                               estimated_snr_db=10*math.log10(speech_power/max(1e-10, noise_power)))
-            self.reset()
-            self.last_metrics = metrics
-            return result
+            return self.finish()
         return None
+
+    def finish(self):
+        """Close an active utterance at its last real sample (including file EOF)."""
+        if not self.blocks:
+            return None
+        result = (np.concatenate(self.blocks), self.start, self.expected_next)
+        metrics = {"speech_ratio": self.voice_samples/len(result[0]), "voiced_seconds": self.voice_samples/16000,
+                   "background_rms": None, "estimated_snr_db": None}
+        if self.noise_samples >= 1536 and self.voice_samples:
+            noise_power = self.noise_energy/self.noise_samples
+            speech_power = max(1e-10, self.voice_energy/self.voice_samples-noise_power)
+            metrics.update(background_rms=math.sqrt(noise_power),
+                           estimated_snr_db=10*math.log10(speech_power/max(1e-10, noise_power)))
+        self.reset()
+        self.last_metrics = metrics
+        return result
 
 
 def camera_process(index, origin, stop, pause, frame_queue, status_queue):

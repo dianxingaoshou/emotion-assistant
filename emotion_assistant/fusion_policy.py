@@ -4,6 +4,7 @@ import math
 
 from .calibration import Calibration, LABELS, MAPPING_VERSION, fingerprint, gate_features, scale_probabilities
 from .evidence import jensen_shannon_divergence, raw_prediction_diagnostics
+from .single_cue import bundled_single_cue
 
 
 @dataclass(frozen=True)
@@ -17,10 +18,13 @@ class FusionConfig:
     opposite_threshold: float = .5
     mapping_version: str = MAPPING_VERSION
     version: str = "aligned-cue-policy-v1"
+    adapt_single_modality: bool = False
 
     def __post_init__(self):
         if self.strategy not in ("quality_v2", "calibrated_fusion") or self.mapping_version != MAPPING_VERSION:
             raise ValueError("unsupported fusion policy")
+        if type(self.adapt_single_modality) is not bool:
+            raise ValueError("adapt_single_modality must be a boolean")
         for number in (self.min_quality, self.conflict_js_threshold, self.conflict_dominance,
                        self.opposite_threshold, self.visual_weight, self.audio_weight):
             if isinstance(number, bool) or not isinstance(number, (float, int)) or not math.isfinite(number):
@@ -38,12 +42,20 @@ def divergence_of(branches):
 
 
 class FusionPolicy:
-    def __init__(self, config, calibration=None, baseline_version=None, configuration_issue=None):
+    def __init__(self, config, calibration=None, baseline_version=None, configuration_issue=None,
+                 *, single_cue_model=None):
         self.settings = config
         self.calibration = calibration if config.strategy == "calibrated_fusion" and calibration else Calibration()
         self.configuration_issue = configuration_issue
+        self.single_cue = single_cue_model if single_cue_model is not None else (
+            bundled_single_cue() if config.adapt_single_modality else None)
         basis = {**asdict(config), "calibration_version": self.calibration.version,
                  "calibration_load_status": self.calibration.status, "configuration_issue": configuration_issue}
+        if config.adapt_single_modality:
+            basis["single_cue_version"] = self.single_cue.version if self.single_cue else None
+        else:
+            # Preserve the fingerprint of historical unadapted policies.
+            basis.pop("adapt_single_modality")
         self.basis_hash = fingerprint(basis)
         self._config = {**basis, "baseline_version": baseline_version}
         self.config_hash = fingerprint(self._config)
@@ -65,6 +77,12 @@ class FusionPolicy:
                     and divergence >= cfg.conflict_js_threshold))
 
     def evaluate(self, branches):
+        from .fusion_explanation import explain_fusion
+        result = self._evaluate(branches)
+        result["evidence_explanation"] = explain_fusion(branches, result, self._evaluate)
+        return result
+
+    def _evaluate(self, branches):
         """Return decisions and separate raw canonical scores, quality and fitted reliability."""
         cfg = self.settings
         branches = {k: v for k, v in branches.items() if v["quality"] * v["coverage"] > 0}
@@ -85,6 +103,9 @@ class FusionPolicy:
                   "predictive_uncertainty": diagnostics, "reliability": {}, "unmapped_mass": None,
                   "input_quality": 0.0, "decision": "abstain", "decision_reasons": [],
                   "fusion_basis_hash": self.basis_hash}
+        result.update(available_modalities=sorted(branches),
+                      missing_modalities=sorted({"visual", "audio"}.difference(branches)),
+                      missing_modality_calibration="not_applicable")
         reasons = result["decision_reasons"]
         if self.configuration_issue:
             reasons.append(self.configuration_issue)
@@ -108,6 +129,16 @@ class FusionPolicy:
                 result["reliability"][k] = reliability
                 weights[k] *= reliability
                 mapped[k] = scale_probabilities(branch["scores"], fitted[k].temperature)
+        elif len(branches) == 1 and cfg.adapt_single_modality:
+            key = next(iter(branches))
+            if self.single_cue is None:
+                result["missing_modality_calibration"] = "artifact_unavailable"
+            else:
+                adjusted, status = self.single_cue.apply(key, branches[key])
+                result["missing_modality_calibration"] = status
+                if adjusted is not None:
+                    mapped[key] = adjusted
+                    result["strategy_used"] = "single_cue_calibration"
         denominator = sum(weights.values())
         weights = {k: weights.get(k, 0) / denominator for k in ("visual", "audio")}
         scores = {label: sum(weights[k] * mapped[k][label] for k in branches) for label in LABELS}

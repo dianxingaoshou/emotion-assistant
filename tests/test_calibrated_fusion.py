@@ -107,6 +107,24 @@ def test_partial_coverage_intrinsic_quality_and_unknown_models():
     assert engine.fuse_audio(obs("audio"))["calibration_status"] == "version_mismatch"
 
 
+def test_counterfactual_keeps_target_and_replays_actual_single_channel_policy(tmp_path):
+    engine = configured(tmp_path, document())
+    engine.add_visual(obs("visual", "positive"))
+    acoustic = obs("audio", "negative")
+    joint = engine.fuse_audio(acoustic)
+    explanation = joint["evidence_explanation"]
+    label = max(joint["scores"], key=joint["scores"].get)
+    assert joint["conflict"] and explanation["target"] == label == "negative"
+    visual = engine.visual_summary(0, 2)
+    audio = configured(tmp_path, document()).fuse_audio(acoustic)
+    for removed, remaining in (("audio", visual), ("visual", audio)):
+        without = explanation["without"][removed]
+        assert without["target_score"] == pytest.approx(remaining["scores"][label])
+        assert without["score_difference"] == pytest.approx(joint["scores"][label] - remaining["scores"][label])
+        assert without["decision"] == remaining["decision"]
+    assert visual["evidence_explanation"]["without"]["visual"]["target_score"] is None
+
+
 def test_rejecting_policy_cannot_accumulate_prompt_evidence(tmp_path):
     engine = configured(tmp_path, document())
     engine.add_visual(obs("visual"))

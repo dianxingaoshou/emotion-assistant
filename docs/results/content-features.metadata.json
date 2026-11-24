@@ -1,0 +1,54 @@
+{
+  "protocol": "content-features-v1",
+  "runtime": {
+    "fusion": {
+      "strategy": "quality_v2",
+      "min_quality": 0.2,
+      "visual_weight": 1.0,
+      "audio_weight": 1.0,
+      "conflict_js_threshold": 0.18,
+      "conflict_dominance": 0.6,
+      "opposite_threshold": 0.5,
+      "mapping_version": "canonical-emotieff-emotion2vec-v1",
+      "version": "aligned-cue-policy-v1",
+      "adapt_single_modality": true,
+      "calibration_version": null,
+      "calibration_load_status": "unfitted",
+      "configuration_issue": null,
+      "single_cue_version": "7591b2a854c2dbb38c74f922acd07c11485b128adbe7d5f3aab90f1df7cf1393",
+      "baseline_version": null
+    },
+    "model_versions": {
+      "face": "YuNet-2023mar@48b10fa505ae",
+      "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+      "audio": "emotion2vec_plus_seed@7be9a30d52bd"
+    }
+  },
+  "asr": "SenseVoiceSmall@3847d57b6bdf",
+  "text_artifact_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "surrogate_text_model": "competition-en-polarity-tfidf-2773dcaf2b5e4e72",
+  "surrogate_train_clips": 3374,
+  "surrogate_train_sources": 1512,
+  "surrogate_excludes_raw_sources": 37,
+  "official_split_sha256": "0d6351ace01a2edee8861b21b2893c82d916d2a3e8b69d3b4f832ca841349875",
+  "input_code_sha256": {
+    "file_tracks.py": "9b218cce3708680a0ad755e0d9d87f8ed369dc56978b072732cbaeb3cc860cb8",
+    "models.py": "b0a047863a34978a9eb593fa79680b44f6224013e84d565f607340a6feab8b85",
+    "english_polarity.py": "fbaa2538a5859662f776616bc24f5d4eeb668e1308371618b9abea515c2844d0",
+    "core.py": "9752a96286db43f02572a3765c9ad3e3ecc38569c502a65c6bdfa22135e813be",
+    "fusion_policy.py": "c4368521f899c0707cdce0c539c851c262f59ece0f1549a3e08d95c13ff2bd1f"
+  },
+  "holdout_reference_texts_repeated_in_base_train_valid": 0,
+  "timeline_code_sha256": "9f09cd8c285a678f3da4f803eb33cd3f813cb1ef543bc832c0f370c677bb903c",
+  "output_sha256": "7440c10e3dc3c9cfeb1d3995e24e73455a3349489f7e6583936f0cd905a3c58b",
+  "partitions": {
+    "development": {
+      "clips": 57,
+      "sources": 18
+    },
+    "holdout": {
+      "clips": 43,
+      "sources": 19
+    }
+  }
+}

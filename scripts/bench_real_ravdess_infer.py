@@ -14,7 +14,6 @@ import time
 from bench_real_ravdess_data import CACHE, ROOT, specimens
 
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / ".runtime" / "ravdess-codecs"))
 from emotion_assistant.paths import configure_environment, MODELS
 
 PROTOCOL = "ravdess-half-second-clip-v1"

@@ -1,0 +1,204 @@
+{
+  "protocol": "ravdess-conditioned-dropout-v1",
+  "dataset": "10.5281/zenodo.1188976",
+  "human_labels": "10.1371/journal.pone.0196391.s008",
+  "unit": "Paired held-out clips with two originally eligible modes and a unique audiovisual rater plurality. No scripted emotion label used.",
+  "masking": "Deterministic masking and reduced coverage/quality on frozen clip features AFTER inference. No raw noise/occlusion synthesis. No text; not a field or clinical evaluation.",
+  "selection": "fit 4x5 ridge multinomial map vs identity on fitting actors. On policy actors minimize Brier, require >=0.005 Brier improvement and no loss in accuracy/macro-F1, otherwise retain identity.",
+  "actor_splits": {
+    "fit": [
+      1,
+      2,
+      7,
+      8,
+      13,
+      14,
+      19,
+      20
+    ],
+    "policy": [
+      3,
+      4,
+      9,
+      10,
+      15,
+      16,
+      21,
+      22
+    ],
+    "test": [
+      5,
+      6,
+      11,
+      12,
+      17,
+      18,
+      23,
+      24
+    ]
+  },
+  "counts_after_excluding_rater_ties": {
+    "fit": 63,
+    "policy": 62,
+    "test": 63
+  },
+  "input_sha256": {
+    "features.jsonl": "f3ba2fa5418be182b0d2fd0069d0cac65c042783fd557d4f0321c96c476002a7",
+    "rater-labels.json": "b26484a48abb12436380eff69e4bfb784fcb562e405d0d06156fbb286e4d3206"
+  },
+  "artifact": "7591b2a854c2dbb38c74f922acd07c11485b128adbe7d5f3aab90f1df7cf1393",
+  "validation": {
+    "visual": {
+      "eligible_fit": 63,
+      "eligible_policy": 62,
+      "base": {
+        "accuracy": 0.4838709677419355,
+        "macro_f1": 0.3812912018255578,
+        "brier": 0.685793939496723
+      },
+      "selected": {
+        "accuracy": 0.5806451612903226,
+        "macro_f1": 0.565987022828455,
+        "brier": 0.5185487560047719
+      },
+      "adapted": true
+    },
+    "audio": {
+      "eligible_fit": 62,
+      "eligible_policy": 57,
+      "base": {
+        "accuracy": 0.9122807017543859,
+        "macro_f1": 0.913151364764268,
+        "brier": 0.1524087529711835
+      },
+      "selected": {
+        "accuracy": 0.9473684210526315,
+        "macro_f1": 0.9484490740740741,
+        "brier": 0.12173369822833773
+      },
+      "adapted": true
+    }
+  },
+  "scenarios": {
+    "both": {
+      "n": 62,
+      "scored": 62,
+      "before": {
+        "accuracy": 0.9354838709677419,
+        "macro_f1": 0.9363603709508883,
+        "brier": 0.19651482329560277,
+        "accepted": 43,
+        "accepted_errors": 3
+      },
+      "after": {
+        "accuracy": 0.9354838709677419,
+        "macro_f1": 0.9363603709508883,
+        "brier": 0.19651482329560277,
+        "accepted": 43,
+        "accepted_errors": 3
+      },
+      "adapted": 0,
+      "paired_brier_change_ci95_actor": [
+        0.0,
+        0.0
+      ]
+    },
+    "visual_missing": {
+      "n": 62,
+      "scored": 62,
+      "before": {
+        "accuracy": 0.9838709677419355,
+        "macro_f1": 0.98380355276907,
+        "brier": 0.04443164104457345,
+        "accepted": 46,
+        "accepted_errors": 1
+      },
+      "after": {
+        "accuracy": 0.9516129032258065,
+        "macro_f1": 0.9508113590263692,
+        "brier": 0.06548777210499487,
+        "accepted": 46,
+        "accepted_errors": 3
+      },
+      "adapted": 62,
+      "paired_brier_change_ci95_actor": [
+        -0.00906591343258081,
+        0.05902285299464335
+      ]
+    },
+    "audio_missing": {
+      "n": 62,
+      "scored": 62,
+      "before": {
+        "accuracy": 0.4838709677419355,
+        "macro_f1": 0.4447142144910908,
+        "brier": 0.6309315602404467,
+        "accepted": 61,
+        "accepted_errors": 32
+      },
+      "after": {
+        "accuracy": 0.7096774193548387,
+        "macro_f1": 0.7010222689339837,
+        "brier": 0.4166188974929566,
+        "accepted": 51,
+        "accepted_errors": 15
+      },
+      "adapted": 62,
+      "paired_brier_change_ci95_actor": [
+        -0.2890088642864273,
+        -0.13745868921610765
+      ]
+    },
+    "visual_coverage_halved": {
+      "n": 62,
+      "scored": 62,
+      "before": {
+        "accuracy": 0.9838709677419355,
+        "macro_f1": 0.98380355276907,
+        "brier": 0.1085338011081195,
+        "accepted": 41,
+        "accepted_errors": 1
+      },
+      "after": {
+        "accuracy": 0.9838709677419355,
+        "macro_f1": 0.98380355276907,
+        "brier": 0.10762174929882888,
+        "accepted": 41,
+        "accepted_errors": 1
+      },
+      "adapted": 14,
+      "paired_brier_change_ci95_actor": [
+        -0.004059369544520661,
+        0.0012024102466110557
+      ]
+    },
+    "acoustic_quality_quartered": {
+      "n": 62,
+      "scored": 62,
+      "before": {
+        "accuracy": 0.5645161290322581,
+        "macro_f1": 0.5432330827067668,
+        "brier": 0.532515921850913,
+        "accepted": 59,
+        "accepted_errors": 27
+      },
+      "after": {
+        "accuracy": 0.8064516129032258,
+        "macro_f1": 0.8003267973856208,
+        "brier": 0.3210718868171102,
+        "accepted": 54,
+        "accepted_errors": 12
+      },
+      "adapted": 39,
+      "paired_brier_change_ci95_actor": [
+        -0.30767524706448407,
+        -0.11707978102438285
+      ]
+    },
+    "both_missing": {
+      "n": 62,
+      "scored": 0,
+      "both_abstained": 62
+    }
+  }
+}
