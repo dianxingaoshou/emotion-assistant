@@ -1,0 +1,707 @@
+{
+  "scope": "Previously assessed attachment 1 holdout, disjoint sources from attachment 2 fit/selection. Actual local file inference with opt-in ASR. Official transcripts used only for separate text-only comparison.",
+  "source_count": 19,
+  "model_sha256": "e3d20b8d43b19267fd9b461963339ca59dcd54aa703123cb9b2a5f96452f0804",
+  "workbook_sha256": "827334f782b1f242c84ad944a657bc7f7c63643f71ae9c977811a3eecdd3ab33",
+  "asr_version": "SenseVoiceSmall@3847d57b6bdf",
+  "train_median": 0.0,
+  "file": {
+    "total": 43,
+    "scored": 42,
+    "abstained": 1,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5492255651956331,
+      "pearson": 0.09399232792565765
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.17736835055907396,
+        0.059080505915245614
+      ],
+      "pearson_95pct": [
+        -0.25654493440272713,
+        0.46182116509604537
+      ]
+    }
+  },
+  "official_text": {
+    "total": 43,
+    "scored": 43,
+    "abstained": 0,
+    "prediction": {
+      "n": 43,
+      "mae": 0.4956286127608845,
+      "pearson": 0.35337282554662486
+    },
+    "train_median_same_clips": {
+      "n": 43,
+      "mae": 0.6046511724937794,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.18434251519632397,
+        -0.01862314917658625
+      ],
+      "pearson_95pct": [
+        0.09959127252663455,
+        0.6185666898912947
+      ]
+    }
+  },
+  "official_text_on_common": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5022056368792638,
+      "pearson": 0.3473119743023821
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.19301174905352542,
+        -0.022491394563034825
+      ],
+      "pearson_95pct": [
+        0.0893207378847018,
+        0.6222718078818666
+      ]
+    }
+  },
+  "file_on_common": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5492255651956331,
+      "pearson": 0.09399232792565765
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.17736835055907396,
+        0.059080505915245614
+      ],
+      "pearson_95pct": [
+        -0.25654493440272713,
+        0.46182116509604537
+      ]
+    }
+  },
+  "clips": [
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "target": 0.3333333432674408,
+      "file": 0.28988937557912886,
+      "official_text": 0.21953942083821387,
+      "source": "0131fb814f44bb9b",
+      "first_pass": 0.24818767420299007,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/07e1fb7a6685e1ee",
+      "target": 1.0,
+      "file": -0.18649325996524124,
+      "official_text": -0.016166027918156023,
+      "source": "027e9bba48f886ed",
+      "first_pass": -0.1560316259416096,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/45c3cba5c05ce37f",
+      "target": 0.0,
+      "file": 0.1823738689100181,
+      "official_text": 0.28675367474269636,
+      "source": "027e9bba48f886ed",
+      "first_pass": 0.2741677818549356,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "027e9bba48f886ed/bdc5552e9c7bc5d7",
+      "target": 1.6666666269302368,
+      "file": 0.31004429014114604,
+      "official_text": 0.40464774762087,
+      "source": "027e9bba48f886ed",
+      "first_pass": 0.40464774762087,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/198998687644acf6",
+      "target": 0.3333333432674408,
+      "file": 0.14642331490516516,
+      "official_text": 0.14642331490516516,
+      "source": "1aa8528533c5fd58",
+      "first_pass": 0.14642331490516516,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "yue"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/463c8c58227d153d",
+      "target": 0.3333333432674408,
+      "file": -0.05506655200414494,
+      "official_text": -0.17142720988422336,
+      "source": "1aa8528533c5fd58",
+      "first_pass": -0.022946716428182495,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "1aa8528533c5fd58/769827a47a9caf07",
+      "target": 1.3333333730697632,
+      "file": -0.023154470509149733,
+      "official_text": 0.10310610887720745,
+      "source": "1aa8528533c5fd58",
+      "first_pass": 0.06515620867398429,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "1f6d1bb337e28dfe/3fb0fb03b005356e",
+      "target": 0.0,
+      "file": 0.25501449002836296,
+      "official_text": 0.2960827294656766,
+      "source": "1f6d1bb337e28dfe",
+      "first_pass": 0.20863470725088296,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "1f6d1bb337e28dfe/a4f90f239090bc81",
+      "target": 0.3333333432674408,
+      "file": 0.46004378490585673,
+      "official_text": 0.44845494239585804,
+      "source": "1f6d1bb337e28dfe",
+      "first_pass": 0.31304782314175655,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "287b60f81cfd5d72/c0f7b19c40bae049",
+      "target": -1.0,
+      "file": 0.14232885057311773,
+      "official_text": 0.15952029945820742,
+      "source": "287b60f81cfd5d72",
+      "first_pass": 0.23328458027710422,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "37a6eeffd27c89a6/d2f9392f1c558302",
+      "target": -0.6666666865348816,
+      "file": 0.07720062684894263,
+      "official_text": 0.042326692143325254,
+      "source": "37a6eeffd27c89a6",
+      "first_pass": 0.06806188837481666,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "37a6eeffd27c89a6/f79b5ec44812073b",
+      "target": 0.6666666865348816,
+      "file": 0.522560052662264,
+      "official_text": 0.4752019098708178,
+      "source": "37a6eeffd27c89a6",
+      "first_pass": 0.47520190987081784,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "50ee595f6744db07/389043f22a9e4b14",
+      "target": 0.6666666865348816,
+      "file": 0.04112938794711862,
+      "official_text": -0.16941994647145717,
+      "source": "50ee595f6744db07",
+      "first_pass": -0.09673068528709003,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "6bdb9c5e021e8a90/6278c40fad440a2d",
+      "target": -0.6666666865348816,
+      "file": 0.01666866867016442,
+      "official_text": 0.10391077523220715,
+      "source": "6bdb9c5e021e8a90",
+      "first_pass": 0.10391077523220715,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "6bdb9c5e021e8a90/8c8fc0f93637e71f",
+      "target": 0.6666666865348816,
+      "file": 0.46721045813237205,
+      "official_text": 0.4412034095893037,
+      "source": "6bdb9c5e021e8a90",
+      "first_pass": 0.46721045813237205,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "ja"
+      ]
+    },
+    {
+      "id": "7a917fffe77e927f/a9fa10a7db6e4d2e",
+      "target": 0.3333333432674408,
+      "file": 0.10084350686923031,
+      "official_text": 0.26867953924089016,
+      "source": "7a917fffe77e927f",
+      "first_pass": -0.011191633145567178,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/6d8020abed7297f7",
+      "target": 1.0,
+      "file": 0.3040711023086503,
+      "official_text": 0.4749056130266789,
+      "source": "91b9a8e6a0c7cb91",
+      "first_pass": 0.04555791140731795,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "91b9a8e6a0c7cb91/fa3cb7a0f9b4b391",
+      "target": 0.6666666865348816,
+      "file": 0.17261581109312576,
+      "official_text": 0.29200698322069785,
+      "source": "91b9a8e6a0c7cb91",
+      "first_pass": 0.17261581109312576,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "ja"
+      ]
+    },
+    {
+      "id": "b467037e45a8aca6/71a44eab6419ef3f",
+      "target": 0.0,
+      "file": 0.4716921036905494,
+      "official_text": 0.41798440558426864,
+      "source": "b467037e45a8aca6",
+      "first_pass": 0.46899389867910934,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/0f89819f9db72637",
+      "target": 0.3333333432674408,
+      "file": 0.8702597114991577,
+      "official_text": 0.38570132432972104,
+      "source": "b5b19dfb1d5a644e",
+      "first_pass": 0.7729794803460541,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/3108f90639d2e2a6",
+      "target": 0.6666666865348816,
+      "file": 0.5746940474374953,
+      "official_text": 0.13264858766628956,
+      "source": "b5b19dfb1d5a644e",
+      "first_pass": 0.39831228150433384,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/4ab79474b2f5d4bf",
+      "target": 1.0,
+      "file": 0.3837038222555461,
+      "official_text": 0.21784393999176851,
+      "source": "b5b19dfb1d5a644e",
+      "first_pass": 0.3487304490073212,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/7aab1a118d8d84dc",
+      "target": 1.3333333730697632,
+      "file": 0.13460857426286704,
+      "official_text": 0.22471283619333815,
+      "source": "b5b19dfb1d5a644e",
+      "first_pass": 0.090744035,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "b5b19dfb1d5a644e/c6c89b28fd6b53b6",
+      "target": 0.6666666865348816,
+      "file": 0.6162239995035891,
+      "official_text": 0.3130308975465875,
+      "source": "b5b19dfb1d5a644e",
+      "first_pass": 0.4158992295557993,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bca5ae7f7084ca4a/e4f2fc92a4c106e1",
+      "target": 0.3333333432674408,
+      "file": 0.4607819601615971,
+      "official_text": 0.5175230566409005,
+      "source": "bca5ae7f7084ca4a",
+      "first_pass": 0.5175230566409005,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/06e2f12f659abbc6",
+      "target": 1.0,
+      "file": 0.6484114876145546,
+      "official_text": 0.5667022311512248,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.6294365836402713,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/34216c571d880471",
+      "target": 0.0,
+      "file": -0.051773556946080254,
+      "official_text": -0.20373033752232725,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.20117126304547525,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/6a7e6dd10425ada3",
+      "target": -0.3333333432674408,
+      "file": -0.04505322769785632,
+      "official_text": -0.13452857545328575,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": -0.1704460223119905,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b7943f9bde96157d",
+      "target": 0.0,
+      "file": 0.3089929612341924,
+      "official_text": 0.02888173700217042,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.2835362104399862,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/b8b483ebccae9ead",
+      "target": 1.3333333730697632,
+      "file": 0.19408397104925987,
+      "official_text": 0.39037141023446864,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.14999004742169222,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/c277902fc714df2c",
+      "target": -2.0,
+      "file": 0.5176958664101309,
+      "official_text": 0.42202319940583877,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.42202319940583877,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "bdecbe00adaa2c2b/fea20adad61a4e56",
+      "target": 0.6666666865348816,
+      "file": 0.5723585095112096,
+      "official_text": 0.4539514081565095,
+      "source": "bdecbe00adaa2c2b",
+      "first_pass": 0.7662743415811668,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/348f87be7bb4c8b2",
+      "target": 0.0,
+      "file": 0.1132088069326924,
+      "official_text": 0.19575335772146005,
+      "source": "be6ff21d93fcdecc",
+      "first_pass": 0.1132088069326924,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "ja"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/629e892c1fed0b4d",
+      "target": 0.0,
+      "file": 0.4250104408082424,
+      "official_text": 0.07442826338449168,
+      "source": "be6ff21d93fcdecc",
+      "first_pass": 0.4250104408082424,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "zh"
+      ]
+    },
+    {
+      "id": "be6ff21d93fcdecc/dd9a07c9c5c047d8",
+      "target": -0.6666666865348816,
+      "file": 0.7974450688989733,
+      "official_text": -0.10460539949545697,
+      "source": "be6ff21d93fcdecc",
+      "first_pass": 0.7974450688989733,
+      "method": "segment_weighted",
+      "asr_languages": [
+        "en",
+        "zh"
+      ]
+    },
+    {
+      "id": "c618ec8c07982e4a/f7c9161ad1328ef3",
+      "target": 0.6666666865348816,
+      "file": 0.3591237574843178,
+      "official_text": 0.5331871682294932,
+      "source": "c618ec8c07982e4a",
+      "first_pass": 0.5775218786494304,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/9e6466902ccd8eaf",
+      "target": 0.3333333432674408,
+      "file": 0.13602831185870276,
+      "official_text": 0.09551827258661567,
+      "source": "c7463432572a4594",
+      "first_pass": 0.09551827258661567,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/aaead252507336ab",
+      "target": 0.3333333432674408,
+      "file": 0.4022866169865711,
+      "official_text": 0.4047019233627719,
+      "source": "c7463432572a4594",
+      "first_pass": 0.4174353547767846,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "c7463432572a4594/ea9c23628f683f7d",
+      "target": 2.0,
+      "file": 0.9975964934167058,
+      "official_text": 0.8674767506861507,
+      "source": "c7463432572a4594",
+      "first_pass": 0.8674767506861507,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "cb2ca0575c191f43/94bf1d0904f4a196",
+      "target": 0.0,
+      "file": 0.48185126734013967,
+      "official_text": 0.6861027405328687,
+      "source": "cb2ca0575c191f43",
+      "first_pass": 0.6861027405328687,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "cdef65b68a59d56f/110cb248f4d3977d",
+      "target": 0.0,
+      "file": null,
+      "official_text": -0.21939359978895248,
+      "source": "cdef65b68a59d56f",
+      "first_pass": null,
+      "method": "abstained",
+      "asr_languages": []
+    },
+    {
+      "id": "cdef65b68a59d56f/80cc4e83add19db8",
+      "target": -0.3333333432674408,
+      "file": 0.4315898523721863,
+      "official_text": -0.38034308603676437,
+      "source": "cdef65b68a59d56f",
+      "first_pass": 0.6472311623705926,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    },
+    {
+      "id": "cdef65b68a59d56f/ed32b423dfd9772d",
+      "target": 0.3333333432674408,
+      "file": 0.6865474696932773,
+      "official_text": 0.12497444028338006,
+      "source": "cdef65b68a59d56f",
+      "first_pass": 0.5040317552200195,
+      "method": "asr_word_character_pool",
+      "asr_languages": [
+        "en"
+      ]
+    }
+  ],
+  "mode": "Desktop default, full production entry point. Seed set per file before the first pass only.",
+  "paired_n": 42,
+  "method_counts": {
+    "asr_word_character_pool": 36,
+    "segment_weighted": 6,
+    "abstained": 1
+  },
+  "first_pass_on_paired": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5741857871924362,
+      "pearson": 0.030596134654242657
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.14649037947461796,
+        0.08439959999002031
+      ],
+      "pearson_95pct": [
+        -0.34298667413667533,
+        0.3396885796954547
+      ]
+    }
+  },
+  "default_on_paired": {
+    "total": 42,
+    "scored": 42,
+    "abstained": 0,
+    "prediction": {
+      "n": 42,
+      "mae": 0.5492255651956331,
+      "pearson": 0.09399232792565765
+    },
+    "train_median_same_clips": {
+      "n": 42,
+      "mae": 0.6190476289817265,
+      "pearson": null
+    },
+    "paired_95pct_by_source": {
+      "draws": 2000,
+      "mae_delta_vs_train_median_95pct": [
+        -0.17736835055907396,
+        0.059080505915245614
+      ],
+      "pearson_95pct": [
+        -0.25654493440272713,
+        0.46182116509604537
+      ]
+    }
+  },
+  "default_minus_first_pass": {
+    "mae_delta": -0.024960221996803034,
+    "mae_delta_95pct": [
+      -0.055997982730688414,
+      0.003155124527465278
+    ],
+    "pearson_delta": 0.06339619327141499,
+    "pearson_delta_95pct": [
+      -0.05270260186393669,
+      0.2169231657293211
+    ]
+  },
+  "gained": 0,
+  "lost": 0
+}

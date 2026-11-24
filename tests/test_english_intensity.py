@@ -28,3 +28,16 @@ def test_regression_metrics_with_constant_target_or_estimates():
     assert regression_metrics([], []) == {"n": 0, "mae": None, "pearson": None}
     assert regression_metrics([-1, 1], [0, 0]) == {"n": 2, "mae": 1., "pearson": None}
     assert regression_metrics([-1, 1], [-.5, .5])["pearson"] == pytest.approx(1.)
+
+
+def test_corrupt_word_model_abstains_for_manual_and_automatic_transcripts(tmp_path, monkeypatch):
+    packed = bytearray(intensity.ASSET.read_bytes())
+    packed[10] ^= 255
+    bad = tmp_path / "corrupt.json.gz"
+    bad.write_bytes(packed)
+    monkeypatch.setattr(intensity, "ASSET", bad)
+    intensity._bundled.cache_clear()
+    try:
+        assert intensity.predict_english_intensity("I love this movie") is None
+    finally:
+        intensity._bundled.cache_clear()

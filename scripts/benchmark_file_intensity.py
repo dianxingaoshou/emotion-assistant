@@ -1,8 +1,10 @@
-"""Check the file importer's utterance-weighted intensity against raw attachment 1 labels."""
+"""Check the original or current file importer against attachment 1 on the same videos."""
 import argparse
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+import random
 
 import numpy as np
 
@@ -38,16 +40,23 @@ def summaries(rows, median):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", required=True, type=Path)
-    parser.add_argument("--out", type=Path, default=ROOT / "reports/file-intensity.json")
+    parser.add_argument("--current", action="store_true", help="Evaluate the current desktop default, paired with its first pass")
+    parser.add_argument("--out", type=Path)
     args = parser.parse_args()
+    if args.out is None:
+        args.out = ROOT / "reports" / ("file-intensity-current.json" if args.current else "file-intensity.json")
     from emotion_assistant.paths import MODELS, configure_environment
     configure_environment()
     import cv2
+    import torch
+    from emotion_assistant.content_fusion import summarize_content
     from emotion_assistant.english_intensity import ASSET, predict_english_intensity
     from emotion_assistant.local_media import analyze_media
     from emotion_assistant.models import ModelHub, VERSIONS
 
     cv2.setNumThreads(2)
+    if args.current:
+        torch.set_num_threads(2)
     protocol = json.loads((ROOT / "docs/results/content-fusion.json").read_text("utf-8"))
     held = {row["id"] for row in protocol["clips"]}
     intensity_run = json.loads((ROOT / "docs/results/english-intensity.json").read_text("utf-8"))
@@ -64,20 +73,43 @@ def main():
     asr = hub.load_asr()["asr"]
     if not asr["ready"]:
         raise RuntimeError(asr["reason"])
+    hashes = {r["id"]: r["sha256"] for r in json.loads((ROOT / "docs/results/mosei-upload.json").read_text("utf-8"))["clips"]}
+    if args.current:
+        for loaded in (hub.load_visual(), hub.load_audio_emotion()):
+            if not all(item["ready"] for item in loaded.values()):
+                raise RuntimeError(str(loaded))
     rows = []
     for index, (key, path, _, official_words) in enumerate(raw, 1):
+        if args.current:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest != hashes[key]:
+                raise ValueError(f"Original media hash mismatch: {key}")
+            seed = (int(digest[:8], 16) + 20261124) % 2**32
+            random.seed(seed)
+            np.random.seed(seed)
+            torch.manual_seed(seed)
+        options = {} if args.current else {"refine_file_intensity": False}
         output = analyze_media(path, model_dir=MODELS, model_hub=hub, transcribe=True,
-                               on_sample=lambda *_: None, cancelled=lambda: False)
+                               on_sample=lambda *_: None, cancelled=lambda: False, **options)
+        if any(t["reason"].startswith("inference_error") for t in output["transcripts"]):
+            raise RuntimeError(f"ASR inference error: {key}")
         published = output["content_summary"]["intensity"]
         reference = predict_english_intensity(official_words)
         rows.append({"id": key, "target": targets[path.parent.name, path.stem],
                      "file": published["value"] if published else None,
                      "official_text": reference["value"] if reference else None})
+        if args.current:
+            baseline = summarize_content(output["content_intervals"])["intensity"]
+            method = published.get("method") if published else "abstained"
+            rows[-1].update(source=key.split("/")[0], first_pass=baseline["value"] if baseline else None,
+                            method=method or "segment_weighted",
+                            asr_languages=sorted({event.get("asr_language") or "unreported"
+                                                  for event in output["transcripts"] if event.get("valid")}))
         if index % 10 == 0:
             print(f"Scored {index}/{len(raw)} raw files", flush=True)
     report = {
         "scope": "Previously assessed attachment 1 holdout, disjoint sources from attachment 2 fit/selection. "
-                 "Actual local file inference with opt-in ASR and duration-weighted intensity on scored speech. "
+                 "Actual local file inference with opt-in ASR. "
                  "Official transcripts used only for separate text-only comparison.",
         "source_count": len({p.parent.name for _, p, _, _ in raw}),
         "model_sha256": hashlib.sha256(ASSET.read_bytes()).hexdigest(),
@@ -87,8 +119,24 @@ def main():
         **summaries(rows, median),
         "clips": rows,
     }
+    if args.current:
+        from benchmark_asr_attribution import SourceBootstrap
+        paired = [r for r in rows if r["file"] is not None and r["first_pass"] is not None]
+        report.update(
+            mode="Desktop default, full production entry point. Seed set per file before the first pass only.",
+            paired_n=len(paired),
+            method_counts=dict(Counter(r["method"] for r in rows)),
+            first_pass_on_paired=evaluate(paired, "first_pass", median),
+            default_on_paired=evaluate(paired, "file", median),
+            default_minus_first_pass=SourceBootstrap(paired).compare("first_pass", "file"),
+            gained=sum(r["first_pass"] is None and r["file"] is not None for r in rows),
+            lost=sum(r["first_pass"] is not None and r["file"] is None for r in rows),
+        )
+    else:
+        report["mode"] = "Historical duration-weighted intensity on scored speech"
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n", "utf-8")
+    args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                        "utf-8", newline="\n")
     print(json.dumps({k: report[k] for k in ("file", "official_text")}), flush=True)
 
 

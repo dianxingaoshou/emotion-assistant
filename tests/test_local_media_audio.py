@@ -147,6 +147,51 @@ def test_file_expression_uses_only_authorized_overlapping_utterance(tmp_path, mo
     assert denied["scores"] == result["scores"]
 
 
+def test_default_file_english_intensity_uses_same_transcript_and_keeps_segment_audit(tmp_path, monkeypatch):
+    from emotion_assistant import file_asr_intensity
+    from emotion_assistant.english_intensity import predict_english_intensity
+    from emotion_assistant.local_media import MediaCancelled
+
+    monkeypatch.setattr(file_tracks, "SileroVAD", SpeechDetector)
+    path = tmp_path / "english-audio.mkv"
+    make_av(path)
+    hub = FixtureHub()
+    text = "This is a wonderful film"
+    segment_score = predict_english_intensity(text)
+    calls = []
+
+    def transcribe(samples, sid, start, end, asr_allowed):
+        assert asr_allowed is True
+        calls.append(sid)
+        return {"text": text, "session_id": sid, "valid": True, "asr_language": "en",
+                "t_start": start, "t_end": end, "semantic_context": {"english_intensity": segment_score}}
+
+    monkeypatch.setattr(hub, "transcribe_audio", transcribe)
+    legacy = run(path, hub, transcribe=True, refine_file_intensity=False)
+    current = run(path, hub, transcribe=True)
+    assert len(calls) == 2
+    assert legacy["content_summary"]["intensity"] == segment_score
+    summary = current["content_summary"]
+    expected = file_asr_intensity.estimate_file_intensity(current["transcripts"], source_id=calls[-1], duration=3.)
+    assert summary["intensity"] == expected["intensity"]
+    assert summary["intensity"]["method"] == "asr_word_character_pool" and "model_version" in summary["intensity"]
+    assert summary["intensity_covered_seconds"] == expected["covered_seconds"] == pytest.approx(3.)
+    assert summary["segment_weighted_intensity"] == legacy["content_summary"]["intensity"]
+    assert [r["intensity"] for r in current["content_intervals"]] == [r["intensity"] for r in legacy["content_intervals"]]
+    assert current["scores"] == legacy["scores"]
+    forbidden = run(path, hub, transcribe="no")
+    assert len(calls) == 2 and forbidden["transcripts"] == [] and forbidden["content_summary"]["intensity"] is None
+
+    finished = []
+    def cancel_during_estimate(*args, **kwargs):
+        finished.append(True)
+        return expected
+    monkeypatch.setattr(file_asr_intensity, "estimate_file_intensity", cancel_during_estimate)
+    with pytest.raises(MediaCancelled):
+        analyze_media(path, model_dir=path.parent, model_hub=hub, transcribe=True,
+                      on_sample=lambda *_: None, cancelled=lambda: bool(finished))
+
+
 def test_interrupted_visual_stream_keeps_observed_frames(tmp_path, monkeypatch):
     from emotion_assistant import local_media
     path = tmp_path / "部分可用.mkv"

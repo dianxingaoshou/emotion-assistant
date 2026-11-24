@@ -90,15 +90,17 @@
 
 ## 三、用真实视频检查文件入口
 
-另将附件 1 中此前预留的 19 个来源、43 段英文原视频送入实际文件分析流程，开启语音转写。来源与强度模型训练集、验证集无交叉。这是既有视频队列上的额外检验。每个可用发言分别预测，按有效发言时长汇总至整段，再与整段人工标注比较。对照组单独使用官方转写。
+首次验收将附件 1 中此前预留的 19 个来源、43 段英文原视频送入实际文件分析流程，开启语音转写。来源与强度模型训练集、验证集无交叉。该版对每个可用发言分别预测，按有效发言时长汇总至整段，再与整段人工标注比较。对照组单独使用官方转写。
 
 | 输入 | 有效 / 全部 | MAE | Pearson |
 | --- | ---: | ---: | ---: |
-| 视频实际转写 | 42 / 43 | 0.578 | 0.038 |
+| 首次归档，视频实际转写后按发言时长汇总 | 42 / 43 | 0.578 | 0.038 |
 | 同一批有视频估计的 42 段，改用官方转写 | 42 / 42 | 0.502 | 0.347 |
 | 相同 42 段，固定预测训练中位数 | 42 / 42 | 0.619 | — |
 
-视频入口的 MAE 小幅低于常数基线，但差值的按来源配对 95% 区间为 −0.145 至 +0.089，Pearson 区间为 −0.298 至 +0.336。这批真实视频没有证实模型能稳定区分发言强弱。转写错误和按语音切分都可能影响结果，当前对照无法区分各自的影响。实时和上传音视频因此将数值标为“自动转写试算”。纯 TXT 直接展示英文表达强度。[实测与逐片预测](results/file-intensity.json)
+首次验收时，视频入口的 MAE 小幅低于常数基线，差值的按来源配对 95% 区间为 −0.145 至 +0.089，Pearson 区间为 −0.298 至 +0.336。实时和上传音视频将自动数值标为“自动转写试算”。纯 TXT 直接展示英文表达强度。[首次实测与逐片预测](results/file-intensity.json)
+
+随后在同一批原视频固定模型，分别改变文字或汇总方式。在 41 段共同有效的片段中，只改汇总使 Pearson 提高 0.025，将自动整段文字换成官方稿提高 0.300。新版在符合条件的短英文音视频上加入字符评分。42 段共同有效的正式文件实测中，Pearson 从本轮旧方法的 0.031 升至 **0.094**，MAE 从 0.574 降至 **0.549**，两个改善区间均跨零。[真实视频转写与分段对照](ASR_INTENSITY_STUDY.md) · [正式入口逐片结果](results/asr-file-end-to-end.json)
 
 ## 在程序中查看与复算
 
@@ -106,7 +108,7 @@
 
 本地文件页先勾选“转写本次文件语音”再选择音频或视频，或直接打开英文 TXT。实时页在会话开始前勾选保存语音转写。正负号表示表达方向，绝对值表示程度。零分是有效值。文件 JSON 的 `content_intervals[].intensity` 和 `content_summary.intensity` 给出 `value`、模型版本和参与通道。汇总还记录 `intensity_covered_seconds`。这项估计不参与自动调节决策。
 
-在项目根目录运行下面的命令。把 `$dataset` 改为包含附件 1、附件 2 的数据根目录，`$vocab` 指向 BERT 原始词表。词表可从参考仓库的 `models/q2/final_compact_20260924/vocab.txt` 取得，脚本校验 SHA-256。前 3 个实验可在没有摄像头、麦克风和转写模型的环境运行。第 4 个实验需要本地媒体模型，重新识别可能产生略有不同的转写。[固定版本的原始词表](https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/vocab.txt)
+在项目根目录运行下面的命令。把 `$dataset` 改为包含附件 1、附件 2 的数据根目录，`$vocab` 指向 BERT 原始词表。词表可从参考仓库的 `models/q2/final_compact_20260924/vocab.txt` 取得，脚本校验 SHA-256。前 3 个实验可在没有摄像头、麦克风和转写模型的环境运行。最后两条命令需要本地媒体模型，分别复跑旧方法和正式文件入口。历史归档没有固定本轮的随机种子，旧方法单独重跑时转写可能略有差异；带 `--current` 的命令固定种子，在同份转写上同时记录新旧结果。[固定版本的原始词表](https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/vocab.txt)
 
 ```powershell
 $dataset = "本机的E题数据目录"
@@ -117,4 +119,5 @@ $vocab = "原始词表所在目录/vocab.txt"
 .\.venv\Scripts\python.exe scripts/benchmark_transcript_gaps.py $workbook --out reports/transcript-gaps-rerun.json
 .\.venv\Scripts\python.exe scripts/benchmark_attachment2_gaps.py --aligned $aligned --vocab $vocab --out reports/attachment2-gaps-rerun.json
 .\.venv\Scripts\python.exe scripts/benchmark_file_intensity.py --data $dataset --out reports/file-intensity-rerun.json
+.\.venv\Scripts\python.exe scripts/benchmark_file_intensity.py --current --data $dataset --out reports/asr-file-end-to-end.json
 ```

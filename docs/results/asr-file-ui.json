@@ -1,0 +1,35 @@
+{
+  "scope": "Qt LocalMediaPage file-to-JSON smoke check on two original attachment 1 MP4s using installed local models. The file worker received the real path with transcription enabled. Review-dialog acceptance was automated with the official transcript; these are interface checks, not measurements of human editing accuracy.",
+  "automatic_method": "asr_word_character_pool",
+  "review_method": "reviewed_english_text_v1",
+  "review_model": "en-intensity-tfidf-ridge-v1-19bb2657c1f39159",
+  "checks_on_both": {
+    "raw_automatic_transcript_retained": true,
+    "separate_automatic_and_reviewed_scores_visible": true,
+    "exported_json_contains_both_estimates": true,
+    "per_file_consent_reset": true
+  },
+  "clips": [
+    {
+      "id": "e1d0f50da03949f6/780f904d8c0b29de",
+      "split": "development",
+      "asr_segments": 1,
+      "speech_seconds": 5.399,
+      "reference_word_edits": {"match": 15, "deletion": 0, "substitution": 0, "insertion": 3},
+      "segment_weighted_intensity": 0.5730864182308066,
+      "automatic_intensity": 0.5452619612469802,
+      "simulated_review_intensity": 0.554574145906243,
+      "next_import_without_consent_cleared_transcript_and_review": true
+    },
+    {
+      "id": "0131fb814f44bb9b/253a0615f322ff2e",
+      "split": "holdout",
+      "asr_segments": 1,
+      "speech_seconds": 6.251625000000002,
+      "reference_word_edits": {"match": 21, "deletion": 1, "substitution": 0, "insertion": 0},
+      "segment_weighted_intensity": 0.24818767420299007,
+      "automatic_intensity": 0.28988937557912886,
+      "simulated_review_intensity": 0.21953942083821387
+    }
+  ]
+}

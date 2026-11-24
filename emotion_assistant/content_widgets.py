@@ -79,6 +79,10 @@ class ContentReadout(QWidget):
             value = round(intensity, 2)
             value_text = f"{value:+.2f}" if value else "0.00"
             title = "英文表达强度 · 自动转写试算" if automatic_transcript else "英文表达强度"
+            if automatic_transcript and result["intensity"].get("method") == "asr_word_character_pool":
+                title += "（整段词与字符）"
+            elif automatic_transcript and "interval_count" in result:
+                title += "（按发言时长加权）"
             line = f"{title}　{value_text}（−3 至 +3）"
             seconds = result.get("intensity_covered_seconds")
             if seconds is not None:

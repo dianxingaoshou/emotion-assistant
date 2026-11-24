@@ -6,11 +6,14 @@ from .semantic_context import interpret_context
 from .content_fusion import fuse_content
 
 
+MAX_TEXT_BYTES = 16384
+
+
 def analyze_text_file(path):
     path = Path(path)
     with path.open("rb") as stream:
-        data = stream.read(16385)
-    if len(data) > 16384:
+        data = stream.read(MAX_TEXT_BYTES + 1)
+    if len(data) > MAX_TEXT_BYTES:
         raise ValueError("文本较长，请每次选择一个片段（上限 16 KiB）。")
     try:
         text = data.decode("utf-8-sig").strip()

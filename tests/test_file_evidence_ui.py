@@ -118,3 +118,65 @@ def test_intensity_only_utterance_is_selectable_and_zero_is_displayed(monkeypatc
         assert page.content_readout.intensity.isHidden()
     finally:
         page.close()
+
+
+def test_file_review_preserves_automatic_result_and_exports_only_confirmed_edits(tmp_path, monkeypatch):
+    monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QFileDialog, QInputDialog
+    from emotion_assistant.english_intensity import predict_english_intensity
+    from emotion_assistant.local_media_widgets import LocalMediaPage
+
+    app = QApplication.instance() or QApplication([])
+    page = LocalMediaPage()
+    page.show()
+    page._path = tmp_path / "interview.mp4"
+    original = "I love this"
+    corrected = "I do not love this at all"
+    automatic = {"value": .45, "used_modalities": ["text"]}
+    summary = {"intensity": automatic, "available_modalities": ["text"]}
+    page.result = {"kind": "video", "valid_count": 0, "sampled_count": 0, "scores": None, "reasons": {},
+                   "transcripts": [], "content_summary": summary,
+                   "content_intervals": [dict(summary, t_start=0., t_end=1.)]}
+    try:
+        page._show_summary()
+        assert page.review_button.isHidden()
+        page.result.update(transcription_status="available", transcripts=[
+            {"valid": True, "t_start": 0., "text": original},
+            {"valid": False, "t_start": 1., "text": "discarded"}])
+        page._show_summary()
+        assert not page.review_button.isHidden()
+        replies = iter([(original, False), (corrected, True), ("试" * 6000, True), ("不太喜欢", True), ("", True)])
+        initial = []
+
+        def edit(_parent, _title, _label, value):
+            initial.append(value)
+            return next(replies)
+
+        monkeypatch.setattr(QInputDialog, "getMultiLineText", edit)
+        page.review_button.click()
+        assert "reviewed_transcript" not in page.result
+        page.review_button.click()
+        expected = predict_english_intensity(corrected)
+        assert page.result["reviewed_transcript"] == {"text": corrected, "source": "user_edited",
+                                                     "method": "reviewed_english_text_v1", "intensity": expected}
+        assert "校对后" in page.reviewed_intensity.text() and "+0.45" in page.content_readout.intensity.text()
+        page.content_intervals.setCurrentIndex(1)
+        assert page.review_button.isHidden() and page.reviewed_intensity.isHidden()
+        page.content_intervals.setCurrentIndex(0)
+        assert not page.reviewed_intensity.isHidden()
+        target = tmp_path / "review.json"
+        monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *a: (str(target), ""))
+        page._export()
+        exported = json.loads(target.read_text("utf-8"))
+        assert exported["transcripts"][0]["text"] == original
+        assert exported["content_summary"]["intensity"] == automatic
+        assert exported["reviewed_transcript"]["intensity"] == expected
+        page.review_button.click()
+        assert "16 KiB" in page.status.text() and page.result["reviewed_transcript"]["text"] == corrected
+        page.review_button.click()
+        assert page.result["reviewed_transcript"]["intensity"] is None and "暂缓" in page.reviewed_intensity.text()
+        page.review_button.click()
+        assert "reviewed_transcript" not in page.result and page.reviewed_intensity.isHidden()
+        assert initial == [original, original, corrected, corrected, "不太喜欢"]
+    finally:
+        page.close()

@@ -1,6 +1,6 @@
 # 本地模型与可复现配置
 
-模型权重、运行环境和数据均保留在本项目中。项目 `.venv` 使用 Python 3.12；不要向系统 Python 安装这些依赖。应用运行时只读取 `models/` 的已下载文件，不按模型名称联网拉取权重。下载是单独执行的准备步骤。
+项目使用独立的 Python 3.12 环境 `.venv`。运行时，声画与转写模型从项目内的 `models/` 加载，英文表达强度等小型模型从随代码分发的 `emotion_assistant/assets/` 加载。第三方权重在安装准备阶段下载，文件分析在本机完成。
 
 ## 安装与下载
 
@@ -34,7 +34,7 @@
 | 人脸检测 | OpenCV YuNet 2023mar；仓库 `48b10fa505aeb51fbd127fc60a5c660040e823b7` | `models/visual/face_detection_yunet_2023mar.onnx` | [OpenCV 官方模型与许可证](https://github.com/opencv/opencv_zoo/tree/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet) |
 | M1 表情 | EmotiEffLib `enet_b0_8_best_afew`；`520a051c64cd191521e5934655314e769a319684` | `models/visual/enet_b0_8_best_afew.onnx` | [作者的模型及推理源码](https://github.com/sb-ai-lab/EmotiEffLib/tree/520a051c64cd191521e5934655314e769a319684) |
 | M2 语音情绪 | emotion2vec+ seed；HF `7be9a30d52bdc793cc24e6f7d25358d6648927c1` | `models/emotion2vec_plus_seed/` | [作者模型卡、类别和 16 kHz 示例](https://huggingface.co/emotion2vec/emotion2vec_plus_seed/tree/7be9a30d52bdc793cc24e6f7d25358d6648927c1) |
-| 可选中文转写 | SenseVoiceSmall；HF `3847d57b6bdf2dd8875cb1508d2af43d80a16bf7` | `models/SenseVoiceSmall/` | [作者模型卡与本地路径用法](https://huggingface.co/FunAudioLLM/SenseVoiceSmall/tree/3847d57b6bdf2dd8875cb1508d2af43d80a16bf7) |
+| 可选语音转写（含中文、英文） | SenseVoiceSmall；HF `3847d57b6bdf2dd8875cb1508d2af43d80a16bf7` | `models/SenseVoiceSmall/` | [作者模型卡与本地路径用法](https://huggingface.co/FunAudioLLM/SenseVoiceSmall/tree/3847d57b6bdf2dd8875cb1508d2af43d80a16bf7) |
 | 语音活动检测 | Silero VAD v5.1.2；`6478567951ae5c9979ad7b234185b5515f4be7a1` | `models/vad/silero_vad.onnx` | [作者 ONNX 状态与上下文接口](https://github.com/snakers4/silero-vad/blob/6478567951ae5c9979ad7b234185b5515f4be7a1/src/silero_vad/utils_vad.py) |
 
 下载脚本为每个文件固定 SHA256，而不仅固定名称。HF 的两个大权重在国内网络较慢，因此下载器优先尝试同一作者的 [ModelScope emotion2vec+ seed](https://modelscope.cn/models/iic/emotion2vec_plus_seed) 和 [ModelScope SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall)；只有内容完全匹配已固定的 HF SHA256 才接受。ModelScope 的 `master` 本身不是固定版本，校验值才是此镜像的版本约束。失败后尝试 HF 固定提交。清单同时记录规范来源、镜像和实际下载地址。
@@ -48,6 +48,8 @@
 | emotion2vec+ model.pt | `327e861049c7105a3f8589edfd16543a7cdc0c1926f1b64de975d98e0650cdd3` |
 | SenseVoiceSmall model.pt | `833ca2dcfdf8ec91bd4f31cfac36d6124e0c459074d5e909aec9cabe6204a3ea` |
 | Silero VAD | `2623a2953f6ff3d2c1e61740c6cdb7168133479b267dfef114a4a3cc5bdd788f` |
+
+短英文音视频的整段强度使用随仓库分发的词回归与字符回归。辅助权重 `emotion_assistant/assets/asr-character-intensity.json.gz` 为 117,051 字节，SHA-256 为 `22db0448d6597475af0568b29563c57c9f3138a11aba1c4c2f12c7e8c26a8f15`。它复用首次转写，推理时无需额外下载模型。训练来源、合成扰动和真实文件的适用边界见专项实验。[真实视频强度实验](ASR_INTENSITY_STUDY.md)
 
 各模型的再分发和使用条件以表中的官方模型仓库、模型卡及许可证为准。
 

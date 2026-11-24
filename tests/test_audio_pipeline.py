@@ -121,9 +121,20 @@ class AudioAdapterTests(unittest.TestCase):
     def test_asr_text_has_no_extra_emotion_vote(self):
         text = self.hub.transcribe_audio(self.samples, "s", 0, 3, True)
         self.assertEqual(text["text"], "可选的转写文本")
+        self.assertEqual(text["asr_language"], "zh")
         self.assertNotIn("scores", text)
         self.assertNotIn("raw_scores", text)
         self.assertFalse(text["is_current_concern"])
+
+    def test_explicit_research_english_mode_preserves_automatic_language_default(self):
+        with patch.object(self.hub._asr_model, "generate", wraps=self.hub._asr_model.generate) as recognize:
+            self.hub.transcribe_audio(self.samples, "s", 0, 3, True)
+            self.assertEqual(recognize.call_args.kwargs["language"], "auto")
+            self.hub.transcribe_audio(self.samples, "s", 0, 3, True, language="en")
+            self.assertEqual(recognize.call_args.kwargs["language"], "en")
+            denied = self.hub.transcribe_audio(self.samples, "s", 0, 3, False, language="en")
+            self.assertEqual(denied["reason"], "consent_not_granted")
+            self.assertEqual(recognize.call_count, 2)
 
     def test_legacy_api_still_returns_observation_and_text(self):
         observation, text = self.hub.analyze_audio(self.samples, "s", 0, 3, True)

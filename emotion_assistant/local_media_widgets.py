@@ -11,13 +11,13 @@ from threading import Lock
 from PySide6.QtCore import QIODevice, QSaveFile, QThread, QTimer, Qt, Signal, Slot
 from PySide6.QtGui import QColor, QImage, QPainter, QPen, QPixmap
 from PySide6.QtWidgets import (
-    QCheckBox, QComboBox, QFileDialog, QHBoxLayout, QLabel, QProgressBar, QScrollArea,
+    QCheckBox, QComboBox, QFileDialog, QHBoxLayout, QInputDialog, QLabel, QProgressBar, QScrollArea,
     QSizePolicy, QVBoxLayout, QWidget,
 )
 
 from .local_media import AUDIO_EXTENSIONS, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS, MediaCancelled, analyze_media
 from .fusion_explanation import evidence_text
-from .text_file import text_polarity_summary
+from .text_file import MAX_TEXT_BYTES, text_polarity_summary
 from .content_widgets import ContentReadout
 from .paths import MODELS
 from .ui_theme import COLORS, RADIUS, SPACE
@@ -131,7 +131,7 @@ class LocalMediaPage(QWidget):
         self.choose_button.clicked.connect(self._choose)
         toolbar.addWidget(self.choose_button)
         self.transcribe = QCheckBox("转写本次文件语音")
-        self.transcribe.setToolTip("让本次英文转写参与发言内容分析。导出的 JSON 会包含已授权的转写。")
+        self.transcribe.setToolTip("让本次英文转写参与发言内容分析。导出的 JSON 包含自动转写和你确认的校对文字。")
         toolbar.addWidget(self.transcribe)
         self.cancel_button = _button("取消检测")
         self.cancel_button.clicked.connect(self.cancel)
@@ -185,6 +185,13 @@ class LocalMediaPage(QWidget):
         self.content_intervals.setAccessibleName("选择要查看的发言时段")
         self.content_intervals.currentIndexChanged.connect(self._show_content_result)
         result_layout.addWidget(self.content_intervals)
+        self.review_button = _button("校对英文转写")
+        self.review_button.clicked.connect(self._review_transcript)
+        result_layout.addWidget(self.review_button, 0, Qt.AlignmentFlag.AlignLeft)
+        self.reviewed_intensity = QLabel()
+        self.reviewed_intensity.setTextFormat(Qt.TextFormat.PlainText)
+        self.reviewed_intensity.setWordWrap(True)
+        result_layout.addWidget(self.reviewed_intensity)
         self.cue_caption = QLabel("声画线索")
         self.cue_caption.setObjectName("muted")
         result_layout.addWidget(self.cue_caption)
@@ -279,6 +286,9 @@ class LocalMediaPage(QWidget):
         self.content_readout.set_result(None)
         self.content_intervals.hide()
         self.content_intervals.clear()
+        self.review_button.hide()
+        self.reviewed_intensity.clear()
+        self.reviewed_intensity.hide()
         self.cue_caption.hide()
         self.aggregate.hide()
         self.distribution.set_scores(None)
@@ -469,13 +479,58 @@ class LocalMediaPage(QWidget):
         if index < 0 or not self.result:
             return
         source = self.content_intervals.itemData(index)
-        if source is None or source < 0:
+        whole_file = source is None or source < 0
+        reviewable = (whole_file and self.result.get("kind") in {"audio", "video"}
+                      and self.result.get("transcription_status") == "available")
+        self.review_button.setVisible(reviewable)
+        review = self.result.get("reviewed_transcript")
+        self.reviewed_intensity.setVisible(bool(reviewable and review))
+        if reviewable and review:
+            estimate = review["intensity"]
+            value = "英文文字依据不足，暂缓估计"
+            if estimate is not None:
+                score = round(estimate["value"], 2)
+                value = (f"{score:+.2f}" if score else "0.00") + "（−3 至 +3）"
+            self.reviewed_intensity.setText("校对后整段英文强度　" + value)
+        else:
+            self.reviewed_intensity.clear()
+        if whole_file:
             self.content_readout.set_result(self.result.get("content_summary"),
                                             automatic_transcript=self.result.get("kind") != "text")
         else:
             row = self.result["content_intervals"][source]
             self.content_readout.set_result(row, f"发言内容 {row['t_start']:.1f}–{row['t_end']:.1f} 秒",
                                             automatic_transcript=True)
+
+    def _review_transcript(self):
+        from .english_intensity import predict_english_intensity
+
+        result = self.result
+        if not result or result.get("transcription_status") != "available":
+            return
+        original = " ".join(row["text"].strip() for row in result.get("transcripts", [])
+                            if row.get("valid") and not row.get("stale") and row.get("text"))
+        if not original:
+            return
+        previous = result.get("reviewed_transcript") or {}
+        edited, accepted = QInputDialog.getMultiLineText(
+            self, "校对本次文件的英文转写",
+            "对照原音修正漏词和错词，或清空以撤销校对。确认后按整段英文估分，导出时会包含校对文字。",
+            previous.get("text", original))
+        if not accepted or result is not self.result:
+            return
+        edited = edited.strip()
+        if len(edited) > MAX_TEXT_BYTES or len(edited.encode("utf-8")) > MAX_TEXT_BYTES:
+            self.status.setText("校对文字过长，请缩短至 16 KiB 后重试。")
+            return
+        if not edited or edited == original:
+            result.pop("reviewed_transcript", None)
+        else:
+            result["reviewed_transcript"] = {"source": "user_edited", "text": edited,
+                                              "method": "reviewed_english_text_v1",
+                                              "intensity": predict_english_intensity(edited)}
+        self._show_content_result(self.content_intervals.currentIndex())
+        self.status.setText(self._completed_status)
 
     def _show_interval(self, index):
         rows = (self.result or {}).get("fusion_intervals", [])

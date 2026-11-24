@@ -1,0 +1,25 @@
+{
+  "finished_utc": "2026-11-24T05:58:35.093+00:00",
+  "junit": {
+    "tests": 405,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_seconds": 7.668,
+  "qt_startup": true,
+  "simulated_closed_loop": true,
+  "script_checks": {
+    "desktop": 47,
+    "regulation": 63,
+    "review": 97
+  },
+  "real_models": {
+    "visual_real_inference": true,
+    "visual_refusals": true,
+    "audio_real_inference": true,
+    "asr_real_inference": true,
+    "vad_real_inference_and_segmentation": true
+  },
+  "test_report_sha256": "d26a9602b9add3c7e9f8d9c1711d828ae754488203c85f163a7424d3bb27a0fb"
+}

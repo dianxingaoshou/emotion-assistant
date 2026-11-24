@@ -7,6 +7,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import zlib
 
 from .english_polarity import terms, tokens
 
@@ -27,7 +28,7 @@ def _bundled():
             model = json.load(stream)
         if model["schema"] == SCHEMA and model["model_version"] == version_of(model):
             return model
-    except (OSError, KeyError, TypeError, ValueError, EOFError):
+    except (OSError, KeyError, TypeError, ValueError, EOFError, zlib.error):
         pass
     return None
 

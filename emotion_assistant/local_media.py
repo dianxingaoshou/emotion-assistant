@@ -187,8 +187,8 @@ def _mean_scores(items, duration_weighted=False):
 
 
 def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, transcribe=False,
-                  strategy=None, on_status=None):
-    """Decode on-device. Scores use disjoint scored intervals, not whole-track votes."""
+                  strategy=None, on_status=None, refine_file_intensity=True):
+    """Decode on-device. Set refine_file_intensity=False to reproduce the legacy file estimate."""
     def check():
         _check_cancelled(cancelled)
 
@@ -203,6 +203,7 @@ def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, tran
     if suffix not in IMAGE_EXTENSIONS | VIDEO_EXTENSIONS | AUDIO_EXTENSIONS:
         raise ValueError("暂不支持此文件类型，请选择支持的照片、音频或视频。")
     kind = "image" if suffix in IMAGE_EXTENSIONS else "audio" if suffix in AUDIO_EXTENSIONS else "video"
+    transcribe = transcribe is True
     hub = model_hub or ModelHub(model_dir, enable_asr=transcribe)
     engine = FusionEngine.from_project(DATA, strategy=strategy)
     issues, visual = [], []
@@ -279,7 +280,17 @@ def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, tran
         utterances = [row["text"] for row in transcripts if row.get("valid") and row.get("text")]
         result["transcription_status"] = "available" if utterances else "no_usable_transcript"
         if utterances:
+            if refine_file_intensity:
+                from .file_asr_intensity import estimate_file_intensity
+                check()
+                refined = estimate_file_intensity(transcripts, source_id=source_id, duration=tracks["audio"].duration)
+                if refined is not None:
+                    summary = result["content_summary"]
+                    summary.update(segment_weighted_intensity=summary["intensity"],
+                                   segment_weighted_intensity_covered_seconds=summary["intensity_covered_seconds"],
+                                   intensity=refined["intensity"], intensity_covered_seconds=refined["covered_seconds"])
             polarity = predict_english_polarity(" ".join(utterances))
             if polarity:
                 result["semantic_context"] = {"english_polarity": polarity}
+    check()
     return result

@@ -367,7 +367,7 @@ class ModelHub:
                 return self._finish(observation, started, f"inference_error: {type(exc).__name__}: {exc}")
 
     def transcribe_audio(self, samples, session_id: str, t_start: float, t_end: float,
-                         asr_allowed: bool = False) -> dict:
+                         asr_allowed: bool = False, *, language: str = "auto") -> dict:
         """Independent text result. Only publish valid results; tags never vote."""
         started = time.perf_counter()
         transcript = {"event_id": str(uuid.uuid4()), "session_id": str(session_id),
@@ -384,9 +384,15 @@ class ModelHub:
                     return self._finish(transcript, started, reason)
                 if self._asr_model is None:
                     return self._finish(transcript, started, "model_unavailable: " + self.status["asr"]["reason"])
+                if language not in ("auto", "en"):
+                    return self._finish(transcript, started, "unsupported_asr_language")
                 result = self._asr_model.generate(input=audio, fs=16000, cache={},
-                    language="auto", use_itn=True, batch_size=1)
-                text = re.sub(r"<\|[^|]*\|>", "", str(result[0].get("text", ""))).strip()
+                    language=language, use_itn=True, batch_size=1)
+                tagged = str(result[0].get("text", ""))
+                tag = re.search(r"<\|(en|zh|yue|ja|ko|nospeech)\|>", tagged)
+                if tag:
+                    transcript["asr_language"] = tag.group(1)
+                text = re.sub(r"<\|[^|]*\|>", "", tagged).strip()
                 transcript.update(text=text, valid=bool(text), reason="ok" if text else "empty_transcript")
                 if text:
                     from .semantic_context import interpret_context
