@@ -1,5 +1,9 @@
 # 本地模型与可复现配置
 
+中文单句的 13 类候选来自 CPED 字符 TF-IDF 多项逻辑回归，使用开发集选择暂缓门槛。双维离线读数来自 Chinese EmoBank CVAS 字符岭回归。用户选中的文字可交给本机 Qwen3 8B 复核，保留原始等级、校准后的 1–9 分和原文引据。中文句库用于学术研究，各来源的训练划分、模型哈希与许可见实验记录。[中文研究与评测](RESEARCH_RATIONALE_ZH.md) · [CPED 参数和逐类误差](results/cped-chinese-emotions.json) · [中文双维训练与验证](results/chinese-dimension-hybrid.json)
+
+英文 GoEmotions 28 类模型以开发集选择每类阈值，句级 EmoBank 三输出岭回归在开发集校准各维的预测区间。表情与声音各自保留原模型的类别分数和前两名差距。[量表、验证与适用条件](AFFECT_QUANTIFICATION.md) · [GoEmotions 资产来源](results/goemotions-fine-emotions.json) · [EmoBank 数据及派生权重 CC BY-SA 4.0 声明](results/emobank-vad.json)
+
 项目使用独立的 Python 3.12 环境 `.venv`。运行时，声画与转写模型从项目内的 `models/` 加载，英文表达强度等小型模型从随代码分发的 `emotion_assistant/assets/` 加载。第三方权重在安装准备阶段下载，文件分析在本机完成。
 
 ## 安装与下载
@@ -25,7 +29,13 @@
 & '.\.venv\Scripts\python.exe' scripts/download_models.py --asr
 ```
 
-全部权重约 2 GiB，emotion2vec+ seed 原始检查点约 1.12 GB，SenseVoiceSmall 约 0.94 GB。断线后重复原命令，下载器保留 `.part` 并尝试断点续传。完整文件只有通过 SHA256 才会成为正式权重；下载完成写入 `models/manifest.json`。文件已存在时重复执行会校验，无需重新下载。若报告校验不符，先核查并移走该文件再重试，不能跳过校验。
+上述声画和转写权重约 2 GiB，emotion2vec+ seed 原始检查点约 1.12 GB，SenseVoiceSmall 约 0.94 GB。断线后重复原命令，下载器保留 `.part` 并尝试断点续传。完整文件只有通过 SHA256 才会成为正式权重；下载完成写入 `models/manifest.json`。文件已存在时重复执行会校验，无需重新下载。若报告校验不符，先核查并移走该文件再重试，不能跳过校验。
+
+可选的文字复核另用 Ollama 运行 Qwen3 8B，模型约 5.2 GB。该服务独立于 Python 推理环境。便携版启动脚本将模型保存在项目的 `models/ollama/`。实时转写和本地文件共用同一套语义字段与引文校验规则。[启动方式与界面入口](../README.md#本地大模型文字复核) · [模型发布页](https://ollama.com/library/qwen3:8b)
+
+本机验收使用 Ollama v0.40.18 和 `qwen3:8b`。该标签对应的模型清单 SHA256 为 `500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`。复现实验时可在本机 Ollama 的 `/api/tags` 响应中核对清单摘要。
+
+英文复核另显示 GoEmotions 官方训练拆分上的域内模型。它对词和相邻词对计算 TF-IDF，再用三类逻辑回归判断发言倾向，适用条件包括英文占比和已知词覆盖。桌面通过标准库读取约 1.66 MiB 的压缩参数，推理无需另装 scikit-learn。监督训练、数据来源、发布摘要及与训练端预测一致性的核查见[同领域基线实验](results/goemotions-linear.json)。
 
 ## 固定的官方来源
 

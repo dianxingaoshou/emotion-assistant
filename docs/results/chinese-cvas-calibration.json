@@ -1,0 +1,184 @@
+{
+  "version": "cvas-zh-affine-v1",
+  "model": "qwen3:8b",
+  "model_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "rater_version": "qwen-zh-expressed-va-v1",
+  "rater_fingerprint": "9f38dbb234e9b9a493180f1226dfccc6edb2d05dee13f5389202b6e1fc913b68",
+  "scale": [
+    1,
+    9
+  ],
+  "source": "https://raw.githubusercontent.com/NYCU-NLP/Chinese-EmoBank/eaf0ca0fd6ec9e48e701231eee490d58bd074c12/ChineseEmoBank/CVAS_SD/CVAS_all.csv",
+  "source_sha256": "d7b78e2ed06fccbee57d8ec88ac29389c1a9356dfd93b7ac3878c89d89eea3d9",
+  "source_use": "CVAS Chinese-EmoBank academic research / noncommercial; derived aggregate coefficients; no sentences or individual annotations.",
+  "source_terms": "https://www.mis.yzu.edu.tw/nlplab/resources/chinese-emobank_download.html",
+  "attribution": "Lee, Li & Yu (2022), Chinese EmoBank; Yu et al. (2016), Building Chinese affective resources in valence-arousal dimensions.",
+  "selection": "Sorted SHA256(zh-va-v1|stripped original text). Excluded pilot ranks 1–96. Fit on 97–288; independent confirmation 289–448. No prompt or parameter search.",
+  "calibration_ids_sha256": "40f28eeee70d75a8f0e7bd225b6a483dab23f7b88b290e1cf4e418df6c4d723a",
+  "test_ids_sha256": "0663e627be2bbc59a0f054c11e6a31d0657e289cd222db7cb1cf8f8b08a54284",
+  "n_fit": 188,
+  "calibration_attempted": 192,
+  "calibration_status_counts": {
+    "ok": 188,
+    "insufficient_evidence": 3,
+    "invalid_response": 1
+  },
+  "calibration_prior": {
+    "valence": 4.518765625,
+    "arousal": 5.06675
+  },
+  "unused_prior": {
+    "valence": 4.6491334894613585,
+    "arousal": 4.966211709601874
+  },
+  "unused_prior_rows": 2135,
+  "method": "Least squares per axis, nonnegative slope, intercept refit at means. Clip prediction to [1,9]. Fallbacks apply to evaluation only.",
+  "coefficients": {
+    "valence": {
+      "slope": 0.4980813013794064,
+      "intercept": 2.374059286610004
+    },
+    "arousal": {
+      "slope": 0.3543039078855547,
+      "intercept": 3.2888845080251228
+    }
+  },
+  "test_attempted": 160,
+  "test_status_counts": {
+    "ok": 159,
+    "insufficient_evidence": 1
+  },
+  "test_coverage": 0.99375,
+  "test_metrics": {
+    "valence": {
+      "valid_raw": {
+        "n": 159,
+        "mae": 0.964,
+        "pearson": 0.7342
+      },
+      "valid_calibrated": {
+        "n": 159,
+        "mae": 0.7882,
+        "pearson": 0.7342
+      },
+      "valid_calibration_mean": {
+        "n": 159,
+        "mae": 1.1949,
+        "pearson": null
+      },
+      "valid_unused_mean": {
+        "n": 159,
+        "mae": 1.2078,
+        "pearson": null
+      },
+      "all_raw_with_calibration_prior": {
+        "n": 160,
+        "mae": 0.9609,
+        "pearson": 0.7341
+      },
+      "all_calibrated_with_calibration_prior": {
+        "n": 160,
+        "mae": 0.7863,
+        "pearson": 0.734
+      },
+      "all_calibration_mean": {
+        "n": 160,
+        "mae": 1.1904,
+        "pearson": null
+      },
+      "all_unused_mean": {
+        "n": 160,
+        "mae": 1.2024,
+        "pearson": null
+      },
+      "exploratory_relative_mae_gain_on_valid": {
+        "raw": {
+          "mae_gain": 0.1757,
+          "paired_bootstrap_95_percentile": [
+            0.0653,
+            0.291
+          ]
+        },
+        "calibration_mean": {
+          "mae_gain": 0.4066,
+          "paired_bootstrap_95_percentile": [
+            0.3087,
+            0.5018
+          ]
+        },
+        "unused_mean": {
+          "mae_gain": 0.4196,
+          "paired_bootstrap_95_percentile": [
+            0.3255,
+            0.512
+          ]
+        }
+      }
+    },
+    "arousal": {
+      "valid_raw": {
+        "n": 159,
+        "mae": 1.0648,
+        "pearson": 0.1848
+      },
+      "valid_calibrated": {
+        "n": 159,
+        "mae": 0.9683,
+        "pearson": 0.1848
+      },
+      "valid_calibration_mean": {
+        "n": 159,
+        "mae": 0.9897,
+        "pearson": null
+      },
+      "valid_unused_mean": {
+        "n": 159,
+        "mae": 0.9778,
+        "pearson": null
+      },
+      "all_raw_with_calibration_prior": {
+        "n": 160,
+        "mae": 1.0815,
+        "pearson": 0.1804
+      },
+      "all_calibrated_with_calibration_prior": {
+        "n": 160,
+        "mae": 0.9856,
+        "pearson": 0.1814
+      },
+      "all_calibration_mean": {
+        "n": 160,
+        "mae": 1.0069,
+        "pearson": null
+      },
+      "all_unused_mean": {
+        "n": 160,
+        "mae": 0.9944,
+        "pearson": null
+      },
+      "exploratory_relative_mae_gain_on_valid": {
+        "raw": {
+          "mae_gain": 0.0965,
+          "paired_bootstrap_95_percentile": [
+            0.0183,
+            0.1763
+          ]
+        },
+        "calibration_mean": {
+          "mae_gain": 0.0215,
+          "paired_bootstrap_95_percentile": [
+            -0.0173,
+            0.064
+          ]
+        },
+        "unused_mean": {
+          "mae_gain": 0.0095,
+          "paired_bootstrap_95_percentile": [
+            -0.0304,
+            0.0549
+          ]
+        }
+      }
+    }
+  }
+}

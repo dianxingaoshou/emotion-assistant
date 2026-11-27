@@ -1,0 +1,462 @@
+{
+  "task": "Chinese text only; one CPED emotion as annotated in TV dialogue",
+  "source": "https://github.com/scutcyr/CPED",
+  "paper": "https://arxiv.org/abs/2205.14727",
+  "data_commit": "1e4b81c28a123f22387e06664f37e5dc9322380f",
+  "source_sha256": {
+    "train_split.csv": "7bce6a11f0bf0ac353d28e96f6cfa03ff5e83b95810647abb55d18ff7299e487",
+    "valid_split.csv": "f434a04d21640bb38c849f3e9598c2b7b2fbdb49be6a7365b2ae016019bd389b",
+    "test_split.csv": "a4bcde678438ba1f95224d8e772e40f1f1df7c72f348796b3fafd421c2443a53",
+    "TSCharacters.txt": "6b5a0a799bea2bb22c001f635eaa3fc2904310f0c08addbff275477a80ecf09a",
+    "opencc-license.txt": "b534e465949558eec2597b04f5092b5e161236a68dfbfd04d547592ac3964308"
+  },
+  "model": "cped-13-char-tfidf-v1",
+  "asset_sha256": "32f1324704a4e0d9f376f453e1c7d93bf01538a4a3df1be44aa174ff72453871",
+  "sklearn": "1.9.1",
+  "split_counts": {
+    "train": 94187,
+    "development": 11137,
+    "test": 27438
+  },
+  "show_counts": [
+    26,
+    5,
+    9
+  ],
+  "overlapping_shows": 0,
+  "model_inputs": [
+    "Utterance"
+  ],
+  "features": "character 1–3 grams, sublinear TF-IDF, up to 30000 features",
+  "preprocessing": "NFKC, lowercase, OpenCC first-candidate traditional-to-simplified character mapping, strip whitespace",
+  "training": "multinomial logistic regression C=3, inverse square-root class frequency, train split only",
+  "gate": {
+    "source": "official development split",
+    "target_accepted_accuracy": 0.45,
+    "minimum_coverage": 0.1,
+    "threshold": 0.45,
+    "minimum_margin": 0.06,
+    "development_coverage": 0.1079285265331777,
+    "development_accepted_accuracy": 0.37104825291181365
+  },
+  "test_metrics": {
+    "train_majority": {
+      "n": 27438,
+      "correct": 7991,
+      "incorrect": 19447,
+      "abstained": 0,
+      "coverage": 1.0,
+      "accuracy_all": 0.2912,
+      "accuracy_accepted": 0.2912,
+      "macro_f1_all": 0.0347,
+      "per_class": {
+        "anger": {
+          "support": 3031,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "astonished": {
+          "support": 1433,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "depress": {
+          "support": 2792,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "disgust": {
+          "support": 435,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "fear": {
+          "support": 872,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "grateful": {
+          "support": 31,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "happy": {
+          "support": 2604,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "negative-other": {
+          "support": 2395,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "neutral": {
+          "support": 7991,
+          "predicted": 27438,
+          "precision": 0.2912,
+          "recall": 1.0,
+          "f1": 0.4511
+        },
+        "positive-other": {
+          "support": 1685,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "relaxed": {
+          "support": 2150,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "sadness": {
+          "support": 530,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "worried": {
+          "support": 1489,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "ungated_top1_among_eligible": {
+      "n": 27438,
+      "correct": 6472,
+      "incorrect": 20537,
+      "abstained": 429,
+      "coverage": 0.9844,
+      "accuracy_all": 0.2359,
+      "accuracy_accepted": 0.2396,
+      "macro_f1_all": 0.1466,
+      "per_class": {
+        "anger": {
+          "support": 3031,
+          "predicted": 3450,
+          "precision": 0.2339,
+          "recall": 0.2662,
+          "f1": 0.249
+        },
+        "astonished": {
+          "support": 1433,
+          "predicted": 1109,
+          "precision": 0.2444,
+          "recall": 0.1891,
+          "f1": 0.2132
+        },
+        "depress": {
+          "support": 2792,
+          "predicted": 2173,
+          "precision": 0.1588,
+          "recall": 0.1236,
+          "f1": 0.139
+        },
+        "disgust": {
+          "support": 435,
+          "predicted": 366,
+          "precision": 0.0546,
+          "recall": 0.046,
+          "f1": 0.0499
+        },
+        "fear": {
+          "support": 872,
+          "predicted": 498,
+          "precision": 0.0843,
+          "recall": 0.0482,
+          "f1": 0.0613
+        },
+        "grateful": {
+          "support": 31,
+          "predicted": 97,
+          "precision": 0.1031,
+          "recall": 0.3226,
+          "f1": 0.1562
+        },
+        "happy": {
+          "support": 2604,
+          "predicted": 1142,
+          "precision": 0.2399,
+          "recall": 0.1052,
+          "f1": 0.1463
+        },
+        "negative-other": {
+          "support": 2395,
+          "predicted": 2021,
+          "precision": 0.1118,
+          "recall": 0.0944,
+          "f1": 0.1024
+        },
+        "neutral": {
+          "support": 7991,
+          "predicted": 11183,
+          "precision": 0.3501,
+          "recall": 0.4899,
+          "f1": 0.4084
+        },
+        "positive-other": {
+          "support": 1685,
+          "predicted": 1148,
+          "precision": 0.1002,
+          "recall": 0.0682,
+          "f1": 0.0812
+        },
+        "relaxed": {
+          "support": 2150,
+          "predicted": 2125,
+          "precision": 0.1176,
+          "recall": 0.1163,
+          "f1": 0.117
+        },
+        "sadness": {
+          "support": 530,
+          "predicted": 456,
+          "precision": 0.0636,
+          "recall": 0.0547,
+          "f1": 0.0588
+        },
+        "worried": {
+          "support": 1489,
+          "predicted": 1241,
+          "precision": 0.1354,
+          "recall": 0.1128,
+          "f1": 0.1231
+        }
+      }
+    },
+    "desktop": {
+      "n": 27438,
+      "correct": 1154,
+      "incorrect": 1992,
+      "abstained": 24292,
+      "coverage": 0.1147,
+      "accuracy_all": 0.0421,
+      "accuracy_accepted": 0.3668,
+      "macro_f1_all": 0.0564,
+      "per_class": {
+        "anger": {
+          "support": 3031,
+          "predicted": 417,
+          "precision": 0.3885,
+          "recall": 0.0534,
+          "f1": 0.094
+        },
+        "astonished": {
+          "support": 1433,
+          "predicted": 229,
+          "precision": 0.3581,
+          "recall": 0.0572,
+          "f1": 0.0987
+        },
+        "depress": {
+          "support": 2792,
+          "predicted": 105,
+          "precision": 0.2286,
+          "recall": 0.0086,
+          "f1": 0.0166
+        },
+        "disgust": {
+          "support": 435,
+          "predicted": 39,
+          "precision": 0.0256,
+          "recall": 0.0023,
+          "f1": 0.0042
+        },
+        "fear": {
+          "support": 872,
+          "predicted": 42,
+          "precision": 0.1667,
+          "recall": 0.008,
+          "f1": 0.0153
+        },
+        "grateful": {
+          "support": 31,
+          "predicted": 70,
+          "precision": 0.1429,
+          "recall": 0.3226,
+          "f1": 0.198
+        },
+        "happy": {
+          "support": 2604,
+          "predicted": 135,
+          "precision": 0.4,
+          "recall": 0.0207,
+          "f1": 0.0394
+        },
+        "negative-other": {
+          "support": 2395,
+          "predicted": 56,
+          "precision": 0.125,
+          "recall": 0.0029,
+          "f1": 0.0057
+        },
+        "neutral": {
+          "support": 7991,
+          "predicted": 1637,
+          "precision": 0.4386,
+          "recall": 0.0899,
+          "f1": 0.1491
+        },
+        "positive-other": {
+          "support": 1685,
+          "predicted": 100,
+          "precision": 0.13,
+          "recall": 0.0077,
+          "f1": 0.0146
+        },
+        "relaxed": {
+          "support": 2150,
+          "predicted": 150,
+          "precision": 0.18,
+          "recall": 0.0126,
+          "f1": 0.0235
+        },
+        "sadness": {
+          "support": 530,
+          "predicted": 40,
+          "precision": 0.15,
+          "recall": 0.0113,
+          "f1": 0.0211
+        },
+        "worried": {
+          "support": 1489,
+          "predicted": 126,
+          "precision": 0.3413,
+          "recall": 0.0289,
+          "f1": 0.0533
+        }
+      }
+    }
+  },
+  "new_wording_test": {
+    "definition": "Normalized text never seen in training or development; test rows retained in order.",
+    "excluded_rows": 3176,
+    "desktop": {
+      "n": 24262,
+      "correct": 1007,
+      "incorrect": 1768,
+      "abstained": 21487,
+      "coverage": 0.1144,
+      "accuracy_all": 0.0415,
+      "accuracy_accepted": 0.3629,
+      "macro_f1_all": 0.0544,
+      "per_class": {
+        "anger": {
+          "support": 2733,
+          "predicted": 364,
+          "precision": 0.3626,
+          "recall": 0.0483,
+          "f1": 0.0852
+        },
+        "astonished": {
+          "support": 1138,
+          "predicted": 116,
+          "precision": 0.2241,
+          "recall": 0.0228,
+          "f1": 0.0415
+        },
+        "depress": {
+          "support": 2522,
+          "predicted": 101,
+          "precision": 0.2376,
+          "recall": 0.0095,
+          "f1": 0.0183
+        },
+        "disgust": {
+          "support": 406,
+          "predicted": 32,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "fear": {
+          "support": 741,
+          "predicted": 32,
+          "precision": 0.1562,
+          "recall": 0.0067,
+          "f1": 0.0129
+        },
+        "grateful": {
+          "support": 23,
+          "predicted": 25,
+          "precision": 0.24,
+          "recall": 0.2609,
+          "f1": 0.25
+        },
+        "happy": {
+          "support": 2251,
+          "predicted": 110,
+          "precision": 0.3727,
+          "recall": 0.0182,
+          "f1": 0.0347
+        },
+        "negative-other": {
+          "support": 2082,
+          "predicted": 55,
+          "precision": 0.1091,
+          "recall": 0.0029,
+          "f1": 0.0056
+        },
+        "neutral": {
+          "support": 7170,
+          "predicted": 1572,
+          "precision": 0.4408,
+          "recall": 0.0967,
+          "f1": 0.1585
+        },
+        "positive-other": {
+          "support": 1485,
+          "predicted": 93,
+          "precision": 0.1398,
+          "recall": 0.0088,
+          "f1": 0.0165
+        },
+        "relaxed": {
+          "support": 1909,
+          "predicted": 141,
+          "precision": 0.1844,
+          "recall": 0.0136,
+          "f1": 0.0254
+        },
+        "sadness": {
+          "support": 489,
+          "predicted": 30,
+          "precision": 0.1333,
+          "recall": 0.0082,
+          "f1": 0.0154
+        },
+        "worried": {
+          "support": 1313,
+          "predicted": 104,
+          "precision": 0.2981,
+          "recall": 0.0236,
+          "f1": 0.0438
+        }
+      }
+    }
+  },
+  "score_parity_max_abs": 3.729888742309839e-08,
+  "scope": "Scripted mainland-Chinese TV dialogue. Reference annotators had context; the model only reads one utterance. A single dominant expression, not simultaneous labels, felt intensity, or an individual's self-report."
+}

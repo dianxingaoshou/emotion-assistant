@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1120" viewBox="0 0 1040 1120" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
+  <title id="title">桌面情绪线索助手的识别、千问复核与调节反馈流程</title>
+  <desc id="desc">实时或文件声画经质量检查和时间对齐后融合，实时会话可依据持续证据和打扰限制询问本人。输入的文字、TXT 或获准的转写由中英文离线模型分析。用户可选中原话交给本地千问复核，核对引文与中文双维估计。复核只供查看。本人主动发起或接受询问后选择调节，记录前后自评、稍后复测和不适，供以后推荐参考。千问直接做中文十三类与双维加权仅用于研究对照。</desc>
+  <style>
+    text { font-family: "Microsoft YaHei","Noto Sans CJK SC","PingFang SC",sans-serif; fill: #1c303a; }
+    .title { font-size: 36px; font-weight: 700; }
+    .lead { font-size: 19px; fill: #465c66; }
+    .heading { font-size: 23px; font-weight: 700; }
+    .body { font-size: 18px; }
+    .small { font-size: 16px; fill: #405760; }
+    .teal { fill: #125c54; }
+    .blue { fill: #245270; }
+    .violet { fill: #514783; }
+    .ochre { fill: #714d13; }
+    .solid { fill: none; stroke: #667c86; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+    .opt { fill: none; stroke: #7767a1; stroke-width: 2.6; stroke-dasharray: 5 6; stroke-linecap: round; stroke-linejoin: round; }
+    .arrow { fill: #667c86; }
+    .optional-arrow { fill: #7767a1; }
+  </style>
+  <rect width="1040" height="1120" fill="#fbfcfd"/>
+  <text x="32" y="57" class="title">情绪识别、千问复核与调节反馈</text>
+  <text x="34" y="93" class="lead">系统估计表达线索。是否需要帮助，以及活动后感受如何，由本人回答。</text>
+
+  <g aria-label="输入与语音转写">
+    <rect x="32" y="126" width="976" height="120" rx="12" fill="#f0f4f5" stroke="#c3d1d5" stroke-width="1.5"/>
+    <path d="M516 145V225" stroke="#c3d1d5" stroke-width="1.5"/>
+    <text x="55" y="164" class="heading">声画来源</text>
+    <text x="55" y="197" class="body">摄像头、麦克风，或本地照片、音视频</text>
+    <text x="55" y="224" class="small">根据实际输入启用表情或语音通道。</text>
+    <text x="542" y="164" class="heading">文字来源</text>
+    <text x="542" y="197" class="body">手动输入、TXT、自动转写或校对稿</text>
+    <text x="542" y="224" class="small">语音获准转写后，SenseVoiceSmall 提供原话。</text>
+  </g>
+  <path d="M264 247V272 M748 247V272" class="solid"/>
+  <path d="M259 268l5 9 5-9z M743 268l5 9 5-9z" class="arrow"/>
+
+  <g aria-label="声画质量检查与融合">
+    <rect x="32" y="280" width="466" height="204" rx="12" fill="#edf7f3" stroke="#a9cfc2" stroke-width="1.5"/>
+    <text x="55" y="319" class="heading teal">声画质量检查与融合</text>
+    <text x="55" y="353" class="body">YuNet 定位人脸，EmotiEffLib 识别表情</text>
+    <text x="55" y="380" class="body">Silero VAD 分出人声，emotion2vec+ 评语调</text>
+    <path d="M55 397H473" stroke="#b7d7ce"/>
+    <text x="55" y="426" class="body">对齐声画时段，按采集质量与覆盖率加权</text>
+    <text x="55" y="455" class="body">可选校准融合。缺一路用单路，依据弱则暂缓。</text>
+  </g>
+  <g aria-label="本地中文与英文文本算法">
+    <rect x="528" y="280" width="452" height="204" rx="12" fill="#eff5f8" stroke="#b3cddc" stroke-width="1.5"/>
+    <text x="550" y="319" class="heading blue">文字表达的离线分析</text>
+    <text x="550" y="353" class="body">中文：CPED 13 类候选，愉悦度与激活度</text>
+    <text x="550" y="380" class="body">英文：GoEmotions 多标签与 EmoBank 三维</text>
+    <path d="M550 397H957" stroke="#c0d4df"/>
+    <text x="550" y="426" class="body">英文极性以文本为主，可和同期声画对照</text>
+    <text x="550" y="455" class="small">结果随所选原文显示，低于相应门槛时暂缓。</text>
+  </g>
+  <path d="M264 485V504" class="solid"/>
+  <path d="M259 500l5 9 5-9z" class="arrow"/>
+  <path d="M970 246H998V554H983" class="opt"/>
+  <path d="M987 549l-9 5 9 5z" class="optional-arrow"/>
+
+  <g aria-label="实时提醒">
+    <rect x="32" y="512" width="466" height="132" rx="12" fill="#fff" stroke="#a9cfc2" stroke-width="1.5"/>
+    <text x="55" y="550" class="heading teal">实时会话判断是否询问</text>
+    <text x="55" y="583" class="body">检查持续负向线索或高质量声画分歧，</text>
+    <text x="55" y="611" class="body">结合专注、勿扰、冷却及近期拒绝决定时机。</text>
+  </g>
+  <g aria-label="用户点击后，将所选原话送入千问复核">
+    <rect x="528" y="512" width="452" height="132" rx="12" fill="#f4f1fa" stroke="#c7bddd" stroke-width="1.5"/>
+    <text x="550" y="550" class="heading violet">点击复核原话 · 本机千问 Qwen3 8B</text>
+    <text x="550" y="583" class="body">核对描述对象、时间、本人感受与原文引据</text>
+    <text x="550" y="611" class="small">中文另列校准双维，英文可对照域内极性模型。</text>
+  </g>
+  <path d="M264 645V681" class="solid"/>
+  <path d="M259 677l5 9 5-9z" class="arrow"/>
+  <text x="280" y="672" class="small">询问本人</text>
+  <text x="548" y="671" class="small violet">文字复核供查看。文件检测独立于实时询问。</text>
+
+  <g aria-label="本人决定是否开始调节">
+    <rect x="32" y="688" width="976" height="86" rx="12" fill="#fff6e3" stroke="#d9c492" stroke-width="1.5"/>
+    <text x="55" y="723" class="heading ochre">本人确认需要，或主动发起调节</text>
+    <text x="55" y="752" class="body">确认自己的需求并记录活动前困扰度（0–10）。可以拒绝或稍后再做。</text>
+  </g>
+  <path d="M264 775V805" class="solid"/>
+  <path d="M259 801l5 9 5-9z" class="arrow"/>
+  <g aria-label="选择和执行活动">
+    <rect x="32" y="812" width="451" height="128" rx="12" fill="#fff" stroke="#c5d0d5" stroke-width="1.5"/>
+    <text x="55" y="850" class="heading">选择与执行活动</text>
+    <text x="55" y="884" class="body">按需求、时长、偏好和既往不适筛选。</text>
+    <text x="55" y="912" class="small">可请千问推荐候选。本人选择、开始或中止。</text>
+  </g>
+  <path d="M484 875H537" class="solid"/>
+  <path d="M533 870l9 5-9 5z" class="arrow"/>
+  <g aria-label="即时反馈与稍后复测">
+    <rect x="545" y="812" width="463" height="128" rx="12" fill="#fff" stroke="#c5d0d5" stroke-width="1.5"/>
+    <text x="568" y="850" class="heading">即时反馈与稍后复测</text>
+    <text x="568" y="884" class="body">对照前后自评，记录主观帮助、不适与缺测。</text>
+    <text x="568" y="912" class="small">可在历史记录中回看和导出。</text>
+  </g>
+  <path d="M773 941V975H267V949" class="solid"/>
+  <path d="M262 953l5-9 5 9z" class="arrow"/>
+  <rect x="340" y="960" width="381" height="29" fill="#fbfcfd"/>
+  <text x="530" y="981" class="small" text-anchor="middle">保存的偏好与活动反馈可供下次推荐参考</text>
+
+  <g aria-label="只用于官方语料评测的研究模型">
+    <rect x="32" y="1023" width="976" height="67" rx="10" fill="#f1f1f5" stroke="#d4d3df"/>
+    <text x="54" y="1064" class="body violet" font-weight="700">实验对照</text>
+    <text x="153" y="1064" class="body">研究脚本另测千问直接判中文 13 类，以及字符模型与千问双维评分的加权组合。</text>
+  </g>
+</svg>

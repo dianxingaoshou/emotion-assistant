@@ -2,7 +2,7 @@
 import re
 
 
-def interpret_context(text):
+def chinese_context_rules(text):
     line = text.strip()[:512]
     quote = bool(re.search(r'[“”「」『』"‘’]|朗读|引用|台词|念一[句段]|照着读|原话|[他她]说', line))
     other = re.search(r"[他她你]|别人|朋友|同学|同事|家人|哥哥|姐姐|弟弟|妹妹|妈妈|爸爸", line)
@@ -29,9 +29,13 @@ def interpret_context(text):
             if re.search(pattern, line):
                 need = key
                 break
-    context = {"version": "zh-context-rules-v1", "subject": subject, "time_scope": scope,
+    return {"version": "zh-context-rules-v1", "subject": subject, "time_scope": scope,
             "is_quote": quote, "explicit_feeling": feeling.group() if feeling and not denied else None,
             "need_hint": need, "evidence_text": line, "requires_confirmation": True}
+
+
+def interpret_context(text):
+    context = chinese_context_rules(text)
     # Store derived text data under the same consent and deletion boundary as ASR.
     from .english_polarity import predict_english_polarity
     from .english_intensity import predict_english_intensity
@@ -42,4 +46,9 @@ def interpret_context(text):
     intensity = predict_english_intensity(text)
     if intensity is not None:
         context["english_intensity"] = intensity
+    from .expression_profile import text_expression_profile
+
+    profile = text_expression_profile(text)
+    if profile is not None:
+        context["expression_profile"] = profile
     return context

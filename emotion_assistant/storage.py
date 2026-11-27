@@ -837,6 +837,12 @@ class Store:
                 loop = loop if isinstance(loop, dict) else {}
                 followup = latest.get("followup") if latest else None
                 followup = followup if isinstance(followup, dict) else {}
+                if latest and latest.get("status") in ("completed", "cancelled"):
+                    item["latest_ratings"] = {
+                        "status": latest["status"], "activity": latest.get("activity"),
+                        "pre": latest.get("pre"), "post": latest.get("post"),
+                        "followup": {"status": followup.get("status"), "distress": followup.get("distress")},
+                    }
                 delayed_loop = followup.get("loop_result")
                 if followup.get("status") == "completed" and isinstance(delayed_loop, dict):
                     loop = delayed_loop

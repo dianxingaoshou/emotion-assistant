@@ -16,6 +16,7 @@ import time
 import uuid
 
 from .evidence import raw_prediction_diagnostics
+from .native_expression import expression_profile
 
 VISUAL_LABELS = ("anger", "contempt", "disgust", "fear", "happiness", "neutral", "sadness", "surprise")
 CANONICAL = ("positive", "neutral", "negative", "uncertain")
@@ -203,6 +204,9 @@ class ModelHub:
         observation["processed_at"] = _now()
         if reason:
             observation["reason"] = reason
+        if "raw_scores" in observation and observation.get("modality") in ("visual", "audio"):
+            observation["expression_profile"] = expression_profile(
+                [observation], observation["modality"], still=True)
         return observation
 
     def analyze_frame(self, frame, session_id: str, t_start: float, t_end: float) -> dict:
@@ -384,7 +388,7 @@ class ModelHub:
                     return self._finish(transcript, started, reason)
                 if self._asr_model is None:
                     return self._finish(transcript, started, "model_unavailable: " + self.status["asr"]["reason"])
-                if language not in ("auto", "en"):
+                if language not in ("auto", "en", "zh"):
                     return self._finish(transcript, started, "unsupported_asr_language")
                 result = self._asr_model.generate(input=audio, fs=16000, cache={},
                     language=language, use_itn=True, batch_size=1)

@@ -474,7 +474,7 @@ class Controller(QObject):
         elif kind == "utterance":
             utterance = event["utterance"]
             sid = utterance.get("session_id")
-            if not self.transcript_allowed or sid != self.session_id:
+            if not self.transcript_allowed or sid != self.session_id or utterance.get("stale"):
                 return
             self.transcript_ready.emit(utterance)
             if self.state == "running" and self.transcript_allowed and self.session_id == sid:

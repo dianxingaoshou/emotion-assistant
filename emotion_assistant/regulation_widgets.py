@@ -8,8 +8,9 @@ SPACE/TYPE/COLORS come from ui_theme; no additional palette or dependency.
 from __future__ import annotations
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout, QWidget
 
+from .regulation import _rating
 from .ui_theme import COLORS, SPACE, TYPE
 
 
@@ -65,6 +66,57 @@ class RecommendationCards(QWidget):
             self.layout_.addWidget(frame)
 
 
+class DistressTimeline(QWidget):
+    """Self-ratings share one 0–10 scale. Unavailable observations have no bar."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        box = QGridLayout(self)
+        box.setContentsMargins(0, 0, 0, 0)
+        box.setHorizontalSpacing(SPACE["md"])
+        box.setVerticalSpacing(SPACE["sm"])
+        box.setColumnStretch(1, 1)
+        self.title = label("本人自评困扰度", "cardTitle")
+        box.addWidget(self.title, 0, 0, 1, 3)
+        self.rows = []
+        for i, name in enumerate(("活动前", "刚结束", "稍后复测"), 1):
+            bar = QProgressBar()
+            bar.setAccessibleName(name + "困扰度，满分十分")
+            bar.setRange(0, 10)
+            bar.setTextVisible(False)
+            bar.setFixedHeight(SPACE["sm"])
+            bar.setStyleSheet(
+                f"QProgressBar {{background: {COLORS['border']}; border: 0; border-radius: 4px;}}"
+                f"QProgressBar::chunk {{background: {COLORS['primary']}; border-radius: 4px;}}"
+            )
+            value = label("", "bodyNote")
+            value.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+            box.addWidget(label(name), i, 0)
+            box.addWidget(bar, i, 1)
+            box.addWidget(value, i, 2)
+            self.rows.append((bar, value))
+        self.hide()
+
+    def set_record(self, record, title="本人自评困扰度"):
+        if not record or record.get("status") not in ("completed", "cancelled"):
+            self.hide()
+            return
+        followup = record.get("followup") or {}
+        delayed_status = followup.get("status")
+        delayed = followup.get("distress") if delayed_status == "completed" else None
+        missing_delayed = {"pending": "待填写", "completed": "未填写", "skipped": "已跳过"}.get(delayed_status, "未安排")
+        self.title.setText(title)
+        for (bar, value), raw, missing in zip(
+                self.rows, (record.get("pre"), record.get("post"), delayed),
+                ("未填写", "未填写", missing_delayed)):
+            score = _rating(raw)
+            bar.setVisible(score is not None)
+            if score is not None:
+                bar.setValue(score)
+            value.setText(f"{score} / 10" if score is not None else missing)
+        self.show()
+
+
 class OutcomeCard(QFrame):
     """Self-report and subjective comfort remain separate visible evidence."""
     def __init__(self, parent=None):
@@ -75,12 +127,12 @@ class OutcomeCard(QFrame):
         box.setSpacing(SPACE["md"])
         self.heading = label("本次反馈已保存", "cardTitle")
         self.caption = label("", "bodyNote")
-        self.ratings = label("", "cardTitle")
+        self.timeline = DistressTimeline()
         self.detail = label("", "muted")
         self.next_action = label("", "muted")
         box.addWidget(self.heading)
         box.addWidget(self.caption)
-        box.addWidget(self.ratings)
+        box.addWidget(self.timeline)
         box.addWidget(self.detail)
         box.addWidget(self.next_action)
         self.hide()
@@ -103,8 +155,7 @@ class OutcomeCard(QFrame):
         elif record.get("save_status") == "failed":
             self.heading.setText("反馈尚未保存，请重试")
         self.caption.setText(result.get("caption") or ("这次活动已中止，未把中止视为改善。" if record.get("status") == "cancelled" else "你的前后自评与主观反馈已分别记录。"))
-        pre, post = record.get("pre"), record.get("post")
-        self.ratings.setText(f"困扰度  {pre if pre is not None else '—'} → {post if post is not None else '无有效复测'}  / 10")
+        self.timeline.set_record(record)
         help_label = {"helpful": "觉得有帮助", "no_change": "无明显帮助", "worse": "更不舒服", "unknown": "暂时无法评价"}.get(record.get("helpfulness"), "未填写")
         window_comparison = record.get("assessment_comparison") or {}
         comparable = window_comparison.get("comparable") is True
@@ -136,7 +187,7 @@ class OutcomeCard(QFrame):
                 detail += f"\n模型负向线索变化（前减后）{negative_delta:+.3f}；与用户感受分别记录。"
         if followup.get("status") == "completed":
             delayed_help = {"helpful": "仍觉得有帮助", "no_change": "无明显帮助", "worse": "更不舒服", "unknown": "暂时无法评价"}.get(followup.get("helpfulness"), "未填写")
-            detail += f"\n稍后复测：困扰度 {followup.get('distress', '—')} / 10；{delayed_help}。"
+            detail += f"\n稍后主观反馈：{delayed_help}。"
         elif followup.get("status") == "skipped":
             detail += "\n稍后复测缺少有效自评，无法评价持续变化。"
         self.detail.setText(detail + ("\n本条为模拟记录，单独统计。" if mode == "simulation" else ""))

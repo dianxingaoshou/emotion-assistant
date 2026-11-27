@@ -1,0 +1,77 @@
+{
+  "design": "Scripted simulation-mode UI actions with real local model inference; no human outcome measurements.",
+  "runs": [
+    {
+      "goal": "stuck",
+      "pre": 5,
+      "seconds": 180,
+      "inference_seconds": 7.687,
+      "displayed": [
+        "选择 · 任务拆解",
+        "选择 · 价值微行动"
+      ],
+      "reasons": [
+        "把卡点、已尝试的方法和下一步写清楚。与本次所选需要相符。可在你预留的 3 分钟内尝试。",
+        "从你在意的方向里，选择一个当下可控的小动作。与本次所选需要相符。可在你预留的 3 分钟内尝试。"
+      ],
+      "exported_offer": {
+        "model": "qwen3:8b",
+        "eligible_ids": [
+          "task_split",
+          "thought_label",
+          "break",
+          "values_action",
+          "breathing",
+          "desk_reset",
+          "grounding",
+          "self_kindness"
+        ],
+        "suggested_ids": [
+          "task_split",
+          "values_action"
+        ],
+        "selected_id": "task_split",
+        "selection_source": "ai_suggestion",
+        "adopted_id": "task_split"
+      },
+      "session_mode": "simulation",
+      "final_activity_status": "cancelled"
+    },
+    {
+      "goal": "fatigue",
+      "pre": 3,
+      "seconds": 60,
+      "inference_seconds": 9.031,
+      "displayed": [
+        "选择 · 桌面舒适调整",
+        "选择 · 短时休息"
+      ],
+      "reasons": [
+        "调整坐姿与注意焦点，活动范围以舒适为准。与本次所选需要相符。可在你预留的 1 分钟内尝试。",
+        "暂时离开任务，给自己一点缓冲。与本次所选需要相符。可在你预留的 1 分钟内尝试。"
+      ],
+      "exported_offer": {
+        "model": "qwen3:8b",
+        "eligible_ids": [
+          "desk_reset",
+          "values_action",
+          "breathing",
+          "break",
+          "grounding",
+          "self_kindness",
+          "task_split",
+          "thought_label"
+        ],
+        "suggested_ids": [
+          "desk_reset",
+          "break"
+        ],
+        "selected_id": "breathing",
+        "selection_source": "manual",
+        "adopted_id": null
+      },
+      "session_mode": "simulation",
+      "final_activity_status": "cancelled"
+    }
+  ]
+}

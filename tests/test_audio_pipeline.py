@@ -126,15 +126,17 @@ class AudioAdapterTests(unittest.TestCase):
         self.assertNotIn("raw_scores", text)
         self.assertFalse(text["is_current_concern"])
 
-    def test_explicit_research_english_mode_preserves_automatic_language_default(self):
+    def test_explicit_recognition_languages_preserve_auto_default_and_consent(self):
         with patch.object(self.hub._asr_model, "generate", wraps=self.hub._asr_model.generate) as recognize:
             self.hub.transcribe_audio(self.samples, "s", 0, 3, True)
             self.assertEqual(recognize.call_args.kwargs["language"], "auto")
             self.hub.transcribe_audio(self.samples, "s", 0, 3, True, language="en")
             self.assertEqual(recognize.call_args.kwargs["language"], "en")
+            self.hub.transcribe_audio(self.samples, "s", 0, 3, True, language="zh")
+            self.assertEqual(recognize.call_args.kwargs["language"], "zh")
             denied = self.hub.transcribe_audio(self.samples, "s", 0, 3, False, language="en")
             self.assertEqual(denied["reason"], "consent_not_granted")
-            self.assertEqual(recognize.call_count, 2)
+            self.assertEqual(recognize.call_count, 3)
 
     def test_legacy_api_still_returns_observation_and_text(self):
         observation, text = self.hub.analyze_audio(self.samples, "s", 0, 3, True)

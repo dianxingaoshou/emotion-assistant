@@ -1,0 +1,105 @@
+{
+  "scope": "One publisher-provided Mandarin ASR demo recording, compared with the publisher's own output with inverse text normalization. No independent ASR benchmark, human emotion labels, or user outcome measurements.",
+  "sample_url": "https://huggingface.co/FunAudioLLM/SenseVoiceSmall/resolve/3847d57b6bdf2dd8875cb1508d2af43d80a16bf7/example/zh.mp3",
+  "sample_sha256": "0e64de19e4ff9a02e682955c9112f32d2317cfdbb5bc2f3504664044c993f195",
+  "publisher_demo_url": "https://fun-audio-llm.github.io/",
+  "matches_publisher_displayed_transcript": true,
+  "asr_model": "SenseVoiceSmall",
+  "asr_disabled_utterances": 0,
+  "asr_enabled_utterances": 1,
+  "selected_asr_segments": [
+    {
+      "t_start": 0.5760000000000003,
+      "t_end": 5.616000000000004,
+      "text": "开放时间早上9点至下午5点。",
+      "emotion_status": "below_threshold",
+      "dimension_status": "ok"
+    }
+  ],
+  "whole_transcript": "开放时间早上9点至下午5点。",
+  "automatic_expression_profile": {
+    "scope": "expressed_text",
+    "language": "zh",
+    "fine_emotions": {
+      "model": "cped-13-char-tfidf-v1",
+      "language": "zh",
+      "scope": "expressed_text",
+      "score_type": "relative_class_score",
+      "labels": [],
+      "top_scores": [
+        {
+          "id": "neutral",
+          "name_zh": "中性表达",
+          "score": 0.430735
+        },
+        {
+          "id": "relaxed",
+          "name_zh": "放松",
+          "score": 0.194759
+        }
+      ],
+      "threshold": 0.45,
+      "minimum_margin": 0.06,
+      "status": "below_threshold"
+    },
+    "affect_dimensions": {
+      "model": "cvas-zh-char-ridge-v1",
+      "scope": "expressed_text",
+      "scale": [
+        1,
+        9
+      ],
+      "dimensions": {
+        "valence": {
+          "score": 5.0298
+        },
+        "arousal": {
+          "score": 4.1303
+        }
+      },
+      "status": "ok",
+      "evidence": {
+        "han_characters": 11,
+        "known_characters": 10
+      }
+    }
+  },
+  "file_page_readout": "中文表达类别暂缓判断。\n中文表达维度（1–9，本地字符模型）\n愉悦度　5.03　激活度　4.13",
+  "qwen_review": {
+    "status": "ok",
+    "model": "qwen3:8b",
+    "review_version": "semantic-review-v2",
+    "subject": "object",
+    "time_scope": "unknown",
+    "content_polarity": "neutral",
+    "current_polarity": "unknown",
+    "current_change": "unknown",
+    "help_request": "none",
+    "current_feeling_quote": "",
+    "evidence": [
+      "开放时间早上9点至下午5点。"
+    ],
+    "chinese_dimensions": {
+      "model": "qwen3:8b",
+      "version": "qwen-zh-expressed-va-v1",
+      "scope": "expressed_text",
+      "scale": [
+        1,
+        9
+      ],
+      "status": "ok",
+      "valence": 5,
+      "arousal": 5,
+      "evidence": "开放时间早上9点至下午5点。",
+      "calibrated": {
+        "valence": 4.864465793507036,
+        "arousal": 5.060404047452897
+      },
+      "calibration_version": "cvas-zh-affine-v1",
+      "calibration_n": 188,
+      "calibration_scope": "academic_research_CVAS"
+    },
+    "text_source": "asr"
+  },
+  "json_export_matches_page_result": true
+}

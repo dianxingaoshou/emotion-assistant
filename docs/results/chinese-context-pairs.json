@@ -1,0 +1,735 @@
+{
+  "design": "Developer-authored Chinese paired sentences. Expected fields fixed before inference. Cases share vocabulary within pairs. No population or clinical inference.",
+  "model": "qwen3:8b",
+  "review_version": "semantic-review-v2",
+  "cases_sha256": "390497af5537b4ef99c8902d9dca4a5ea4dfaaad620fea2268de1ed045355272",
+  "summary": {
+    "n": 24,
+    "pairs": 12,
+    "validated_reviews": 24,
+    "rules_shared_fields": {
+      "by_field": {
+        "subject": 19,
+        "time_scope": 19
+      },
+      "all_scored_fields": 14
+    },
+    "qwen_shared_fields": {
+      "by_field": {
+        "subject": 20,
+        "time_scope": 22
+      },
+      "all_scored_fields": 18
+    },
+    "qwen_all_fields": {
+      "by_field": {
+        "subject": 20,
+        "time_scope": 22,
+        "current_polarity": 19,
+        "help_request": 3
+      },
+      "all_scored_fields": 3
+    }
+  },
+  "cases": [
+    {
+      "pair": "紧张",
+      "text": "我现在很紧张。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我现在很紧张。",
+        "evidence": [
+          "我现在很紧张。"
+        ]
+      }
+    },
+    {
+      "pair": "紧张",
+      "text": "同桌现在很紧张。",
+      "expected": {
+        "subject": "other",
+        "time_scope": "current",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "unknown",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "现在很紧张",
+        "evidence": [
+          "同桌现在很紧张。"
+        ]
+      }
+    },
+    {
+      "pair": "欣喜",
+      "text": "我此刻满心欢喜。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻满心欢喜。",
+        "evidence": [
+          "我此刻满心欢喜。"
+        ]
+      }
+    },
+    {
+      "pair": "欣喜",
+      "text": "我昨天满心欢喜。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "past",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "past"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "past",
+        "content_polarity": "positive",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "我昨天满心欢喜。"
+        ]
+      }
+    },
+    {
+      "pair": "恼火",
+      "text": "我眼下对这件事感到恼火。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我眼下对这件事感到恼火。",
+        "evidence": [
+          "我眼下对这件事感到恼火。"
+        ]
+      }
+    },
+    {
+      "pair": "恼火",
+      "text": "倘若再发生这件事，我会感到恼火。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "hypothetical",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "unknown"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "future",
+        "content_polarity": "negative",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "倘若再发生这件事，我会感到恼火。"
+        ]
+      }
+    },
+    {
+      "pair": "称赞",
+      "text": "这款键盘手感非常好。",
+      "expected": {
+        "subject": "object",
+        "time_scope": "unknown",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "unknown",
+        "time_scope": "unknown"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "object",
+        "time_scope": "unknown",
+        "content_polarity": "positive",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "none",
+        "current_feeling_quote": "",
+        "evidence": [
+          "这款键盘手感非常好。"
+        ]
+      }
+    },
+    {
+      "pair": "称赞",
+      "text": "我目前的心情非常好。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "unknown"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我目前的心情非常好。",
+        "evidence": [
+          "我目前的心情非常好。"
+        ]
+      }
+    },
+    {
+      "pair": "难过",
+      "text": "我此刻很难过，能陪我坐一会儿吗？",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "yes"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "yes",
+        "current_feeling_quote": "我此刻很难过",
+        "evidence": [
+          "我此刻很难过",
+          "能陪我坐一会儿吗？"
+        ]
+      }
+    },
+    {
+      "pair": "难过",
+      "text": "我此刻很难过，请别陪我，让我独处。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "declined"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻很难过",
+        "evidence": [
+          "我此刻很难过，请别陪我，让我独处。"
+        ]
+      }
+    },
+    {
+      "pair": "伤心",
+      "text": "我上周很伤心。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "past",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "past"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "past",
+        "content_polarity": "negative",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "我上周很伤心。"
+        ]
+      }
+    },
+    {
+      "pair": "伤心",
+      "text": "我上周很伤心，现在我感到快乐。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "mixed",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "past"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "mixed",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "improving",
+        "help_request": "unknown",
+        "current_feeling_quote": "现在我感到快乐",
+        "evidence": [
+          "我上周很伤心",
+          "现在我感到快乐"
+        ]
+      }
+    },
+    {
+      "pair": "放松",
+      "text": "我此刻全身放松，心里很愉悦。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻全身放松，心里很愉悦。",
+        "evidence": [
+          "我此刻全身放松，心里很愉悦。"
+        ]
+      }
+    },
+    {
+      "pair": "放松",
+      "text": "我希望以后能全身放松、心里愉悦。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "future",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "hypothetical"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "future",
+        "content_polarity": "positive",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "我希望以后能全身放松、心里愉悦。"
+        ]
+      }
+    },
+    {
+      "pair": "引述",
+      "text": "我此刻心里很害怕。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻心里很害怕。",
+        "evidence": [
+          "我此刻心里很害怕。"
+        ]
+      }
+    },
+    {
+      "pair": "引述",
+      "text": "室友说：“我此刻心里很害怕。”",
+      "expected": {
+        "subject": "other",
+        "time_scope": "current",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻心里很害怕",
+        "evidence": [
+          "我此刻心里很害怕"
+        ]
+      }
+    },
+    {
+      "pair": "安心",
+      "text": "此刻我非常安心。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "此刻我非常安心。",
+        "evidence": [
+          "此刻我非常安心。"
+        ]
+      }
+    },
+    {
+      "pair": "安心",
+      "text": "此刻小周非常安心。",
+      "expected": {
+        "subject": "other",
+        "time_scope": "current",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "unknown",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "此刻小周非常安心。",
+        "evidence": [
+          "此刻小周非常安心。"
+        ]
+      }
+    },
+    {
+      "pair": "气愤",
+      "text": "我此刻很气愤，请帮我整理思路。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "yes"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "yes",
+        "current_feeling_quote": "我此刻很气愤",
+        "evidence": [
+          "我此刻很气愤，请帮我整理思路。"
+        ]
+      }
+    },
+    {
+      "pair": "气愤",
+      "text": "我此刻很气愤，但我不需要任何协助。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "declined"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "none",
+        "current_feeling_quote": "我此刻很气愤",
+        "evidence": [
+          "我此刻很气愤",
+          "但我不需要任何协助。"
+        ]
+      }
+    },
+    {
+      "pair": "不安",
+      "text": "假如明天独自上台，我会不安。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "hypothetical",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "hypothetical"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "future",
+        "content_polarity": "negative",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "假如明天独自上台，我会不安。"
+        ]
+      }
+    },
+    {
+      "pair": "不安",
+      "text": "想到明天要上台，我此刻已经感到不安。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "negative",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "hypothetical"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻已经感到不安",
+        "evidence": [
+          "想到明天要上台，我此刻已经感到不安。"
+        ]
+      }
+    },
+    {
+      "pair": "自豪",
+      "text": "我此刻为完成这项任务而感到自豪。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "self",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "我此刻为完成这项任务而感到自豪。",
+        "evidence": [
+          "我此刻为完成这项任务而感到自豪。"
+        ]
+      }
+    },
+    {
+      "pair": "自豪",
+      "text": "教练此刻为完成这项任务而感到自豪。",
+      "expected": {
+        "subject": "other",
+        "time_scope": "current",
+        "current_polarity": "unknown",
+        "help_request": "none"
+      },
+      "rules": {
+        "subject": "unknown",
+        "time_scope": "current"
+      },
+      "qwen": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "感到自豪",
+        "evidence": [
+          "教练此刻为完成这项任务而感到自豪。"
+        ]
+      }
+    }
+  ]
+}

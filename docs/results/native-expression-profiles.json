@@ -1,0 +1,2435 @@
+{
+  "source": "https://zenodo.org/records/1188976",
+  "human_ratings_source": "https://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0196391.s008",
+  "workbook_sha256": "b304b75a1a1a8928be557b0fe6a248c40db193e95e4d5b02073dce8dd034fcee",
+  "actors": [
+    5,
+    6,
+    11,
+    12,
+    17,
+    18,
+    23,
+    24
+  ],
+  "model_versions": {
+    "face": "YuNet-2023mar@48b10fa505ae",
+    "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+    "audio": "emotion2vec_plus_seed@7be9a30d52bd",
+    "asr": "SenseVoiceSmall@3847d57b6bdf"
+  },
+  "method": "Local AV file path, separate audio and visual distributions. Duration × input quality among eligible observations. Each native ranking compared to the same take's unique plurality of 10 original audio-only or video-only votes. Check top score versus perceived intensity (ten modality-specific 1-5 ratings) for all clips with an output. Full model vocabularies retained. Tied votes excluded per modality. 8 clips per held-out actor, normal intensity, acted neutral/happy/angry/surprised. No fitting or threshold selection; upstream training overlap unknown.",
+  "metrics": {
+    "visual": {
+      "clips": 64,
+      "tied_human_vote": 6,
+      "with_reference": 58,
+      "with_output_and_reference": 58,
+      "abstained_with_reference": 0,
+      "top1_correct": 32,
+      "top2_contains_reference": 42,
+      "accuracy_all_with_reference": 0.5517241379310345,
+      "top2_recall_all_with_reference": 0.7241379310344828,
+      "median_gap_when_top1_correct": 0.2290493484560268,
+      "median_gap_when_top1_incorrect": 0.07020370364260825,
+      "gap_auc_for_top1_correct_on_outputs": 0.7451923076923077,
+      "intensity_pairs": 64,
+      "top_score_vs_perceived_intensity_pearson": 0.17635875461169065,
+      "reference_counts": {
+        "neutral": 17,
+        "happiness": 15,
+        "anger": 13,
+        "surprise": 12,
+        "disgust": 1
+      }
+    },
+    "audio": {
+      "clips": 64,
+      "tied_human_vote": 4,
+      "with_reference": 60,
+      "with_output_and_reference": 44,
+      "abstained_with_reference": 16,
+      "top1_correct": 29,
+      "top2_contains_reference": 36,
+      "accuracy_all_with_reference": 0.48333333333333334,
+      "top2_recall_all_with_reference": 0.6,
+      "median_gap_when_top1_correct": 0.9999986931107233,
+      "median_gap_when_top1_incorrect": 0.9999693921868341,
+      "gap_auc_for_top1_correct_on_outputs": 0.6,
+      "intensity_pairs": 47,
+      "top_score_vs_perceived_intensity_pearson": 0.042069967608863244,
+      "reference_counts": {
+        "neutral": 25,
+        "calm": 3,
+        "anger": 12,
+        "surprise": 14,
+        "happiness": 5,
+        "disgust": 1
+      }
+    }
+  },
+  "clips": [
+    {
+      "clip": "01-01-01-01-01-01-05",
+      "media_sha256": "150fd212676fd757237a1ff4291b4fd9eed6315a171e279d716c7634418093d8",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 1,
+          "neutral": 8,
+          "sadness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.23221467696367537,
+        "top1_score": 0.4862392233224092,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 2,
+          "neutral": 8
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-05",
+      "media_sha256": "627cd211a16c1b3e19e500039a5d895e3a1063a6542c42fc138b030bb1e0ae8c",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 2,
+          "sadness": 3,
+          "neutral": 4,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.2505829877065122,
+        "top1_score": 0.5015122818964103,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "calm": 2
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-05",
+      "media_sha256": "4f9ea2e56dbcc919560e3fb9b7cc7998de64f82d5cdf33ec4dc129882dd127a5",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "sadness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "disgust"
+        ],
+        "margin": 0.337258662269757,
+        "top1_score": 0.488077843150859,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "calm",
+        "votes": {
+          "surprise": 1,
+          "calm": 4,
+          "fear": 2,
+          "neutral": 1,
+          "none_of_the_above": 1,
+          "disgust": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-05",
+      "media_sha256": "efa08256afb851ab25812fe03f24bf61df32cb2b6deedf8a8e7e62f7e39caf1b",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "surprise": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.4600320304870952,
+        "top1_score": 0.6002725912827676,
+        "human_intensity_mean": 4.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 6,
+          "calm": 4
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-05",
+      "media_sha256": "83bf556193e512ac5b44c38a97eb53f65907f23238905cd3b3239c9c83018bf7",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "sadness": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.08101772976549731,
+        "top1_score": 0.29648283610161746,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 6,
+          "disgust": 2,
+          "neutral": 1,
+          "surprise": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "surprise"
+        ],
+        "margin": 0.9999986931107233,
+        "top1_score": 0.9999989841533299,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-05",
+      "media_sha256": "fd5b606d850e223ca1c30358040192220e7a0e84837ecac9fa3c9a506da2238e",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 5,
+          "sadness": 3,
+          "calm": 1,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "neutral"
+        ],
+        "margin": 0.020268179102616413,
+        "top1_score": 0.3244603560590089,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 9
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 3,
+          "calm": 2,
+          "none_of_the_above": 2,
+          "neutral": 1,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "neutral"
+        ],
+        "margin": 0.9999719957369833,
+        "top1_score": 0.9999821382553595,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-05",
+      "media_sha256": "1dec16a1f26222c0913912704238df8c4e6659d309af0ac38f3fb6daaa6e0828",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 5,
+          "happiness": 2,
+          "none_of_the_above": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.35921169015304877,
+        "top1_score": 0.5296532008014434,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 7,
+          "neutral": 2,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.998656545067048,
+        "top1_score": 0.9992518542862892,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-05",
+      "media_sha256": "a32a536cea08f696f253023b19aa68d1f58312ed64dc888bee1fe24ed7b1b0e4",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 4,
+          "calm": 3,
+          "surprise": 1,
+          "happiness": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.025702263616111665,
+        "top1_score": 0.27723490918820765,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 5,
+          "calm": 1,
+          "happiness": 2,
+          "neutral": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.2015511668062645,
+        "top1_score": 0.598260276492429,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-06",
+      "media_sha256": "3e9ae1632dac4a59df171603922b72a12af07ef1eb672d00a5bdff5c2a2bb033",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "sadness": 3,
+          "anger": 1,
+          "neutral": 6
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.0971014607541241,
+        "top1_score": 0.266892907949134,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 9,
+          "calm": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-06",
+      "media_sha256": "d66c9cfc474768a536b035f81fbf205a6bb27ddfa059504b484015ba914b16e1",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 1,
+          "neutral": 7,
+          "anger": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "anger"
+        ],
+        "margin": 0.08804105283095137,
+        "top1_score": 0.27872494497687567,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 7,
+          "disgust": 1,
+          "calm": 2
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.5,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-06",
+      "media_sha256": "0b16683ce1d4b9035d6bd816f3e7f155c3a51947cbe991fd9ebd775482278a95",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "disgust"
+        ],
+        "margin": 0.5809664734173445,
+        "top1_score": 0.7564398231974685,
+        "human_intensity_mean": 4.5,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 6,
+          "neutral": 3,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.999999990834256,
+        "top1_score": 0.999999994300474,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-06",
+      "media_sha256": "ac27c3a1c3355cc6ae3ce640f15525552d7c043b5c7e612f68f09870c3bb5d3f",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "disgust",
+          "happiness"
+        ],
+        "margin": 0.02787691109694196,
+        "top1_score": 0.45349040383698197,
+        "human_intensity_mean": 4.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "happiness",
+        "votes": {
+          "neutral": 2,
+          "calm": 3,
+          "happiness": 4,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "anger"
+        ],
+        "margin": 0.999999936444713,
+        "top1_score": 0.9999999613262435,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-06",
+      "media_sha256": "95a51af172f02a120b07889747e2030db2117acecab925ae071e4725d5ecaf3b",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.3809595455215972,
+        "top1_score": 0.5822067333996804,
+        "human_intensity_mean": 4.3,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "disgust": 2,
+          "anger": 6,
+          "calm": 1,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999668191085,
+        "top1_score": 0.9999999790241995,
+        "human_intensity_mean": 3.6,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-06",
+      "media_sha256": "12eec299a0d382062b2f7ae0b7f09f74fd83f5beca5c8927f083780a3b3c72fa",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 9,
+          "fear": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.31188031856690424,
+        "top1_score": 0.5098219434041756,
+        "human_intensity_mean": 4.4,
+        "eligible_observations": 9
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "disgust": 4,
+          "anger": 5,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999734908532,
+        "top1_score": 0.9999999830367949,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-06",
+      "media_sha256": "e172ea50d6d09fab1df01e11f7b6c042c6adf32c6607b2cd84300e6feac63b3d",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 8,
+          "fear": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "disgust",
+          "fear"
+        ],
+        "margin": 0.06954401161085594,
+        "top1_score": 0.31492229465723226,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 6,
+          "neutral": 2,
+          "calm": 1,
+          "anger": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-06",
+      "media_sha256": "f9daca95ef50158d82ef3e3fb4db9d1d5189c1ed0f81a05a27659238b27a0b08",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "fear": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "disgust",
+          "anger"
+        ],
+        "margin": 0.013134421603287094,
+        "top1_score": 0.25435263299914795,
+        "human_intensity_mean": 3.8,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 8,
+          "none_of_the_above": 1,
+          "calm": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-11",
+      "media_sha256": "c7d41f64b99e64019b52cbb3d94dba91257045a5b536cbe0d46427299bc529d9",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 6,
+          "calm": 4
+        },
+        "status": "ok",
+        "top_two": [
+          "contempt",
+          "neutral"
+        ],
+        "margin": 0.10031923034838591,
+        "top1_score": 0.3619999350290416,
+        "human_intensity_mean": 3.7,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 2,
+          "neutral": 8
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.8,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-11",
+      "media_sha256": "ea726dc657ce5911218e253f58c9092acbad126613eed24a66a4d194594ea831",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 7,
+          "calm": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "contempt",
+          "neutral"
+        ],
+        "margin": 0.043706202616381085,
+        "top1_score": 0.3353859969614966,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 6,
+          "calm": 2,
+          "none_of_the_above": 2
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-11",
+      "media_sha256": "395158ffd26c423c0b0f32a4a986cde98da155917234203e36a099169ed0b13a",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "neutral": 3,
+          "happiness": 5,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.1865935698248633,
+        "top1_score": 0.5132953916968978,
+        "human_intensity_mean": 2.9,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "calm": 1,
+          "surprise": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-11",
+      "media_sha256": "56d413e8cc1420c38d0ea3f46145b6388a8b4ffa79d43069e4e839cfdd38fd1a",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 7,
+          "anger": 1,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.5437724987578805,
+        "top1_score": 0.7580452036788534,
+        "human_intensity_mean": 2.9,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.9998296460194012,
+        "top1_score": 0.9999128686781387,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-11",
+      "media_sha256": "507c9c092d8843eb3fecd7cfb42175400a41801ae837dae8b1b2bc78310e9bc2",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "anger": 4,
+          "neutral": 4,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.05482652321474696,
+        "top1_score": 0.25455596551642445,
+        "human_intensity_mean": 3,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 6,
+          "neutral": 1,
+          "none_of_the_above": 2,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.999999982508287,
+        "top1_score": 0.9999999875727535,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-11",
+      "media_sha256": "df899185ef69569da0677405e4aadf4f9e7e246dfe56a40016ee6f3991e503c2",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "anger": 1,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "contempt",
+          "anger"
+        ],
+        "margin": 0.07086339567436056,
+        "top1_score": 0.2807615108776142,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": null,
+        "votes": {
+          "disgust": 3,
+          "anger": 3,
+          "neutral": 2,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999793970519,
+        "top1_score": 0.9999999852884423,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-11",
+      "media_sha256": "5a3464d7c1fa8f9820863a8d56ae7241265868bbf0e215006ee69f1262f618ca",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 1,
+          "surprise": 4,
+          "neutral": 5
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "contempt"
+        ],
+        "margin": 0.14449346163374252,
+        "top1_score": 0.3175591913791398,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "anger": 1,
+          "happiness": 2,
+          "neutral": 2,
+          "surprise": 4,
+          "calm": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-11",
+      "media_sha256": "32bd05e0ab1ce29eb5c77fc8268079a54310a145d3acb9591fd91064feb956b1",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 8,
+          "none_of_the_above": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.16793682519143655,
+        "top1_score": 0.34868487018933914,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "none_of_the_above": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-12",
+      "media_sha256": "7216370de953796e93dc37a043a0867f0e5c1b56febed84017a71910f27af854",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "calm": 5,
+          "neutral": 5
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "contempt"
+        ],
+        "margin": 0.09159005795822417,
+        "top1_score": 0.31426653209324096,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": null,
+        "votes": {
+          "calm": 5,
+          "neutral": 5
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.7,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-12",
+      "media_sha256": "b77d60695523c9b24578de92d0f03d8ff19e60c4b35fc05d49bc8a438a6d68a6",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "anger": 1,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "surprise"
+        ],
+        "margin": 0.22588401994837823,
+        "top1_score": 0.40041330623918825,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 3,
+          "neutral": 7
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.999803785583932,
+        "top1_score": 0.9998825721699333,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-12",
+      "media_sha256": "af64c96fd8ae71a9c5d45e75cae62f45dd33bd2e59e5785b50c00dd79ba5c09a",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "anger": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.6285615745751296,
+        "top1_score": 0.7932961404502875,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 5,
+          "happiness": 2,
+          "calm": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.9999999928934599,
+        "top1_score": 0.9999999949592576,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-12",
+      "media_sha256": "08212e6cc00cc77c12a7cae12f05f43e4a621780b3741d95dba934b8d91c9122",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.6444453595345674,
+        "top1_score": 0.7567483164591813,
+        "human_intensity_mean": 3.7,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 6,
+          "calm": 1,
+          "anger": 2,
+          "happiness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.9999999731247856,
+        "top1_score": 0.9999999823069365,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-12",
+      "media_sha256": "e8059cb16d887161ff59a0e183cabea185f88905f6c57d11a3f5a0b7d45b9b08",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "neutral"
+        ],
+        "margin": 0.015468968761545715,
+        "top1_score": 0.23972620007683773,
+        "human_intensity_mean": 4,
+        "eligible_observations": 9
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 6,
+          "surprise": 1,
+          "neutral": 2,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999635666812,
+        "top1_score": 0.9999999739038299,
+        "human_intensity_mean": 2.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-12",
+      "media_sha256": "8320e6d317319b1f083caf255584f1ed2b16b3dfbb4f47a0e5d232bfa64fcd5a",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "disgust"
+        ],
+        "margin": 0.006924117277641306,
+        "top1_score": 0.2732516975861354,
+        "human_intensity_mean": 4.3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 5,
+          "disgust": 4,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999988839480134,
+        "top1_score": 0.999999265323418,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-12",
+      "media_sha256": "e0fd2ec08cfe07c75ec525033d0bdb2bcad3e6a6f08dca0e418385d9a443893c",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 8,
+          "happiness": 1,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.1322521840656876,
+        "top1_score": 0.3366402181553747,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.9999999551762442,
+        "top1_score": 0.9999999692530775,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-12",
+      "media_sha256": "bbf6e48a0b9dfd080bdf9dcf6ced111f06e507521292b5ada9160f7f4af33748",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "anger": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "surprise"
+        ],
+        "margin": 0.14089584169811245,
+        "top1_score": 0.3669704697423058,
+        "human_intensity_mean": 4,
+        "eligible_observations": 5
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "calm": 2,
+          "none_of_the_above": 1,
+          "anger": 2,
+          "surprise": 3,
+          "neutral": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.3738050261412361,
+        "top1_score": 0.6864126554539159,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-17",
+      "media_sha256": "28912cc5e00cd8a9965e6e67c4ac5434eec8db3fc5e7070d6948c8f7130af711",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 1,
+          "neutral": 7,
+          "anger": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "neutral"
+        ],
+        "margin": 0.0681466324988671,
+        "top1_score": 0.3892333195201994,
+        "human_intensity_mean": 3,
+        "eligible_observations": 3
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 3,
+          "neutral": 5,
+          "fear": 1,
+          "sadness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.7867158419294552,
+        "top1_score": 0.8930516656168322,
+        "human_intensity_mean": 3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-17",
+      "media_sha256": "a169fd2919383f96ffed4cc1268126f0f55b4e8ea2372de988112f92aa7412f2",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.017863349754199065,
+        "top1_score": 0.3874870746632673,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 6
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.4751038894985564,
+        "top1_score": 0.7364701371520223,
+        "human_intensity_mean": 3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-17",
+      "media_sha256": "e16e012670987e136e7e6574f456996d0e504e29484422cd0ab9601c7f69f7ac",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "sadness"
+        ],
+        "margin": 0.538840653304742,
+        "top1_score": 0.6450309424034871,
+        "human_intensity_mean": 3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 6,
+          "calm": 1,
+          "none_of_the_above": 2,
+          "surprise": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.9999998481483808,
+        "top1_score": 0.9999998918740816,
+        "human_intensity_mean": 3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-17",
+      "media_sha256": "cbea5d9b19dfb5961f8caa7e7cb26218d1c464320cd3496841d1e03ea1a9c771",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 8,
+          "neutral": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.617421056701488,
+        "top1_score": 0.7255343626361521,
+        "human_intensity_mean": 3,
+        "eligible_observations": 6
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 5,
+          "disgust": 1,
+          "happiness": 1,
+          "calm": 2,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.9984328245853085,
+        "top1_score": 0.9990299164093125,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-17",
+      "media_sha256": "51d843ce4a8b44297aec2b9034e1b0fc63e57479295f7fc756030c6f37f7340a",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 7,
+          "sadness": 2,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "disgust",
+          "neutral"
+        ],
+        "margin": 0.007240467637593562,
+        "top1_score": 0.2842482631524292,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "calm": 3,
+          "neutral": 5,
+          "anger": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "sadness"
+        ],
+        "margin": 0.9717799740917534,
+        "top1_score": 0.9843009509592489,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-17",
+      "media_sha256": "ba2e4704b347d21230ff3377db8748af3f9817be97a19330b1742a38fc8f6c01",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "anger": 5,
+          "neutral": 5
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "disgust"
+        ],
+        "margin": 0.3242912503083113,
+        "top1_score": 0.46119553435089794,
+        "human_intensity_mean": 3,
+        "eligible_observations": 5
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "calm": 2,
+          "neutral": 3,
+          "anger": 4,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "sadness"
+        ],
+        "margin": 0.999743330100062,
+        "top1_score": 0.9998353972650964,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-17",
+      "media_sha256": "abed3f0ab52c27604e18e5db4c12c68f4d5b9e6034480fa748abc6972ff3d54f",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "disgust": 1,
+          "anger": 3,
+          "none_of_the_above": 2,
+          "surprise": 1,
+          "neutral": 2,
+          "happiness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "happiness"
+        ],
+        "margin": 0.018004575322071392,
+        "top1_score": 0.22044133843368618,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 4
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 7,
+          "happiness": 2,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.7893259953766812,
+        "top1_score": 0.8936950205932828,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-17",
+      "media_sha256": "c579320a127c51fb858140534a54e0aad5ac2e36eef4d7051a63b254f33b6feb",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "none_of_the_above": 2,
+          "surprise": 7,
+          "anger": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "anger"
+        ],
+        "margin": 0.15118784263734195,
+        "top1_score": 0.35633198297701485,
+        "human_intensity_mean": 2.4,
+        "eligible_observations": 3
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "anger": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.9999447970684323,
+        "top1_score": 0.9999692155816692,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-18",
+      "media_sha256": "d7c98513882f6f5dede93cc475755dbfeda953b826e7e4ba9ce3b7bbf76ddcd9",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "disgust": 1,
+          "sadness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "neutral"
+        ],
+        "margin": 0.6057585864273328,
+        "top1_score": 0.7620699524057153,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "sadness": 1,
+          "calm": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.8,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-18",
+      "media_sha256": "a0c5fb7ad05232f2777b55f8d62163e3122913accf4e1cc836f9fb66f570bb7c",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "sadness": 1,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "neutral"
+        ],
+        "margin": 0.17115163457859428,
+        "top1_score": 0.5099766345812481,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "calm",
+        "votes": {
+          "calm": 5,
+          "neutral": 4,
+          "sadness": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.8,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-18",
+      "media_sha256": "202d8b6edd46833ff2513685e6d78d074615ace85c2ac3c8c59d39feb76524ee",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "surprise": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.6859264014077819,
+        "top1_score": 0.7723143798362382,
+        "human_intensity_mean": 4,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 9,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.9999999792369749,
+        "top1_score": 0.999999988884081,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-18",
+      "media_sha256": "fb90dc525edda72b377d305a968da6dfba0e7634180e754710dc069b2d4ce628",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "sadness"
+        ],
+        "margin": 0.754772291211366,
+        "top1_score": 0.8363604741847409,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "calm",
+        "votes": {
+          "happiness": 3,
+          "calm": 6,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.9999999687552362,
+        "top1_score": 0.9999999807354963,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-18",
+      "media_sha256": "5237bd9d2dd3c927e5b216222362a82867db42c3ef43d7f88853966935d53a39",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "anger"
+        ],
+        "margin": 0.16573676131084925,
+        "top1_score": 0.45147748501911045,
+        "human_intensity_mean": 4.2,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 7,
+          "neutral": 1,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999997792900369,
+        "top1_score": 0.9999998612099216,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-18",
+      "media_sha256": "3d9cb286ffa484f5222e407a2b56c57204d11487b10ec1703b25a00d7e5b8521",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "anger"
+        ],
+        "margin": 0.11993380848501062,
+        "top1_score": 0.46897729048444836,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "disgust": 1,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999470548009,
+        "top1_score": 0.999999965482584,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-18",
+      "media_sha256": "33d51ff8dccf50f19ee431e39ca4b23620ee85efe366c4bfe704aee5ec65bdac",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 6,
+          "none_of_the_above": 1,
+          "neutral": 2,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "fear"
+        ],
+        "margin": 0.2393095107925108,
+        "top1_score": 0.4271334583402929,
+        "human_intensity_mean": 4.1,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.9999998843357331,
+        "top1_score": 0.9999999180532007,
+        "human_intensity_mean": 2.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-18",
+      "media_sha256": "28e5b55cda2012961bc9c1d6fe7ce623e7f362d41ecd143d295e94b06821d5cf",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 7,
+          "none_of_the_above": 2,
+          "disgust": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "disgust"
+        ],
+        "margin": 0.2411029119247515,
+        "top1_score": 0.43126200127574654,
+        "human_intensity_mean": 3.8,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 9,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.9999964825349512,
+        "top1_score": 0.9999981017045181,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-23",
+      "media_sha256": "3fa00efb86a2093cf701479a972810fa5b9397b2f4ebdc7979a4d92ee6ea4c47",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "none_of_the_above": 2,
+          "neutral": 6,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "contempt"
+        ],
+        "margin": 0.017714269205052036,
+        "top1_score": 0.3056286916100723,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": null,
+        "votes": {
+          "neutral": 5,
+          "calm": 5
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "happiness"
+        ],
+        "margin": 0.9999309124506495,
+        "top1_score": 0.9999526991995522,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-23",
+      "media_sha256": "25e3da59b3050baae4f2f0a47c30a5316e6d27af576d79521cdd6a9e730bfc5d",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.030428645669102528,
+        "top1_score": 0.2898735310838491,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 8,
+          "calm": 1,
+          "sadness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "happiness"
+        ],
+        "margin": 0.9999948445369228,
+        "top1_score": 0.9999968348595458,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-23",
+      "media_sha256": "811a3f81e4bd5b693378ea23a2ca33f8125633598d8da9eeb7824b08e2a55572",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "calm": 2,
+          "surprise": 3,
+          "neutral": 2,
+          "happiness": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "contempt",
+          "happiness"
+        ],
+        "margin": 0.012336974527100614,
+        "top1_score": 0.22418670407888266,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "surprise": 2,
+          "neutral": 3,
+          "happiness": 2,
+          "calm": 2,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "surprise"
+        ],
+        "margin": 0.9999861687493651,
+        "top1_score": 0.9999930656540046,
+        "human_intensity_mean": 2.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-23",
+      "media_sha256": "63b284ed2be02cbb13b3cc48685b838f32919ddd6161ddcdcfb336ec03f19528",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 7,
+          "surprise": 1,
+          "calm": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "contempt"
+        ],
+        "margin": 0.06401636517572357,
+        "top1_score": 0.31426760687559196,
+        "human_intensity_mean": 2.9,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "happiness": 2,
+          "neutral": 5,
+          "calm": 1,
+          "surprise": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "anger"
+        ],
+        "margin": 0.9999693921868341,
+        "top1_score": 0.9999821100176663,
+        "human_intensity_mean": 2.6,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-23",
+      "media_sha256": "580e96ab78fcc1a08e1492858b84a2e3d35b983698a92c813b87187b5891aa18",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 5,
+          "none_of_the_above": 1,
+          "disgust": 4
+        },
+        "status": "ok",
+        "top_two": [
+          "disgust",
+          "sadness"
+        ],
+        "margin": 0.006447025412593843,
+        "top1_score": 0.30714752263989237,
+        "human_intensity_mean": 3.6,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": null,
+        "votes": {
+          "anger": 3,
+          "none_of_the_above": 3,
+          "sadness": 1,
+          "surprise": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "surprise"
+        ],
+        "margin": 0.9999100628931336,
+        "top1_score": 0.999945072724339,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-23",
+      "media_sha256": "d11851d7ad7b4ff4c2fd66f7bac31c177be908ee774f921d93f83cfe070fd28e",
+      "visual": {
+        "human_label": "disgust",
+        "votes": {
+          "anger": 4,
+          "disgust": 6
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "disgust"
+        ],
+        "margin": 0.027182487118662724,
+        "top1_score": 0.35762311813603553,
+        "human_intensity_mean": 3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "disgust",
+        "votes": {
+          "disgust": 4,
+          "anger": 1,
+          "happiness": 1,
+          "surprise": 3,
+          "none_of_the_above": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "surprise"
+        ],
+        "margin": 0.7566119048487244,
+        "top1_score": 0.8780219618911417,
+        "human_intensity_mean": 2.8,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-23",
+      "media_sha256": "7b84383e272b3b044b504a708fb9e5ed6fcdb7e7ddd3d321b5c6b195b8aa73f7",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 4,
+          "none_of_the_above": 2,
+          "neutral": 3,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "sadness",
+          "neutral"
+        ],
+        "margin": 0.18468840708432835,
+        "top1_score": 0.37303574548011,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 6,
+          "surprise": 4
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.9998063189793157,
+        "top1_score": 0.9998991983509081,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-23",
+      "media_sha256": "ee6a2b0e2ad9500293fb9e69f88709a770c489b7946d83b6404f852be6cf84fc",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 8,
+          "calm": 1,
+          "happiness": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "sadness"
+        ],
+        "margin": 0.06640378945863484,
+        "top1_score": 0.2549557787111177,
+        "human_intensity_mean": 3,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 5,
+          "none_of_the_above": 1,
+          "surprise": 4
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "happiness"
+        ],
+        "margin": 0.9999831663934805,
+        "top1_score": 0.9999911438959235,
+        "human_intensity_mean": 3.7,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-01-01-24",
+      "media_sha256": "0e10ed4c510b44291abfff1425cb362166460f12179d10375f3b51bfba85bed2",
+      "visual": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "happiness"
+        ],
+        "margin": 0.21658552464573702,
+        "top1_score": 0.38666496959515984,
+        "human_intensity_mean": 3.3,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "sadness": 3,
+          "neutral": 6,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.998808605403546,
+        "top1_score": 0.9991852464778469,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-01-01-02-01-24",
+      "media_sha256": "731709a5b8aa532b3a54a3a34d23ee28ce682f17031c14fe62765731e93fdba5",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "neutral": 3,
+          "disgust": 2,
+          "none_of_the_above": 1,
+          "calm": 3,
+          "anger": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "surprise"
+        ],
+        "margin": 0.17695245993763606,
+        "top1_score": 0.3475556375630179,
+        "human_intensity_mean": 2.4,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.9999965899435554,
+        "top1_score": 0.9999980245439068,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-01-01-24",
+      "media_sha256": "fbf949d39bf75d230298b40d96f9e5e8fe1a3674edf9a673ecd8d8740bea03c9",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "disgust"
+        ],
+        "margin": 0.18152714887639892,
+        "top1_score": 0.3838124768183846,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 7,
+          "calm": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "sadness"
+        ],
+        "margin": 0.9999906022258818,
+        "top1_score": 0.9999935250402457,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-03-01-02-01-24",
+      "media_sha256": "0dee4456c3ffb063b13f5e825c5de48109edf4743c8e83773c1771b8ddeab2e3",
+      "visual": {
+        "human_label": "happiness",
+        "votes": {
+          "happiness": 10
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "disgust"
+        ],
+        "margin": 0.2908010298813332,
+        "top1_score": 0.4762301805774747,
+        "human_intensity_mean": 3.5,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "neutral",
+        "votes": {
+          "neutral": 9,
+          "calm": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.9994740706793935,
+        "top1_score": 0.9996307085414866,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-01-01-24",
+      "media_sha256": "40d013336be5bd1488054da40c5aec762b51ced9935e1f719cea54f98dbeb4e5",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "none_of_the_above": 1,
+          "anger": 5,
+          "disgust": 3,
+          "neutral": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "neutral",
+          "sadness"
+        ],
+        "margin": 0.06228993607434158,
+        "top1_score": 0.2512739247246055,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 9
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999999739196486,
+        "top1_score": 0.9999999807090743,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-05-01-02-01-24",
+      "media_sha256": "19caf925ba4496042c3d76126be6b63157c4d00a90d8cc1164a4dfe5e1973915",
+      "visual": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "none_of_the_above": 1,
+          "fear": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "sadness"
+        ],
+        "margin": 0.01987428816551362,
+        "top1_score": 0.23878516733976832,
+        "human_intensity_mean": 4,
+        "eligible_observations": 8
+      },
+      "audio": {
+        "human_label": "anger",
+        "votes": {
+          "anger": 8,
+          "neutral": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.9999992532678691,
+        "top1_score": 0.9999994701614,
+        "human_intensity_mean": 3.9,
+        "eligible_observations": 1
+      }
+    },
+    {
+      "clip": "01-01-08-01-01-01-24",
+      "media_sha256": "fd685e8e78a8d0996fbe3ca7a36e24be687d21fc5fe06a1af13eacb547874c7b",
+      "visual": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 7,
+          "happiness": 3
+        },
+        "status": "ok",
+        "top_two": [
+          "happiness",
+          "neutral"
+        ],
+        "margin": 0.019224731950583496,
+        "top1_score": 0.2987957078833091,
+        "human_intensity_mean": 3.2,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "happiness": 2,
+          "surprise": 7,
+          "calm": 1
+        },
+        "status": "unavailable",
+        "top_two": [],
+        "margin": null,
+        "top1_score": null,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 0
+      }
+    },
+    {
+      "clip": "01-01-08-01-02-01-24",
+      "media_sha256": "a76a692f3966a9bbc22dd237f8c0efd0c2c3c20e5b4a7967209cb7244a49966e",
+      "visual": {
+        "human_label": null,
+        "votes": {
+          "anger": 4,
+          "surprise": 4,
+          "disgust": 2
+        },
+        "status": "ok",
+        "top_two": [
+          "anger",
+          "disgust"
+        ],
+        "margin": 0.0016974403718257036,
+        "top1_score": 0.2098630244067448,
+        "human_intensity_mean": 3.4,
+        "eligible_observations": 7
+      },
+      "audio": {
+        "human_label": "surprise",
+        "votes": {
+          "surprise": 4,
+          "none_of_the_above": 1,
+          "happiness": 2,
+          "calm": 1,
+          "neutral": 1,
+          "fear": 1
+        },
+        "status": "ok",
+        "top_two": [
+          "surprise",
+          "fear"
+        ],
+        "margin": 0.9992867902446453,
+        "top1_score": 0.999521224661053,
+        "human_intensity_mean": 3.1,
+        "eligible_observations": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "task": "expressed content polarity",
+  "dataset": {
+    "repository": "google-research/google-research/goemotions",
+    "commit": "7951440944924ac61b6e2f9a2a3c715834005c40",
+    "sha256": {
+      "test.tsv": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4",
+      "emotions.txt": "45c3ef86782d2a4d7fedcd6d8c111aa0d0e94720689bd164fac94fefb4495a89",
+      "sentiment_mapping.json": "801f6f028082141bd38541a4b14d65b33bdc55d29c7b2aaa029fefecf206f76b",
+      "train.tsv": "1c254a142be5c00e80d819b9ae1bbd36d94b2eeb8f4b1271846508d57e57d9c5"
+    },
+    "attribution": {
+      "dataset": "GoEmotions, Google Research; Demszky, Movshovitz-Attias, Ko, Cowen, Nemade and Ravi (2020).",
+      "source": "https://github.com/google-research/google-research/tree/7951440944924ac61b6e2f9a2a3c715834005c40/goemotions",
+      "paper": "https://aclanthology.org/2020.acl-main.372/",
+      "source_license_statement": "https://github.com/google-research/google-research/blob/7951440944924ac61b6e2f9a2a3c715834005c40/README.md",
+      "dataset_license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "Collapsed eligible official training labels to three polarities and fitted new weights."
+    }
+  },
+  "protocol": {
+    "training": "Official train.tsv only; vocabulary, IDF and classifier fit on eligible training comments.",
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "mapping": "Use the official sentiment taxonomy; exclude ambiguous or cross-polarity comments.",
+    "selection": "Model settings fixed before evaluating either cohort; no tuning or threshold selection.",
+    "decision": "Highest-scoring class for every comment.",
+    "overlap_audit": "Raw case-sensitive identical comment texts across eligible splits are counted, not removed.",
+    "official_train_test_shared_ids": 0
+  },
+  "software": {
+    "python": "3.12.6",
+    "scikit_learn": "1.9.1",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3"
+  },
+  "model": {
+    "vectorizer": {
+      "type": "TfidfVectorizer",
+      "analyzer": "word",
+      "token_pattern": "(?u)\\b\\w\\w+\\b",
+      "lowercase": true,
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "max_features": 60000,
+      "sublinear_tf": true,
+      "norm": "l2"
+    },
+    "classifier": {
+      "type": "LogisticRegression",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "solver": "lbfgs",
+      "max_iter": 300
+    },
+    "fit_order": "sorted by the fixed per-ID hash",
+    "library_threads": 1,
+    "actual_vocabulary_size": 49562,
+    "solver_iterations": [
+      111
+    ]
+  },
+  "desktop_asset": {
+    "schema": "goemotions-word-bigram-tfidf-lr-v1",
+    "compressed_bytes": 1741064,
+    "sha256": "87aec5ced9d772712d76978003f3a13462929fa9051351e0bb8b4a16706677e4",
+    "check": "Deserialized standard-library scorer versus sklearn before input gating.",
+    "compared": 4539,
+    "label_mismatches": 0,
+    "gate": "ASCII letters >=80% of letters; at least two vocabulary matches among alphabetic tokens and >=50% of those tokens known.",
+    "full_eligible_test_passing_gate": 4479
+  },
+  "train": {
+    "eligible_count": 36172,
+    "official_count": 43410,
+    "eligible_by_class": {
+      "negative": 8133,
+      "neutral": 12823,
+      "positive": 15216
+    },
+    "excluded": {
+      "missing": 0,
+      "ambiguous": 5367,
+      "cross_polarity": 1871
+    }
+  },
+  "pilot_60": {
+    "selection": {
+      "official_test_count": 5427,
+      "eligible_by_class": {
+        "negative": 1070,
+        "neutral": 1606,
+        "positive": 1863
+      },
+      "excluded": {
+        "missing": 0,
+        "ambiguous": 677,
+        "cross_polarity": 211
+      },
+      "per_class": 20,
+      "offset_per_class": 0,
+      "sample_count": 60,
+      "seed": "goemotions-text-review-v1",
+      "ordered_ids_sha256": "455b3a91b13114ea845a46d86dbffc54db547045dd4ba7aee7c757c3e43bd289"
+    },
+    "sample_count": 60,
+    "exact_text_also_in_eligible_training": 0,
+    "correct": 42,
+    "incorrect": 18,
+    "abstained": 0,
+    "coverage": 1.0,
+    "accuracy_all": 0.7,
+    "accuracy_classified": 0.7,
+    "macro_f1_all": 0.7020704915441757,
+    "per_class": {
+      "negative": {
+        "support": 20,
+        "correct": 13,
+        "incorrect": 7,
+        "abstained": 0,
+        "f1": 0.7027027027027027
+      },
+      "neutral": {
+        "support": 20,
+        "correct": 15,
+        "incorrect": 5,
+        "abstained": 0,
+        "f1": 0.6666666666666666
+      },
+      "positive": {
+        "support": 20,
+        "correct": 14,
+        "incorrect": 6,
+        "abstained": 0,
+        "f1": 0.7368421052631579
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 13,
+        "neutral": 6,
+        "positive": 1,
+        "abstain": 0
+      },
+      "neutral": {
+        "negative": 2,
+        "neutral": 15,
+        "positive": 3,
+        "abstain": 0
+      },
+      "positive": {
+        "negative": 2,
+        "neutral": 4,
+        "positive": 14,
+        "abstain": 0
+      }
+    }
+  },
+  "confirmation_180": {
+    "selection": {
+      "official_test_count": 5427,
+      "eligible_by_class": {
+        "negative": 1070,
+        "neutral": 1606,
+        "positive": 1863
+      },
+      "excluded": {
+        "missing": 0,
+        "ambiguous": 677,
+        "cross_polarity": 211
+      },
+      "per_class": 60,
+      "offset_per_class": 20,
+      "sample_count": 180,
+      "seed": "goemotions-text-review-v1",
+      "ordered_ids_sha256": "0f1028d7425a644132e854b600e756e51ee9ea4c30b088069f43d1f7203d8c62"
+    },
+    "sample_count": 180,
+    "exact_text_also_in_eligible_training": 1,
+    "correct": 116,
+    "incorrect": 64,
+    "abstained": 0,
+    "coverage": 1.0,
+    "accuracy_all": 0.6444444444444445,
+    "accuracy_classified": 0.6444444444444445,
+    "macro_f1_all": 0.645544989486238,
+    "per_class": {
+      "negative": {
+        "support": 60,
+        "correct": 35,
+        "incorrect": 25,
+        "abstained": 0,
+        "f1": 0.6140350877192983
+      },
+      "neutral": {
+        "support": 60,
+        "correct": 39,
+        "incorrect": 21,
+        "abstained": 0,
+        "f1": 0.6046511627906976
+      },
+      "positive": {
+        "support": 60,
+        "correct": 42,
+        "incorrect": 18,
+        "abstained": 0,
+        "f1": 0.717948717948718
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 35,
+        "neutral": 18,
+        "positive": 7,
+        "abstain": 0
+      },
+      "neutral": {
+        "negative": 13,
+        "neutral": 39,
+        "positive": 8,
+        "abstain": 0
+      },
+      "positive": {
+        "negative": 6,
+        "neutral": 12,
+        "positive": 42,
+        "abstain": 0
+      }
+    },
+    "paired_review": {
+      "baseline": "in-domain TF-IDF + logistic regression (before desktop language/lexical gate)",
+      "review": "desktop semantic review content_polarity",
+      "both_correct": 76,
+      "baseline_only": 40,
+      "review_only": 34,
+      "neither_correct": 30,
+      "accuracy_delta": -0.03333333333333333,
+      "exact_mcnemar_two_sided_p": 0.5613807442989819,
+      "desktop_agreement": {
+        "rule": "Retain a polarity only when the gated desktop reference and the review agree.",
+        "denominator": 180,
+        "disposition": {
+          "agree": 90,
+          "disagree": 80,
+          "reference_unavailable": 4,
+          "review_unresolved": 6
+        },
+        "correct": 75,
+        "incorrect": 15,
+        "abstained": 90,
+        "coverage": 0.5,
+        "accuracy_all": 0.4166666666666667,
+        "accuracy_classified": 0.8333333333333334,
+        "macro_f1_all": 0.551702786377709,
+        "per_class": {
+          "negative": {
+            "support": 60,
+            "correct": 30,
+            "incorrect": 5,
+            "abstained": 25,
+            "f1": 0.631578947368421
+          },
+          "neutral": {
+            "support": 60,
+            "correct": 18,
+            "incorrect": 5,
+            "abstained": 37,
+            "f1": 0.4235294117647059
+          },
+          "positive": {
+            "support": 60,
+            "correct": 27,
+            "incorrect": 5,
+            "abstained": 28,
+            "f1": 0.6
+          }
+        },
+        "confusion_true_by_predicted": {
+          "negative": {
+            "negative": 30,
+            "neutral": 3,
+            "positive": 2,
+            "abstain": 25
+          },
+          "neutral": {
+            "negative": 4,
+            "neutral": 18,
+            "positive": 1,
+            "abstain": 37
+          },
+          "positive": {
+            "negative": 1,
+            "neutral": 4,
+            "positive": 27,
+            "abstain": 28
+          }
+        }
+      }
+    }
+  },
+  "full_eligible_test": {
+    "split_counts": {
+      "official_count": 5427,
+      "eligible_by_class": {
+        "negative": 1070,
+        "neutral": 1606,
+        "positive": 1863
+      },
+      "excluded": {
+        "missing": 0,
+        "ambiguous": 677,
+        "cross_polarity": 211
+      }
+    },
+    "sample_count": 4539,
+    "exact_text_also_in_eligible_training": 32,
+    "correct": 3230,
+    "incorrect": 1309,
+    "abstained": 0,
+    "coverage": 1.0,
+    "accuracy_all": 0.7116104868913857,
+    "accuracy_classified": 0.7116104868913857,
+    "macro_f1_all": 0.7014564339095196,
+    "per_class": {
+      "negative": {
+        "support": 1070,
+        "correct": 682,
+        "incorrect": 388,
+        "abstained": 0,
+        "f1": 0.6314814814814815
+      },
+      "neutral": {
+        "support": 1606,
+        "correct": 1184,
+        "incorrect": 422,
+        "abstained": 0,
+        "f1": 0.6871735345327916
+      },
+      "positive": {
+        "support": 1863,
+        "correct": 1364,
+        "incorrect": 499,
+        "abstained": 0,
+        "f1": 0.7857142857142857
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 682,
+        "neutral": 299,
+        "positive": 89,
+        "abstain": 0
+      },
+      "neutral": {
+        "negative": 266,
+        "neutral": 1184,
+        "positive": 156,
+        "abstain": 0
+      },
+      "positive": {
+        "negative": 142,
+        "neutral": 357,
+        "positive": 1364,
+        "abstain": 0
+      }
+    }
+  }
+}

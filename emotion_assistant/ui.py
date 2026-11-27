@@ -30,12 +30,17 @@ from PySide6.QtWidgets import (
 from .ui_theme import APP_STYLE, COLORS, SPACE, TYPE, RADIUS
 from .ui_widgets import TrendChart, SignalDistribution, StepIndicator, ChartLegend
 from .regulation import ACTIVITIES as ACTIVITY_LIBRARY, NEEDS
-from .regulation_widgets import RecommendationCards, OutcomeCard
+from .ai_activity import activity_context
+from .ai_activity_widget import AiActivitySuggestions
+from .regulation_widgets import DistressTimeline, RecommendationCards, OutcomeCard
+from .native_expression import format_expression
 from .trial_widgets import PromptTimingFeedback, TrialPage
 from .local_media_widgets import LocalMediaPage
 from .content_widgets import ContentReadout
+from .live_semantic_review import LiveSemanticReview
 from .fusion_explanation import evidence_text
 from .text_file import text_polarity_summary
+from .expression_profile import format_expression_profile
 
 
 LABELS = {
@@ -230,6 +235,12 @@ class ModalityCard(QFrame):
         self.scores.setObjectName("smallMuted")
         self.scores.setWordWrap(True)
         layout.addWidget(self.scores)
+        self.fine_expression = QLabel()
+        self.fine_expression.setObjectName("bodyNote")
+        self.fine_expression.setWordWrap(True)
+        self.fine_expression.setToolTip("模型对各类别的相对支持度。差值越小，两类越接近。本人感受强度单独自评。")
+        self.fine_expression.hide()
+        layout.addWidget(self.fine_expression)
         self.reason = QLabel("开始会话后显示本次观察。")
         self.reason.setObjectName("muted")
         self.reason.setWordWrap(True)
@@ -293,6 +304,9 @@ class ModalityCard(QFrame):
             self.dominant.setText("暂无有效线索")
             self.scores.setText("正向 —   中性 —   负向 —   未映射 —")
         self.reason.setText(_reason(result.get("reason") or "等待有效输入"))
+        profile = result.get("expression_profile")
+        self.fine_expression.setVisible(bool(profile))
+        self.fine_expression.setText(format_expression(profile) if profile else "")
         self.model.setText("模型：" + _text(result.get("model_version", result.get("model"))))
         start, end = _number(result.get("t_start")), _number(result.get("t_end"))
         self.observation_time.setText(f"最近区间 {_session_time(start)} – {_session_time(end)}" if start is not None and end is not None else "尚无观察区间")
@@ -382,6 +396,7 @@ class MainWindow(QMainWindow):
         self._applying_recommendation_selection = False
         self._pending_followups = []
         self._activity_preferences = {}
+        self._ai_recommendation_scope = None
         self._recommendation_user_name = None
         self._recommendation_mode = None
         self._active_trial = None
@@ -781,6 +796,8 @@ class MainWindow(QMainWindow):
         self.live_content = ContentReadout()
         self._content_end = -1.
         transcript_l.addWidget(self.live_content)
+        self.live_review = LiveSemanticReview()
+        transcript_l.addWidget(self.live_review)
         self._context_hint = None
         self._last_context_end = -1.
         self.context_button = _button("")
@@ -921,6 +938,8 @@ class MainWindow(QMainWindow):
             self.duration_combo.addItem(f"{seconds // 60} 分钟", seconds)
         self.duration_combo.setCurrentIndex(1)
         form.addRow("调节前自评", self.pre_combo)
+        self.ai_activity = AiActivitySuggestions()
+        form.addRow(self.ai_activity)
         form.addRow("选择活动", self.activity_combo)
         form.addRow("计划时长", self.duration_combo)
         self.task_form = QWidget()
@@ -1295,6 +1314,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(panel, 1)
         details, detail_l = _card("会话详情", "选中一条记录，查看观察覆盖与活动反馈。")
         self.history_detail_card = details
+        self.history_ratings = DistressTimeline()
+        detail_l.addWidget(self.history_ratings)
         self.history_details = QPlainTextEdit()
         self.history_details.setReadOnly(True)
         self.history_details.setPlaceholderText("选择一条会话查看详情。")
@@ -1404,6 +1425,7 @@ class MainWindow(QMainWindow):
         self.stop_button.clicked.connect(self.controller.stop_session)
         self.consent.toggled.connect(self._set_session_controls)
         self.transcript_consent.toggled.connect(self._set_session_controls)
+        self.transcript_consent.toggled.connect(self._review_consent_changed)
         self.mode_combo.currentIndexChanged.connect(self._mode_changed)
         self.camera_combo.currentIndexChanged.connect(self._set_session_controls)
         self.mic_combo.currentIndexChanged.connect(self._set_session_controls)
@@ -1446,7 +1468,10 @@ class MainWindow(QMainWindow):
         self.need_combo.currentIndexChanged.connect(self._context_changed)
         self.available_combo.currentIndexChanged.connect(self._context_changed)
         self.recommendation_cards.chosen.connect(self._choose_recommendation)
+        self.ai_activity.chosen.connect(self._choose_recommendation)
+        self.pre_combo.currentIndexChanged.connect(self._sync_ai_activity)
         self.activity_combo.activated.connect(lambda _: setattr(self, "_manual_activity_choice", True))
+        self.activity_combo.activated.connect(self.ai_activity.manual_choice)
         self.next_guide_button.clicked.connect(self.controller.advance_activity_step)
         self.process_comfortable.clicked.connect(lambda: self.controller.activity_checkin("comfortable"))
         self.process_no_change.clicked.connect(lambda: self.controller.activity_checkin("no_change"))
@@ -1655,6 +1680,7 @@ class MainWindow(QMainWindow):
         self.session_id = result.get("session_id", self.session_id)
         if self.session_state != "running" or self.session_id != previous_id:
             self._on_content({})
+            self.live_review.clear()
         self._session_mode = result.get("mode", self._session_mode)
         mode_index = self.mode_combo.findData(self._session_mode)
         if mode_index >= 0 and mode_index != self.mode_combo.currentIndex():
@@ -1871,6 +1897,11 @@ class MainWindow(QMainWindow):
         self.transcript_consent.setChecked(False)
         self._set_session_controls()
 
+    def _review_consent_changed(self, allowed):
+        if not allowed:
+            self.live_review.clear()
+            self.transcript.clear()
+
     def _on_content(self, result: dict):
         if not result:
             self._content_end = -1.
@@ -1888,9 +1919,13 @@ class MainWindow(QMainWindow):
 
     def _on_transcript(self, result: dict) -> None:
         if (self.session_state != "running" or not self.transcript_consent.isChecked()
-                or result.get("session_id") != self.session_id):
+                or result.get("session_id") != self.session_id or result.get("stale")):
             return
-        text = str(result.get("text", result.get("transcript", ""))).strip()
+        text = str(result.get("text") or result.get("transcript") or "").strip()
+        end = _number(result.get("t_end"))
+        if end is not None:
+            segment = result.get("segment_id") or result.get("event_id") or str(end)
+            self.live_review.observe(segment, text if result.get("valid") is not False else "", end)
         prefix = "[模拟] " if self._session_mode in ("simulation", "demo", "replay") else ""
         stamp = result.get("t_start")
         if isinstance(stamp, (int, float)) and stamp < 1_000_000_000:
@@ -1900,7 +1935,10 @@ class MainWindow(QMainWindow):
             polarity = text_polarity_summary(result.get("semantic_context"))
             if polarity:
                 self.transcript.appendPlainText(polarity)
-            end = _number(result.get("t_end"))
+            if result.get("valid") is not False:
+                profile = (result.get("semantic_context") or {}).get("expression_profile")
+                if profile:
+                    self.transcript.appendPlainText(format_expression_profile(profile))
             if end is None or end < self._last_context_end:
                 return
             self._last_context_end = end
@@ -2029,6 +2067,7 @@ class MainWindow(QMainWindow):
         self.accept_button.setEnabled(active_session and confirming)
         self.reject_button.setEnabled(active_session and confirming)
         self.setup_widget.setEnabled(active_session and ready)
+        self._sync_ai_activity()
         self.begin_activity_button.setEnabled(active_session and ready)
         self.post_combo.setEnabled(retesting)
         self.helpfulness_combo.setEnabled(retesting)
@@ -2087,6 +2126,7 @@ class MainWindow(QMainWindow):
         # system's own default selection. Late recommendations cannot replace it.
         if _args and not self._applying_recommendation_selection:
             self._manual_activity_choice = True
+            self.ai_activity.manual_choice()
         key = self.activity_combo.currentData()
         if key not in ACTIVITY_LIBRARY:
             return
@@ -2125,7 +2165,21 @@ class MainWindow(QMainWindow):
         index = self.duration_combo.findData(seconds)
         if index >= 0 and self.activity_state != "running":
             self.duration_combo.setCurrentIndex(index)
+        self._sync_ai_activity()
         self._refresh_recommendations()
+
+    def _sync_ai_activity(self, *_args):
+        need = self.need_combo.currentData()
+        seconds = self.available_combo.currentData()
+        distress = self.pre_combo.currentData()
+        scope = (self.session_id, self.user_name.text().strip(), self.mode_combo.currentData(),
+                 need, seconds, distress)
+        context = None
+        if (self.session_id and self.session_state in ("running", "paused") and not self._active_trial
+                and self.activity_state in ("ready", "confirmed") and self._ai_recommendation_scope == scope):
+            context = activity_context(need, min(seconds, self.duration_combo.currentData()), distress,
+                                       self._recommendation_items, self._activity_preferences)
+        self.ai_activity.set_context(scope if context else None, context)
 
     def _refresh_recommendations(self, *_args):
         if not hasattr(self.controller, "refresh_recommendations"):
@@ -2164,6 +2218,11 @@ class MainWindow(QMainWindow):
         self._recommendation_profile_id = payload.get("user_id")
         self._activity_preferences = payload.get("preferences") or {}
         self._recommendation_items = list(payload.get("items") or [])
+        decision_context = (payload.get("decision") or {}).get("context") or {}
+        self._ai_recommendation_scope = (self.session_id, payload.get("user_name"), payload.get("mode"),
+                                         payload.get("need"), payload.get("available_seconds"),
+                                         decision_context.get("pre_distress"))
+        self._sync_ai_activity()
         selected = self.activity_combo.currentData()
         blocked = {item["activity"] for item in self._recommendation_items if item.get("blocked")}
         for index in range(self.activity_combo.count()):
@@ -2222,11 +2281,14 @@ class MainWindow(QMainWindow):
     def _choose_recommendation(self, activity):
         if self.activity_state == "running":
             return
+        self.ai_activity.manual_choice()
         self._manual_activity_choice = True
         self.activity_combo.setCurrentIndex(self.activity_combo.findData(activity))
         self.recommendation_cards.set_items(self._recommendation_items, activity)
 
     def _save_activity_preference(self):
+        self._ai_recommendation_scope = None
+        self._sync_ai_activity()
         self.controller.set_activity_preference(self.pref_activity_combo.currentData(), self.pref_state_combo.currentData())
 
     def _preference_activity_changed(self, *_args):
@@ -2251,6 +2313,7 @@ class MainWindow(QMainWindow):
             self.followup_distress_combo.setCurrentIndex(0)
 
     def _duration_changed(self, *_args) -> None:
+        self._sync_ai_activity()
         if self.activity_state not in ("running", "active"):
             seconds = self.duration_combo.currentData()
             self.countdown.setText(f"{seconds // 60:02d}:{seconds % 60:02d}")
@@ -2270,6 +2333,9 @@ class MainWindow(QMainWindow):
         kwargs = {"task_details": task if activity == "task_split" else None}
         if "context" in inspect.signature(method).parameters:
             kwargs["context"] = {"need": self.need_combo.currentData(), "available_seconds": self.available_combo.currentData()}
+            offer = self.ai_activity.selection_record(activity)
+            if offer:
+                kwargs["context"]["ai_activity_offer"] = offer
         method(activity, pre, duration, **kwargs)
 
     def _complete_activity(self) -> None:
@@ -2471,6 +2537,9 @@ class MainWindow(QMainWindow):
                               and self.session_state in ("running", "paused", "starting", "stopping", "stop_failed"))
         self.history_delete.setEnabled(session is not None and not current_active)
         self.history_detail_card.setVisible(session is not None)
+        ratings = (session or {}).get("latest_ratings") or {}
+        activity_name = ACTIVITIES.get(ratings.get("activity"), "本次活动")
+        self.history_ratings.set_record(ratings, activity_name + " · 本人自评困扰度")
         self._sync_action_hierarchy()
         if session is not None:
             simulated = session.get("mode") in ("simulation", "demo", "replay")
@@ -2545,6 +2614,8 @@ class MainWindow(QMainWindow):
         if not self.local_media_page.stop_for_close():
             event.ignore()
             return
+        self.live_review.clear()
+        self.ai_activity.set_context(None, None)
         self.breathing.set_running(False)
         self.controller.shutdown()
         event.accept()

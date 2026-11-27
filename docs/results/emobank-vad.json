@@ -1,0 +1,191 @@
+{
+  "model": "emobank-tfidf-ridge-v1",
+  "dataset": {
+    "dataset": "EmoBank, Sven Buechel and Udo Hahn, JULIE Lab, 2017",
+    "source": "https://raw.githubusercontent.com/JULIELab/EmoBank/248ce2a43e165a66d31aeaed83cff9641d6654e0/corpus/emobank.csv",
+    "commit": "248ce2a43e165a66d31aeaed83cff9641d6654e0",
+    "sha256": "1ade4a4a453e880c0f39d0536d2b355e8a716e0cf88236c64cdb4d438cf9605b",
+    "papers": [
+      "https://aclanthology.org/E17-2092/",
+      "https://aclanthology.org/W17-0801/"
+    ],
+    "license_statement": "https://github.com/JULIELab/EmoBank/blob/248ce2a43e165a66d31aeaed83cff9641d6654e0/README.md#license",
+    "data_and_derived_parameters_license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Fitted sentence-level TF-IDF ridge coefficients and dev residual radii."
+  },
+  "sklearn_version": "1.9.1",
+  "target": "Reader and writer perspectives weighted by number of annotators; English sentence-level ratings from 1 to 5.",
+  "counts": {
+    "train": 8062,
+    "dev": 1000,
+    "test": 1000
+  },
+  "vocabulary_size": 39412,
+  "training": "Training split only; word unigrams/bigrams, within-word 3/4-grams and punctuation, min_df 2, log-count TF-IDF, L2 norm, multioutput ridge alpha 2. Fixed before test.",
+  "baseline": "Constant train mean and train-fitted ridge conversion of original desktop three polarity scores plus abstention indicator.",
+  "exact_train_test_text_overlap_test_rows": 18,
+  "scorer_max_abs_difference_vs_sklearn": 1.5059464786304488e-10,
+  "coverage_by_status": {
+    "dev": {
+      "ok": 959,
+      "insufficient_words": 40,
+      "unsupported_language": 1
+    },
+    "test": {
+      "ok": 958,
+      "insufficient_words": 37,
+      "too_long": 4,
+      "unsupported_language": 1
+    }
+  },
+  "all_test_before_gate": {
+    "train_mean": {
+      "valence": {
+        "mae": 0.244937,
+        "pearson": null
+      },
+      "arousal": {
+        "mae": 0.190432,
+        "pearson": null
+      },
+      "dominance": {
+        "mae": 0.156349,
+        "pearson": null
+      }
+    },
+    "desktop_polarity_conversion": {
+      "valence": {
+        "mae": 0.242367,
+        "pearson": 0.247509
+      },
+      "arousal": {
+        "mae": 0.189839,
+        "pearson": 0.023326
+      },
+      "dominance": {
+        "mae": 0.155036,
+        "pearson": 0.087467
+      }
+    },
+    "vad": {
+      "valence": {
+        "mae": 0.207658,
+        "pearson": 0.553739
+      },
+      "arousal": {
+        "mae": 0.17625,
+        "pearson": 0.426054
+      },
+      "dominance": {
+        "mae": 0.150064,
+        "pearson": 0.299199
+      }
+    }
+  },
+  "desktop_supported_test": {
+    "n": 958,
+    "coverage": 0.958,
+    "train_mean": {
+      "valence": {
+        "mae": 0.242374,
+        "pearson": null
+      },
+      "arousal": {
+        "mae": 0.187323,
+        "pearson": null
+      },
+      "dominance": {
+        "mae": 0.156768,
+        "pearson": null
+      }
+    },
+    "desktop_polarity_conversion": {
+      "valence": {
+        "mae": 0.23924,
+        "pearson": 0.261296
+      },
+      "arousal": {
+        "mae": 0.186675,
+        "pearson": 0.03308
+      },
+      "dominance": {
+        "mae": 0.155302,
+        "pearson": 0.101305
+      }
+    },
+    "vad": {
+      "valence": {
+        "mae": 0.20712,
+        "pearson": 0.543778
+      },
+      "arousal": {
+        "mae": 0.174575,
+        "pearson": 0.391263
+      },
+      "dominance": {
+        "mae": 0.150196,
+        "pearson": 0.301468
+      }
+    }
+  },
+  "supported_test_excluding_verbatim_train_text": {
+    "n": 945,
+    "desktop_polarity_conversion": {
+      "valence": {
+        "mae": 0.239563,
+        "pearson": 0.257427
+      },
+      "arousal": {
+        "mae": 0.185691,
+        "pearson": 0.035872
+      },
+      "dominance": {
+        "mae": 0.155437,
+        "pearson": 0.100873
+      }
+    },
+    "vad": {
+      "valence": {
+        "mae": 0.208328,
+        "pearson": 0.537052
+      },
+      "arousal": {
+        "mae": 0.174354,
+        "pearson": 0.384201
+      },
+      "dominance": {
+        "mae": 0.150736,
+        "pearson": 0.295775
+      }
+    }
+  },
+  "intervals": {
+    "level": 0.8,
+    "calibration_split": "dev, supported only",
+    "method": "Per-axis absolute residual order statistic ceil((n+1)*level), clipped to annotation scale. Marginal, not simultaneous.",
+    "n_calibration": 959,
+    "rank": 768,
+    "per_axis_test": {
+      "valence": {
+        "radius": 0.32842,
+        "covered": 759,
+        "coverage": 0.792276,
+        "mean_width": 0.656841
+      },
+      "arousal": {
+        "radius": 0.272994,
+        "covered": 758,
+        "coverage": 0.791232,
+        "mean_width": 0.545988
+      },
+      "dominance": {
+        "radius": 0.22898,
+        "covered": 755,
+        "coverage": 0.7881,
+        "mean_width": 0.457961
+      }
+    }
+  },
+  "asset_sha256": "82ee41ea3859e30d4b2f39494803e1505f4eb0189151cd5b553c9b76f32a812b"
+}

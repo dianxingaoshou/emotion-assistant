@@ -1,0 +1,189 @@
+{
+  "version": "cvas-zh-char-qwen-mixture-v1",
+  "source": "https://raw.githubusercontent.com/NYCU-NLP/Chinese-EmoBank/eaf0ca0fd6ec9e48e701231eee490d58bd074c12/ChineseEmoBank/CVAS_SD/CVAS_all.csv",
+  "source_sha256": "d7b78e2ed06fccbee57d8ec88ac29389c1a9356dfd93b7ac3878c89d89eea3d9",
+  "papers": [
+    "Lee, Li & Yu (2022), Chinese EmoBank: Building Valence-Arousal Resources for Dimensional Sentiment Analysis, https://doi.org/10.1145/3489141",
+    "Yu et al. (2016), Building Chinese Affective Resources in Valence-Arousal Dimensions, https://aclanthology.org/N16-1066/"
+  ],
+  "terms": "https://www.mis.yzu.edu.tw/nlplab/resources/chinese-emobank_download.html",
+  "source_use": "Academic research only; no source text, labels or verbatim model quotations in released artefacts.",
+  "script_variants": {
+    "contributors": "OpenCC contributors; first, one-character candidate from TSCharacters in ver.1.1.9",
+    "map_source": "https://raw.githubusercontent.com/BYVoid/OpenCC/ver.1.1.9/data/dictionary/TSCharacters.txt",
+    "map_digest": "6b5a0a799bea2bb22c001f635eaa3fc2904310f0c08addbff275477a80ecf09a",
+    "license_source": "https://raw.githubusercontent.com/BYVoid/OpenCC/ver.1.1.9/LICENSE",
+    "license_digest": "b534e465949558eec2597b04f5092b5e161236a68dfbfd04d547592ac3964308",
+    "notice": "Apache-2.0 license included verbatim inside the weights archive."
+  },
+  "axes": [
+    "valence",
+    "arousal"
+  ],
+  "scale": [
+    1,
+    9
+  ],
+  "rater_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "rater_fingerprint": "9f38dbb234e9b9a493180f1226dfccc6edb2d05dee13f5389202b6e1fc913b68",
+  "selection": "SHA256(zh-va-v1|text) sorted, 1-based. Exclude old pilot 1-96 and old test 289-448; calibrate 97-288; new test 449-608; train from 609 onward. Prior studies used a complement-wide constant mean, but no fresh row was individually examined or rated by Qwen for previous tests. Public foundation-model pretraining overlap unknown.",
+  "normalized_overlap_policy": "Training excludes duplicates within training and across all reserved pools after NFKC, Han script normalization, case folding, and punctuation/whitespace removal. Sensitivity subset additionally removes normalized prior or within-test copies.",
+  "official_rows": 2583,
+  "fit_candidates": 1975,
+  "fit_unique": 1975,
+  "fit_alphas_valence_arousal": [
+    0.1,
+    0.5
+  ],
+  "ridge_method": "Character 1/2/3-grams, CRC32 65536 buckets, sublinear TF and smoothed IDF, L2 normalization; alpha per dimension by shuffled five-fold MAE only within training.",
+  "mixture_method": "One bounded least squares coefficient per axis on the 192 calibration rows with both outputs available. Qwen uses the unchanged affine transform previously fitted on these calibration rows. Both weights fixed before comparing new test gold.",
+  "calibration_attempted": 192,
+  "calibration_valid_for_both": 187,
+  "qwen_weights": {
+    "valence": 0.7786544816240918,
+    "arousal": 0.1389359882037256
+  },
+  "ridge_export_vs_sklearn_max_abs_delta": 3.4875897725328286e-08,
+  "reproduction_note": "Before final export the development OS-specific Han conversion was replaced by fixed licensed OpenCC; the same splits, scoring policy, alphas grid and mixture procedure were rerun without optimizing on test. The frozen Qwen ratings were reused.",
+  "new_test_ids_sha256": "25fd5493c0d0adc38f3404090bc3deb1dfa07d53f1137eaf78220e926d793a33",
+  "bootstrap": "5,000 paired sentence-resamples with replacement; unadjusted axis-specific percentile intervals for absolute-error reduction. Positive favors Qwen/mixture.",
+  "fresh_confirmation": {
+    "attempted": 160,
+    "offline_valid": 160,
+    "qwen_status_counts": {
+      "ok": 159,
+      "insufficient_evidence": 1
+    },
+    "paired_valid": 159,
+    "paired": {
+      "character_ridge": {
+        "valence": {
+          "mae": 1.1118,
+          "pearson": 0.3426
+        },
+        "arousal": {
+          "mae": 0.957,
+          "pearson": 0.3469
+        }
+      },
+      "calibrated_qwen": {
+        "valence": {
+          "mae": 0.7884,
+          "pearson": 0.7673
+        },
+        "arousal": {
+          "mae": 0.9852,
+          "pearson": 0.2347
+        }
+      },
+      "mixture": {
+        "valence": {
+          "mae": 0.8291,
+          "pearson": 0.7731
+        },
+        "arousal": {
+          "mae": 0.9546,
+          "pearson": 0.3601
+        }
+      }
+    },
+    "paired_mae_reduction_vs_offline": {
+      "calibrated_qwen": {
+        "valence": {
+          "mae_reduction": 0.3234,
+          "paired_bootstrap_95": [
+            0.21,
+            0.433
+          ]
+        },
+        "arousal": {
+          "mae_reduction": -0.0282,
+          "paired_bootstrap_95": [
+            -0.1036,
+            0.0436
+          ]
+        }
+      },
+      "mixture": {
+        "valence": {
+          "mae_reduction": 0.2827,
+          "paired_bootstrap_95": [
+            0.1914,
+            0.3698
+          ]
+        },
+        "arousal": {
+          "mae_reduction": 0.0024,
+          "paired_bootstrap_95": [
+            -0.0089,
+            0.0132
+          ]
+        }
+      }
+    },
+    "all_with_declared_fallback": {
+      "training_mean": {
+        "valence": {
+          "mae": 1.2456,
+          "pearson": null
+        },
+        "arousal": {
+          "mae": 0.9945,
+          "pearson": null
+        }
+      },
+      "character_ridge": {
+        "valence": {
+          "mae": 1.1101,
+          "pearson": 0.3408
+        },
+        "arousal": {
+          "mae": 0.9515,
+          "pearson": 0.348
+        }
+      },
+      "qwen_with_training_mean": {
+        "valence": {
+          "mae": 0.7857,
+          "pearson": 0.7674
+        },
+        "arousal": {
+          "mae": 0.983,
+          "pearson": 0.2354
+        }
+      },
+      "mixture_with_available_branch": {
+        "valence": {
+          "mae": 0.8292,
+          "pearson": 0.7713
+        },
+        "arousal": {
+          "mae": 0.9492,
+          "pearson": 0.3608
+        }
+      },
+      "mixture_mae_reduction_vs_offline": {
+        "valence": {
+          "mae_reduction": 0.2809,
+          "paired_bootstrap_95": [
+            0.1903,
+            0.3685
+          ]
+        },
+        "arousal": {
+          "mae_reduction": 0.0023,
+          "paired_bootstrap_95": [
+            -0.0086,
+            0.0134
+          ]
+        }
+      }
+    }
+  },
+  "deduplicated_test_size": 160,
+  "bundled_parity": {
+    "sentences_checked": 160,
+    "mixtures_checked": 159
+  },
+  "weights_sha256": "e5e73aa857d413a336f7c95b42891b25c5a820a6a7b47d5367e274de7bed7f0a"
+}

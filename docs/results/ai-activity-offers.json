@@ -1,0 +1,248 @@
+{
+  "design": "Eight scripted contexts; real model calls only when eligible. No human outcomes.",
+  "model": "qwen3:8b",
+  "scenarios": 8,
+  "model_requests": 7,
+  "offers_returned": 7,
+  "valid_offers_or_fallbacks": 8,
+  "offers_with_goal_match": 7,
+  "distinct_activities_offered": [
+    "break",
+    "breathing",
+    "desk_reset",
+    "self_kindness",
+    "task_split",
+    "thought_label",
+    "values_action"
+  ],
+  "records": [
+    {
+      "need": "tense",
+      "seconds": 120,
+      "distress": 6,
+      "preferences": {},
+      "prior_discomfort": [],
+      "eligible": [
+        "break",
+        "breathing",
+        "self_kindness",
+        "desk_reset",
+        "grounding",
+        "thought_label",
+        "task_split",
+        "values_action"
+      ],
+      "rule_top_two": [
+        "break",
+        "breathing"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "break",
+        "breathing"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "tense",
+      "seconds": 120,
+      "distress": 6,
+      "preferences": {
+        "breathing": "avoid"
+      },
+      "prior_discomfort": [
+        "grounding"
+      ],
+      "eligible": [
+        "break",
+        "self_kindness",
+        "desk_reset",
+        "thought_label",
+        "task_split",
+        "values_action"
+      ],
+      "rule_top_two": [
+        "break",
+        "self_kindness"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "break",
+        "self_kindness"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "rumination",
+      "seconds": 180,
+      "distress": 5,
+      "preferences": {
+        "thought_label": "prefer"
+      },
+      "prior_discomfort": [],
+      "eligible": [
+        "thought_label",
+        "grounding",
+        "task_split",
+        "self_kindness",
+        "values_action",
+        "break",
+        "breathing",
+        "desk_reset"
+      ],
+      "rule_top_two": [
+        "thought_label",
+        "grounding"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "thought_label",
+        "task_split"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "stuck",
+      "seconds": 180,
+      "distress": 5,
+      "preferences": {
+        "task_split": "prefer"
+      },
+      "prior_discomfort": [],
+      "eligible": [
+        "task_split",
+        "thought_label",
+        "break",
+        "values_action",
+        "breathing",
+        "desk_reset",
+        "grounding",
+        "self_kindness"
+      ],
+      "rule_top_two": [
+        "task_split",
+        "thought_label"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "task_split",
+        "values_action"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "fatigue",
+      "seconds": 60,
+      "distress": 4,
+      "preferences": {
+        "desk_reset": "prefer"
+      },
+      "prior_discomfort": [],
+      "eligible": [
+        "desk_reset",
+        "values_action",
+        "breathing",
+        "break",
+        "grounding",
+        "self_kindness",
+        "task_split",
+        "thought_label"
+      ],
+      "rule_top_two": [
+        "desk_reset",
+        "values_action"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "desk_reset",
+        "break"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "unsure",
+      "seconds": 60,
+      "distress": 3,
+      "preferences": {},
+      "prior_discomfort": [],
+      "eligible": [
+        "desk_reset",
+        "breathing",
+        "self_kindness",
+        "break",
+        "grounding",
+        "task_split",
+        "thought_label",
+        "values_action"
+      ],
+      "rule_top_two": [
+        "desk_reset",
+        "breathing"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "desk_reset"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "fatigue",
+      "seconds": 120,
+      "distress": 7,
+      "preferences": {
+        "break": "prefer"
+      },
+      "prior_discomfort": [
+        "break"
+      ],
+      "eligible": [
+        "values_action",
+        "breathing",
+        "desk_reset",
+        "grounding",
+        "self_kindness",
+        "thought_label",
+        "task_split"
+      ],
+      "rule_top_two": [
+        "values_action",
+        "breathing"
+      ],
+      "status": "ok",
+      "ai_suggestions": [
+        "desk_reset",
+        "breathing"
+      ],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": true
+    },
+    {
+      "need": "unsure",
+      "seconds": 120,
+      "distress": 5,
+      "preferences": {
+        "break": "avoid",
+        "breathing": "avoid",
+        "grounding": "avoid",
+        "task_split": "avoid",
+        "thought_label": "avoid",
+        "self_kindness": "avoid",
+        "values_action": "avoid",
+        "desk_reset": "avoid"
+      },
+      "prior_discomfort": [],
+      "eligible": [],
+      "rule_top_two": [],
+      "status": "no_eligible_options",
+      "ai_suggestions": [],
+      "offer_or_fallback_valid": true,
+      "has_goal_match": false
+    }
+  ]
+}

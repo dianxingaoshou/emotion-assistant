@@ -1,0 +1,41 @@
+{
+  "model": "qwen3:8b",
+  "version": "semantic-review-v2",
+  "n": 30,
+  "samples_per_class": 10,
+  "selection": "first 10 per true class ordered by sha256(semantic-review-pilot-v1|video_id|clip_id); held-out official full transcripts",
+  "baseline": {
+    "correct": 15,
+    "correct_per_class": {
+      "negative": 5,
+      "neutral": 3,
+      "positive": 7
+    },
+    "abstained": 0,
+    "abstained_per_class": {
+      "negative": 0,
+      "neutral": 0,
+      "positive": 0
+    },
+    "incorrect": 15
+  },
+  "semantic_review": {
+    "correct": 18,
+    "correct_per_class": {
+      "negative": 7,
+      "neutral": 6,
+      "positive": 5
+    },
+    "abstained": 0,
+    "abstained_per_class": {
+      "negative": 0,
+      "neutral": 0,
+      "positive": 0
+    },
+    "incorrect": 12
+  },
+  "status": {
+    "ok": 30
+  },
+  "latency_median_s": 1.617
+}

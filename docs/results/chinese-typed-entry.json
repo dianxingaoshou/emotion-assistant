@@ -1,0 +1,136 @@
+{
+  "kind": "text",
+  "filename": null,
+  "text_source": "typed",
+  "text": "谢谢你。",
+  "semantic_context": {
+    "version": "zh-context-rules-v1",
+    "subject": "other",
+    "time_scope": "unknown",
+    "is_quote": false,
+    "explicit_feeling": null,
+    "need_hint": null,
+    "evidence_text": "谢谢你。",
+    "requires_confirmation": true,
+    "expression_profile": {
+      "scope": "expressed_text",
+      "language": "zh",
+      "fine_emotions": {
+        "model": "cped-13-char-tfidf-v1",
+        "language": "zh",
+        "scope": "expressed_text",
+        "score_type": "relative_class_score",
+        "labels": [
+          {
+            "id": "grateful",
+            "name_zh": "感激",
+            "score": 0.885554
+          }
+        ],
+        "top_scores": [
+          {
+            "id": "grateful",
+            "name_zh": "感激",
+            "score": 0.885554
+          },
+          {
+            "id": "happy",
+            "name_zh": "开心",
+            "score": 0.037481
+          }
+        ],
+        "threshold": 0.45,
+        "minimum_margin": 0.06,
+        "status": "ok"
+      },
+      "affect_dimensions": {
+        "model": "cvas-zh-char-ridge-v1",
+        "scope": "expressed_text",
+        "scale": [
+          1,
+          9
+        ],
+        "dimensions": {
+          "valence": {
+            "score": 5.9112
+          },
+          "arousal": {
+            "score": 5.4704
+          }
+        },
+        "status": "ok",
+        "evidence": {
+          "han_characters": 3,
+          "known_characters": 3
+        }
+      }
+    }
+  },
+  "content_summary": {
+    "model_version": "aligned-utterance-polarity-v1",
+    "policy": "text_first",
+    "label": null,
+    "scores": null,
+    "decision": "abstain",
+    "status": "no_evidence",
+    "available_modalities": [],
+    "used_modalities": [],
+    "weights": {},
+    "candidate_weights": {},
+    "candidate_scores": null,
+    "candidate_label": null,
+    "candidate_decision": "abstain",
+    "candidate_estimate_scores": null,
+    "candidate_estimate_weights": {},
+    "disagreement": false,
+    "covered_seconds": null,
+    "observed_seconds": null,
+    "candidate_seconds": null,
+    "interval_count": 0,
+    "intensity": null,
+    "intensity_covered_seconds": null
+  },
+  "content_intervals": [],
+  "mode": "text_only",
+  "scores": null,
+  "valid_count": 0,
+  "sampled_count": 0,
+  "samples": [],
+  "reasons": {},
+  "semantic_review": {
+    "status": "ok",
+    "model": "qwen3:8b",
+    "review_version": "semantic-review-v2",
+    "subject": "other",
+    "time_scope": "unknown",
+    "content_polarity": "neutral",
+    "current_polarity": "unknown",
+    "current_change": "unknown",
+    "help_request": "unknown",
+    "current_feeling_quote": "",
+    "evidence": [
+      "谢谢你。"
+    ],
+    "chinese_dimensions": {
+      "model": "qwen3:8b",
+      "version": "qwen-zh-expressed-va-v1",
+      "scope": "expressed_text",
+      "scale": [
+        1,
+        9
+      ],
+      "status": "ok",
+      "valence": 7,
+      "arousal": 3,
+      "evidence": "谢谢你。",
+      "calibrated": {
+        "valence": 5.860628396265849,
+        "arousal": 4.351796231681787
+      },
+      "calibration_version": "cvas-zh-affine-v1",
+      "calibration_n": 188,
+      "calibration_scope": "academic_research_CVAS"
+    },
+    "text_source": "typed"
+  }
+}

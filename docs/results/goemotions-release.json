@@ -1,0 +1,2233 @@
+{
+  "dataset": {
+    "name": "GoEmotions",
+    "commit": "7951440944924ac61b6e2f9a2a3c715834005c40",
+    "sha256": {
+      "test.tsv": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4",
+      "emotions.txt": "45c3ef86782d2a4d7fedcd6d8c111aa0d0e94720689bd164fac94fefb4495a89",
+      "sentiment_mapping.json": "801f6f028082141bd38541a4b14d65b33bdc55d29c7b2aaa029fefecf206f76b",
+      "dev.tsv": "575489c079c9de1097062a01738f998590d6b7ead66dd1c9fd1d2ba01fd8bc62",
+      "train.tsv": "1c254a142be5c00e80d819b9ae1bbd36d94b2eeb8f4b1271846508d57e57d9c5"
+    }
+  },
+  "selection": {
+    "official_test_rows": 5427,
+    "single_polarity_rows": 4539,
+    "previous_cohort_ids_excluded": 240,
+    "remaining_pool": 4197,
+    "pool_by_class": {
+      "negative": 980,
+      "neutral": 1501,
+      "positive": 1716
+    },
+    "selected": 240,
+    "selected_by_class": {
+      "positive": 94,
+      "neutral": 80,
+      "negative": 66
+    },
+    "seed": "goemotions-release-240-v1",
+    "ordered_ids_sha256": "eeff649a39636599b118dba44eb2d60ef15806ad500d872945e29fb78acc1643"
+  },
+  "identity": {
+    "ordered_ids_sha256": "eeff649a39636599b118dba44eb2d60ef15806ad500d872945e29fb78acc1643",
+    "manifest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "review_source_sha256": "9653812ca5de83d11e4b5a11f62f8662550390724105b14b2ff6f30a274d01e0"
+  },
+  "ollama": "0.40.18",
+  "sources": {
+    "legacy_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+    "in_domain_sha256": "87aec5ced9d772712d76978003f3a13462929fa9051351e0bb8b4a16706677e4"
+  },
+  "protocol": "Fixed lowest SHA256(seed|ID) across eligible test comments without class strata. Exclude all prior pilot and confirmation IDs, normalized training/development texts and any text repeated anywhere in official test; NFKC, casefold and alphanumeric normalization. Three polarity labels only. All abstentions stay in denominator. Paired unadjusted two-sided exact McNemar tests, primary reference legacy; domain-trained references also reported.",
+  "metrics": {
+    "legacy": {
+      "correct": 107,
+      "incorrect": 127,
+      "abstained": 6,
+      "coverage": 0.975,
+      "accuracy_all": 0.44583333333333336,
+      "accuracy_classified": 0.45726495726495725,
+      "macro_f1_all": 0.4125725321612704,
+      "per_class": {
+        "negative": {
+          "support": 66,
+          "correct": 26,
+          "incorrect": 35,
+          "abstained": 5,
+          "f1": 0.36879432624113473,
+          "precision": 0.3466666666666667,
+          "recall": 0.3939393939393939
+        },
+        "neutral": {
+          "support": 80,
+          "correct": 15,
+          "incorrect": 64,
+          "abstained": 1,
+          "f1": 0.25210084033613445,
+          "precision": 0.38461538461538464,
+          "recall": 0.1875
+        },
+        "positive": {
+          "support": 94,
+          "correct": 66,
+          "incorrect": 28,
+          "abstained": 0,
+          "f1": 0.616822429906542,
+          "precision": 0.55,
+          "recall": 0.7021276595744681
+        }
+      },
+      "confusion_true_by_predicted": {
+        "negative": {
+          "negative": 26,
+          "neutral": 12,
+          "positive": 23,
+          "abstain": 5
+        },
+        "neutral": {
+          "negative": 33,
+          "neutral": 15,
+          "positive": 31,
+          "abstain": 1
+        },
+        "positive": {
+          "negative": 16,
+          "neutral": 12,
+          "positive": 66,
+          "abstain": 0
+        }
+      },
+      "macro_precision": 0.4270940170940171,
+      "macro_recall": 0.42785568450462064
+    },
+    "in_domain_gated": {
+      "correct": 172,
+      "incorrect": 68,
+      "abstained": 0,
+      "coverage": 1.0,
+      "accuracy_all": 0.7166666666666667,
+      "accuracy_classified": 0.7166666666666667,
+      "macro_f1_all": 0.7119109079036786,
+      "per_class": {
+        "negative": {
+          "support": 66,
+          "correct": 44,
+          "incorrect": 22,
+          "abstained": 0,
+          "f1": 0.6567164179104478,
+          "precision": 0.6470588235294118,
+          "recall": 0.6666666666666666
+        },
+        "neutral": {
+          "support": 80,
+          "correct": 58,
+          "incorrect": 22,
+          "abstained": 0,
+          "f1": 0.6744186046511628,
+          "precision": 0.6304347826086957,
+          "recall": 0.725
+        },
+        "positive": {
+          "support": 94,
+          "correct": 70,
+          "incorrect": 24,
+          "abstained": 0,
+          "f1": 0.8045977011494253,
+          "precision": 0.875,
+          "recall": 0.7446808510638298
+        }
+      },
+      "confusion_true_by_predicted": {
+        "negative": {
+          "negative": 44,
+          "neutral": 17,
+          "positive": 5,
+          "abstain": 0
+        },
+        "neutral": {
+          "negative": 17,
+          "neutral": 58,
+          "positive": 5,
+          "abstain": 0
+        },
+        "positive": {
+          "negative": 7,
+          "neutral": 17,
+          "positive": 70,
+          "abstain": 0
+        }
+      },
+      "macro_precision": 0.7174978687127025,
+      "macro_recall": 0.7121158392434989
+    },
+    "in_domain_top1": {
+      "correct": 172,
+      "incorrect": 68,
+      "abstained": 0,
+      "coverage": 1.0,
+      "accuracy_all": 0.7166666666666667,
+      "accuracy_classified": 0.7166666666666667,
+      "macro_f1_all": 0.7119109079036786,
+      "per_class": {
+        "negative": {
+          "support": 66,
+          "correct": 44,
+          "incorrect": 22,
+          "abstained": 0,
+          "f1": 0.6567164179104478,
+          "precision": 0.6470588235294118,
+          "recall": 0.6666666666666666
+        },
+        "neutral": {
+          "support": 80,
+          "correct": 58,
+          "incorrect": 22,
+          "abstained": 0,
+          "f1": 0.6744186046511628,
+          "precision": 0.6304347826086957,
+          "recall": 0.725
+        },
+        "positive": {
+          "support": 94,
+          "correct": 70,
+          "incorrect": 24,
+          "abstained": 0,
+          "f1": 0.8045977011494253,
+          "precision": 0.875,
+          "recall": 0.7446808510638298
+        }
+      },
+      "confusion_true_by_predicted": {
+        "negative": {
+          "negative": 44,
+          "neutral": 17,
+          "positive": 5,
+          "abstain": 0
+        },
+        "neutral": {
+          "negative": 17,
+          "neutral": 58,
+          "positive": 5,
+          "abstain": 0
+        },
+        "positive": {
+          "negative": 7,
+          "neutral": 17,
+          "positive": 70,
+          "abstain": 0
+        }
+      },
+      "macro_precision": 0.7174978687127025,
+      "macro_recall": 0.7121158392434989
+    },
+    "qwen": {
+      "correct": 138,
+      "incorrect": 96,
+      "abstained": 6,
+      "coverage": 0.975,
+      "accuracy_all": 0.575,
+      "accuracy_classified": 0.5897435897435898,
+      "macro_f1_all": 0.5780904174707531,
+      "per_class": {
+        "negative": {
+          "support": 66,
+          "correct": 54,
+          "incorrect": 11,
+          "abstained": 1,
+          "f1": 0.627906976744186,
+          "precision": 0.5094339622641509,
+          "recall": 0.8181818181818182
+        },
+        "neutral": {
+          "support": 80,
+          "correct": 35,
+          "incorrect": 42,
+          "abstained": 3,
+          "f1": 0.4861111111111111,
+          "precision": 0.546875,
+          "recall": 0.4375
+        },
+        "positive": {
+          "support": 94,
+          "correct": 49,
+          "incorrect": 43,
+          "abstained": 2,
+          "f1": 0.620253164556962,
+          "precision": 0.765625,
+          "recall": 0.5212765957446809
+        }
+      },
+      "confusion_true_by_predicted": {
+        "negative": {
+          "negative": 54,
+          "neutral": 8,
+          "positive": 3,
+          "abstain": 1
+        },
+        "neutral": {
+          "negative": 30,
+          "neutral": 35,
+          "positive": 12,
+          "abstain": 3
+        },
+        "positive": {
+          "negative": 22,
+          "neutral": 21,
+          "positive": 49,
+          "abstain": 2
+        }
+      },
+      "macro_precision": 0.607311320754717,
+      "macro_recall": 0.592319471308833
+    }
+  },
+  "paired_qwen_vs": {
+    "legacy": {
+      "both_correct": 63,
+      "baseline_only": 44,
+      "review_only": 75,
+      "neither_correct": 58,
+      "accuracy_delta": 0.12916666666666668,
+      "exact_mcnemar_two_sided_p": 0.0057268619068842576
+    },
+    "in_domain_gated": {
+      "both_correct": 103,
+      "baseline_only": 69,
+      "review_only": 35,
+      "neither_correct": 33,
+      "accuracy_delta": -0.14166666666666666,
+      "exact_mcnemar_two_sided_p": 0.0011086208878113386
+    },
+    "in_domain_top1": {
+      "both_correct": 103,
+      "baseline_only": 69,
+      "review_only": 35,
+      "neither_correct": 33,
+      "accuracy_delta": -0.14166666666666666,
+      "exact_mcnemar_two_sided_p": 0.0011086208878113386
+    }
+  },
+  "rows": [
+    {
+      "id": "edna4oz",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edusa8c",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eegij2q",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "edfup7i",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edw1eyg",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "efhcnhz",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edpuk1k",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edt6gpu",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eenewbj",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "efbm1g4",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed1dgap",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee32y8f",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edlxi1r",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "efbf9dl",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edmjk91",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed4bh9f",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ef9471y",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eejxciz",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "edm59ci",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef6vgi7",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ednluk3",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee24fws",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee7qsxc",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed3frbd",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edcegf4",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed70zjm",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "efbeqvc",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed0dqec",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edvourz",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeqxizl",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edi2ths",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eel4gs7",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ednd9yt",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "efa8ogq",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "eeoi9xd",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeepfbd",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "eer4oun",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed1b5wt",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eezrf5u",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edxysbg",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ede7nap",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eere80w",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "abstain"
+    },
+    {
+      "id": "eevfocn",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edmcs0g",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edbt4wx",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ef7rj8o",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee6peah",
+      "truth": "negative",
+      "legacy": "abstain",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edvqpif",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeq2rcw",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "efe1uuq",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee9rbeu",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "efc94jc",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef71nlv",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "effqmde",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "abstain"
+    },
+    {
+      "id": "eeylwuu",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eczc44a",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee4hcgp",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "eent12k",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eds8xso",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ef8k4d7",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "abstain"
+    },
+    {
+      "id": "eddyedw",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eddb1k5",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edhu00c",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee79w6s",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "efbqwh3",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed77gkb",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "efakift",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edrlgil",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee3zlc2",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "edgbj6h",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eerpe67",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "ef2d4r4",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eezh3s6",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edx6l0q",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeclq2b",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edg5o0w",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "eep9pse",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edzarre",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edy363e",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee96t99",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ef5f877",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "edh5ho0",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eeq65gb",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "efbogyx",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "edjl9qg",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edp8l3q",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee73d7q",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eeg8gj7",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed9aauo",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edur7a5",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeuty8i",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eeoqkey",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edqv0nr",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edj8erw",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eex192q",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edpemfy",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edczhh9",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eedjls2",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edk4ufg",
+      "truth": "negative",
+      "legacy": "abstain",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef21ym0",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eew3bph",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edw8ngq",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed8c0zh",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeema0n",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed4bex7",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edjw4gq",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ed9kbjb",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef4ua8p",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed8d72k",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edacekn",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ef2n7oz",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee85xvq",
+      "truth": "negative",
+      "legacy": "abstain",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "efg9rcx",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edz2aql",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "efdvksk",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edcqwfw",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef2u519",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edypsys",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edhrxvs",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "efb9acz",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edlu920",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee0i9hs",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef5r1ke",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "edmz6i7",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee39888",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee8f682",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeo1u45",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "efakc1k",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edh2lj3",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeim5c0",
+      "truth": "negative",
+      "legacy": "abstain",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ed9azzj",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeu1m0l",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee8wv5f",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "een6y2q",
+      "truth": "negative",
+      "legacy": "abstain",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "positive"
+    },
+    {
+      "id": "eenqt5a",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee48rqi",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeecutl",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edacf6f",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "edr2ac7",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edrk5we",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "eecu1b6",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "efag9qk",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef9gur2",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed8xf9t",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eerwdmi",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "edj6qoa",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edyy1ug",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edl7xlz",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "eesmjoo",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "efgqcan",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edkczfq",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "eehcw51",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeleixf",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee6j2me",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeungao",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "efegrrd",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "efgl49z",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eegn6i5",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee57wmh",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edv7ojx",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed157d1",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eel3nj4",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ef03lcq",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ed8pbzk",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eed7nom",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eeixbxm",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef0450f",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed4vtot",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edbye2t",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef4egyl",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edxcm6p",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee8wr0s",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "edpt47k",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eekv307",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "abstain"
+    },
+    {
+      "id": "efcaa2y",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edtkad3",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed0qarb",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee3q2de",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edpq3n3",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee5wijm",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edlhe3h",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eekww76",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edqa9v6",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ef44r29",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edit49m",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "eeukd29",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee3wney",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eepo4t6",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef1eq85",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eerk3up",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeocaf7",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ef5oovf",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ef7lwnw",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edfpf89",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "eendihf",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed1p5dh",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ed9vovm",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee3qi05",
+      "truth": "neutral",
+      "legacy": "abstain",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "abstain"
+    },
+    {
+      "id": "ee2bd7a",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee0apa5",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edpq6cw",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed4ejz5",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed7x62x",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed1lgh1",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "abstain"
+    },
+    {
+      "id": "ed3fb5o",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee3vgdl",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "efgvews",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edqr2i2",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ee5weni",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edhanm0",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edzxp7r",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "eek89ki",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eeq2xbc",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edrrcnt",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eegqgtl",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edwd76c",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ed9gzk1",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee11e1h",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "ee0r36w",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edlq3g5",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "edo2loq",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eebvddu",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee6y5p9",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edl1iz9",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edsoyjt",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee0tuha",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "eejyd2o",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed5f85d",
+      "truth": "positive",
+      "legacy": "negative",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "edahwir",
+      "truth": "positive",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "eda4ma4",
+      "truth": "neutral",
+      "legacy": "neutral",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "ed3z4b8",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eegouvj",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eff52fk",
+      "truth": "positive",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "positive"
+    },
+    {
+      "id": "edosajf",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "eetayw7",
+      "truth": "negative",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "positive"
+    },
+    {
+      "id": "edgyww4",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    },
+    {
+      "id": "edep85r",
+      "truth": "negative",
+      "legacy": "neutral",
+      "in_domain_gated": "negative",
+      "in_domain_top1": "negative",
+      "qwen": "negative"
+    },
+    {
+      "id": "eesfw7d",
+      "truth": "negative",
+      "legacy": "positive",
+      "in_domain_gated": "positive",
+      "in_domain_top1": "positive",
+      "qwen": "negative"
+    },
+    {
+      "id": "ee34q02",
+      "truth": "neutral",
+      "legacy": "negative",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "neutral"
+    },
+    {
+      "id": "eetc1j1",
+      "truth": "neutral",
+      "legacy": "positive",
+      "in_domain_gated": "neutral",
+      "in_domain_top1": "neutral",
+      "qwen": "negative"
+    }
+  ]
+}

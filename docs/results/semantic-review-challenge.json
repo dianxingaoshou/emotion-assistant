@@ -1,0 +1,300 @@
+{
+  "created_utc": "2026-11-27T08:47:42.428814+00:00",
+  "model": "qwen3:8b",
+  "review_version": "semantic-review-v2",
+  "design": "Hand-written bilingual challenge cases with expected fields defined before inference. An exact match on every specified field passes the case. Service failures count as failures.",
+  "cases_sha256": "1dfc9e10a2df8cbdd613d9e3e2827f5b1bebbfcdd239370ddb6bea0c4c25f2eb",
+  "summary": {
+    "cases_passed": 6,
+    "cases_total": 8,
+    "fields": {
+      "subject": {
+        "passed": 4,
+        "scored": 5
+      },
+      "content_polarity": {
+        "passed": 2,
+        "scored": 2
+      },
+      "current_polarity": {
+        "passed": 6,
+        "scored": 8
+      },
+      "current_change": {
+        "passed": 7,
+        "scored": 8
+      },
+      "help_request": {
+        "passed": 2,
+        "scored": 4
+      },
+      "time_scope": {
+        "passed": 2,
+        "scored": 2
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "zh_object",
+      "language": "zh",
+      "text": "这盏台灯的开关设计得很糟糕。",
+      "expected": {
+        "subject": "object",
+        "content_polarity": "negative",
+        "current_polarity": "unknown",
+        "current_change": "unknown"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "object",
+        "time_scope": "unknown",
+        "content_polarity": "negative",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "这盏台灯的开关设计得很糟糕。"
+        ]
+      },
+      "passed_by_field": {
+        "subject": true,
+        "content_polarity": true,
+        "current_polarity": true,
+        "current_change": true
+      },
+      "passed": true
+    },
+    {
+      "id": "en_quotation",
+      "language": "en",
+      "text": "My neighbor said, ‘I feel miserable today.’",
+      "expected": {
+        "subject": "other",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "none"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "I feel miserable today.",
+        "evidence": [
+          "I feel miserable today."
+        ]
+      },
+      "passed_by_field": {
+        "subject": false,
+        "current_polarity": false,
+        "current_change": true,
+        "help_request": false
+      },
+      "passed": false
+    },
+    {
+      "id": "en_self_positive",
+      "language": "en",
+      "text": "I feel delighted right now.",
+      "expected": {
+        "subject": "self",
+        "time_scope": "current",
+        "current_polarity": "positive",
+        "current_change": "unknown"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "positive",
+        "current_polarity": "positive",
+        "current_change": "unknown",
+        "help_request": "unknown",
+        "current_feeling_quote": "I feel delighted right now.",
+        "evidence": [
+          "I feel delighted right now."
+        ]
+      },
+      "passed_by_field": {
+        "subject": true,
+        "time_scope": true,
+        "current_polarity": true,
+        "current_change": true
+      },
+      "passed": true
+    },
+    {
+      "id": "zh_self_help",
+      "language": "zh",
+      "text": "我现在很难过。请帮帮我，陪我聊一会儿。",
+      "expected": {
+        "subject": "self",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "yes"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "unknown",
+        "help_request": "yes",
+        "current_feeling_quote": "我现在很难过。",
+        "evidence": [
+          "我现在很难过。",
+          "请帮帮我，陪我聊一会儿。"
+        ]
+      },
+      "passed_by_field": {
+        "subject": true,
+        "current_polarity": true,
+        "current_change": true,
+        "help_request": true
+      },
+      "passed": true
+    },
+    {
+      "id": "en_relative_improvement",
+      "language": "en",
+      "text": "Compared with an hour ago, I feel a little better.",
+      "expected": {
+        "current_polarity": "unknown",
+        "current_change": "improving"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "mixed",
+        "content_polarity": "positive",
+        "current_polarity": "unknown",
+        "current_change": "improving",
+        "help_request": "unknown",
+        "current_feeling_quote": "",
+        "evidence": [
+          "Compared with an hour ago, I feel a little better."
+        ]
+      },
+      "passed_by_field": {
+        "current_polarity": true,
+        "current_change": true
+      },
+      "passed": true
+    },
+    {
+      "id": "zh_past_and_present",
+      "language": "zh",
+      "text": "昨晚我很开心，可现在我觉得很伤心。",
+      "expected": {
+        "subject": "self",
+        "time_scope": "mixed",
+        "current_polarity": "negative",
+        "current_change": "worsening"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "mixed",
+        "content_polarity": "negative",
+        "current_polarity": "negative",
+        "current_change": "worsening",
+        "help_request": "unknown",
+        "current_feeling_quote": "现在我觉得很伤心",
+        "evidence": [
+          "昨晚我很开心",
+          "现在我觉得很伤心"
+        ]
+      },
+      "passed_by_field": {
+        "subject": true,
+        "time_scope": true,
+        "current_polarity": true,
+        "current_change": true
+      },
+      "passed": true
+    },
+    {
+      "id": "en_fact",
+      "language": "en",
+      "text": "The library opens at nine on weekdays.",
+      "expected": {
+        "content_polarity": "neutral",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "none"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "object",
+        "time_scope": "unknown",
+        "content_polarity": "neutral",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "none",
+        "current_feeling_quote": "",
+        "evidence": [
+          "The library opens at nine on weekdays."
+        ]
+      },
+      "passed_by_field": {
+        "content_polarity": true,
+        "current_polarity": true,
+        "current_change": true,
+        "help_request": true
+      },
+      "passed": true
+    },
+    {
+      "id": "zh_unchanged_declines_help",
+      "language": "zh",
+      "text": "我现在的心情和早上一样，既不高兴也不难过。我不需要帮助。",
+      "expected": {
+        "current_polarity": "neutral",
+        "current_change": "unchanged",
+        "help_request": "declined"
+      },
+      "actual": {
+        "status": "ok",
+        "model": "qwen3:8b",
+        "review_version": "semantic-review-v2",
+        "subject": "self",
+        "time_scope": "current",
+        "content_polarity": "neutral",
+        "current_polarity": "unknown",
+        "current_change": "unknown",
+        "help_request": "none",
+        "current_feeling_quote": "",
+        "evidence": [
+          "我现在的心情和早上一样，既不高兴也不难过。",
+          "我不需要帮助。"
+        ]
+      },
+      "passed_by_field": {
+        "current_polarity": false,
+        "current_change": false,
+        "help_request": false
+      },
+      "passed": false
+    }
+  ]
+}

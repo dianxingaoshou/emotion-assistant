@@ -38,7 +38,8 @@ def adjudicate(ratings):
     return (winners[0] if len(winners) == 1 else None), top, dict(sorted(counts.items()))
 
 
-def av_ratings(z, shared, sheet):
+def av_ratings(z, shared, sheet, modality="AV"):
+    prefix, extension = {"AV": ("01", "mp4"), "VO": ("02", "mp4"), "AO": ("03", "wav")}[modality]
     records = {}
     with z.open(f"xl/worksheets/{sheet}.xml") as stream:
         for _, row in ET.iterparse(stream, events=("end",)):
@@ -51,11 +52,11 @@ def av_ratings(z, shared, sheet):
                     col = cell.attrib["r"].rstrip("0123456789")
                     cells[col] = shared[int(v)] if cell.get("t") == "s" else v
             row.clear()
-            if cells.get("B") != "AV" or cells.get("C") != "Speech":
+            if cells.get("B") != modality or cells.get("C") != "Speech":
                 continue
             name = cells["A"]
-            if not re.fullmatch(r"01-01-(?:[0-9]{2}-){4}[0-9]{2}\.mp4", name) or name[:-4] in records:
-                raise ValueError(f"Duplicate or invalid audiovisual stimulus: {name}")
+            if not re.fullmatch(rf"{prefix}-01-(?:[0-9]{{2}}-){{4}}[0-9]{{2}}\.{extension}", name) or name[:-4] in records:
+                raise ValueError(f"Duplicate or invalid {modality} stimulus: {name}")
             records[name[:-4]] = (cells["D"], [int(cells[k]) for k in RATING_COLS])
     return records
 

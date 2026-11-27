@@ -1,0 +1,66 @@
+{
+  "version": "qwen-zh-expressed-va-v1",
+  "source": "https://raw.githubusercontent.com/NYCU-NLP/Chinese-EmoBank/eaf0ca0fd6ec9e48e701231eee490d58bd074c12/ChineseEmoBank/CVAS_SD/CVAS_all.csv",
+  "source_sha256": "d7b78e2ed06fccbee57d8ec88ac29389c1a9356dfd93b7ac3878c89d89eea3d9",
+  "source_rows": 2583,
+  "selection": "First 96 distinct sentences sorted by SHA256(zh-va-v1|original stripped text); no task fitting.",
+  "ids_sha256": "e077eeb78db9e7c036ebc16ae916a8e16f9da9e6e78e36cfe05c8d7325e865c8",
+  "scale": [
+    1,
+    9
+  ],
+  "attempted": 96,
+  "coverage": 0.9895833333333334,
+  "status_counts": {
+    "ok": 95,
+    "invalid_response": 1
+  },
+  "metrics": {
+    "valence": {
+      "qwen_accepted": {
+        "n": 95,
+        "mae": 1.1247,
+        "pearson": 0.7345
+      },
+      "constant_prior_same_accepted": {
+        "n": 95,
+        "mae": 1.1577,
+        "pearson": null
+      },
+      "qwen_with_prior_for_missing": {
+        "n": 96,
+        "mae": 1.1167,
+        "pearson": 0.7347
+      },
+      "constant_prior_all": {
+        "n": 96,
+        "mae": 1.1494,
+        "pearson": null
+      },
+      "complement_mean": 4.6444
+    },
+    "arousal": {
+      "qwen_accepted": {
+        "n": 95,
+        "mae": 1.2709,
+        "pearson": 0.3075
+      },
+      "constant_prior_same_accepted": {
+        "n": 95,
+        "mae": 0.9752,
+        "pearson": null
+      },
+      "qwen_with_prior_for_missing": {
+        "n": 96,
+        "mae": 1.258,
+        "pearson": 0.3074
+      },
+      "constant_prior_all": {
+        "n": 96,
+        "mae": 0.9655,
+        "pearson": null
+      },
+      "complement_mean": 4.9639
+    }
+  }
+}

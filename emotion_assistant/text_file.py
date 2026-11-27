@@ -19,15 +19,24 @@ def analyze_text_file(path):
         text = data.decode("utf-8-sig").strip()
     except UnicodeDecodeError as exc:
         raise ValueError("无法读取文本，请另存为 UTF-8 编码的 TXT 文件。") from exc
-    if not text or "\x00" in text:
-        raise ValueError("文件没有可用的文本内容。")
+    return analyze_text(text, filename=path.name)
+
+
+def analyze_text(text, *, filename=None):
+    """Analyze a user-submitted passage in memory, sharing the TXT pipeline."""
+    if not isinstance(text, str) or not text.strip() or "\x00" in text:
+        raise ValueError("请提供一段可读的文字。")
+    if len(text.encode("utf-8")) > MAX_TEXT_BYTES:
+        raise ValueError("文字较长，请每次选择一个片段（上限 16 KiB）。")
+    text = text.strip()
     context = interpret_context(text)
     content = fuse_content(text=context.get("english_polarity"))
     content.update(covered_seconds=None, observed_seconds=None, candidate_seconds=None, interval_count=0)
     content.update(intensity=context.get("english_intensity"), intensity_covered_seconds=None)
     return {
         "kind": "text",
-        "filename": path.name,
+        "filename": filename,
+        "text_source": "txt" if filename is not None else "typed",
         "text": text,
         "semantic_context": context,
         "content_summary": content,

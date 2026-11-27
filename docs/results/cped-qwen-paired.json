@@ -1,0 +1,473 @@
+{
+  "source": "https://github.com/scutcyr/CPED",
+  "data_commit": "1e4b81c28a123f22387e06664f37e5dc9322380f",
+  "task": "One dominant expression in a Chinese utterance. Gold labels are used for stratification and scoring only.",
+  "sampling": "10 per CPED class, lowest SHA-256(salt + normalized text) within each gold class; exclude any training/development text and repeat normalized test strings before sampling. No length or correctness filter.",
+  "salt": "paired-cped-qwen-v1|",
+  "n": 130,
+  "cohort_sha256": "a308fe3b5360c569a6b3cff64d856fcd577764ad11ccabdb265341b003f99294",
+  "cohort_sha256_ids": [
+    "0001f2e4e946c7f1d2532b3dc45f7db2678acdac1525bc88f1739c6250728edf",
+    "0002055cc9c1380f74f2f17def9e121eaffb517b6a7ea4184e49b77bf6a9cc46",
+    "00025f557021d1e5055fcea5875e2d9f8b27a151de71bc212975a51e0fcbbad3",
+    "0002e64fb621988a6f6537c6963c2b68e12c0745170abae5b0a53257c8e3b9af",
+    "00030d71a48033ebb58a2a3d30fcaacb746d17892ac6f70ff00e172177b394e6",
+    "00090b6a0a8a288fe00796d8b356f3f160dd20b247131925e1a45ce8d6b00153",
+    "000ca3787f03079be65fe6a0600d3166806a63570cea397ad539c96df2e52848",
+    "000edee1bc686abe32cf4ecf253c791e88456dac31aa8bc8bb68ae33f4573460",
+    "000ef6534fffb6c6a4d52d1cb7a6f41eaf5bab880097c076e11ea0e97910a038",
+    "000f2a58166a802ca5cf115269faf54b4c0e124cd8639758da50f9449bbe75d4",
+    "00130cfd0e4e3e0af0085df60becbdd516c73279eb4864e78a4fa768c2bc3457",
+    "001449c7ecc6dd21e70806bb648cffe5ba56cc7d10772dea1d08654d27070762",
+    "0014e52d0a31ca65d44fdbd26d650fbc858a062e3de1d0ff8b46cbce28ee9b5d",
+    "001751712763f8455e4c8b41d525bf60e85c9abb3213f0c7f6f4d3b9f1f049bf",
+    "00176cb8e8e134bd1742b98692d0c67ff150a1f513d68766d7ba244f66aff627",
+    "001a2658d6c5c6731ea5e398a5cd6eed610496c52938166856af74b654062ede",
+    "001c0b1808cca1d668fbcf56e8633f4ae50f2cb154e9f27fba4ee22c6f84b302",
+    "001e8b7b12433b2f44031928805d98bcd778c086eb9d2ef48262933d1cf09140",
+    "001f7f8996d51ed65f8224cb50673e8f75a42a4fc4707d4b01c942c598ebf151",
+    "002a570c707cd0f90412a2dd3c1deee102bb24ac51ca94c44edce43d5b8d2065",
+    "00309fa6de8052b4e73fabc081c8931d3dfc6d7c33805f7d192594e7ec0d264a",
+    "00363e2fda2d33f5402945cb0f6ab1e6b54ce4ecb5ea46c2264c9f20cf072f17",
+    "003a595e8141a3f6b81c05072b833cd36076692bbad19c232c7936ea9f2c7f8a",
+    "003cd6a297296e7a83da2ccd01206ca22f12a36c6bc1c11865390afe2dc07035",
+    "0042d37d906799e4afb3ff3889316d348b101a028de7ad3cb19b16aab87d22b1",
+    "0044b57a6a17766850f99cad4787ce396f53063d3ac0bcb77a66054985668bf4",
+    "004ec56b941cb95dc852c02095027c31c6bf80c7caa0f507e4c7b853252865e5",
+    "004f08b62be23e5322622bc6934c21e9d468ceee51866f314683de78104e5a22",
+    "00548f9a19fd7f4851464c25fe771544ca9e24d0d48270049e37e1ba28dad21f",
+    "005aa30cb3e3ecbdb4fa1acc77ee4cfbfcd57f831280774c63b1a8c34968b4b3",
+    "005ab378d0e093cd877e8f5616031c8f8cc6a60ca4e606227d33dccf178037ca",
+    "005bb4a4b02605fb276ac74934d5a2b9d82bebde829c1ee04bcca0b809095238",
+    "005c22f92af6acb488438966d80bffd232303490f503ae40ef254e669e69751b",
+    "005e47e65d07bd458300d42add70ef8115c775c067f53a13c188e23872af0adc",
+    "0066a219cf5e2078b9c6eb2cb58e6358ee30e917145a6c260681eb86ce67544e",
+    "00696c9b27e0e66e561abfac16ba89b8d62e1349bab167d3ad1bca8977ee6006",
+    "00710a48026c879e4136960808530676d242244a7438a755adbf53d3bdf5dcb7",
+    "00727cc4ad2345e7d81ca92e140cf30e57882789c4842ddfb50a22d43cf9fd28",
+    "00748b1aa9093ae723623a55a0a9e3535288f2de839d0a16f7a09b321898114c",
+    "008c084e4a6b10b253e3762f977609aa3f551bd9a2d39c0efe0fcb3b141efce0",
+    "00904b618ae33f143f174bae34b8749ad11501420d7400998d3be75080f5c78e",
+    "00906ee7f2a5131e24242e1ddf8364fbde165dc94615ba88473de9fe19c9b290",
+    "009302a2226574a987151517ef013c7462012a038705d22d6b6118bd456881eb",
+    "00966c97caa5aa07cc91a298c07af5d899f9c0585adeb95166dfcddc94c23e30",
+    "009892c8a8bfd8ecbe8005b188eb971a1b59cce8ca3cd48ed93276b8c8e3c3c0",
+    "009a7cc4fd4799d0999c40c72dd14b76aff1b13db7dde8e09679b45141df5181",
+    "009af9766b09423c00c0b0e35fb8288c7539391675bbd746080bc19eae869da6",
+    "009d79f47f09e19149c49f378a12deeecd76b326340ab8c562b875d8b62c3fcf",
+    "009f5069216b2367dc5c93c7ac15d4a1eafd53a48fb49a7f0a5102612fc3a70c",
+    "00a035f5c57c4db2a0eabf387d02dde9d14f40c0988efe9b1f1aebaac2e27c3f",
+    "00aed9d8e40e79d64ff97dd1a45da48be49d9d040292c511dd53d76b95208295",
+    "00b213b58e7700bdac7ed9029d0a1813ca0d82d74289c42e6b6d90b6292d6484",
+    "00b2e275565570cca85dd01923964303ff849a1ce2e4fbb97d5c52620fa9e4ec",
+    "00b7281f89aa4d614f3b54923ef83edc579117dd0e03a9442e75baa5aa1ee028",
+    "00b87f642ab339dfca9c288bd4f67a28a6d9b5d989a46d014b26e529e8aeb625",
+    "00bab2c30010b6109bfe74bf7fcb7381dee132c0c6b087cebba5218187398e2f",
+    "00bfa805a6afb45f3e1db7a12af1e448a30729b7be571e423cb48151172de61f",
+    "00c55ed2429955fd8f7d6203ccae638bbcd44787fca08bfa73f028d222e80215",
+    "00cb0081a72751e892b5f4f2601c6599c27660842e92fe95eeb6e87b3c81ab66",
+    "00d7099c389c1e8cb71519c44c460824f61b26b2b5d559c08c6296566f2cbb4c",
+    "00d7c242b00b792de513031ee17d0a3c111fa357dbfd8553ea34a100e01ef0f4",
+    "00db852a2723ce6c549461ff66ac8638b0737a717dfa7fb90427d49f078c461e",
+    "00dea21e8f646016923fce207d3d0a99d3cda6fca48d5817a77c77c49827235e",
+    "00dfbb82fdcf8e266839f2a22b4955814d0cab5b88590eefc03a24943f66156c",
+    "00e0e001e64f9d6957d8d2a83b53e7a0062b4c5cb10bd5abb8ee59e6741bea2e",
+    "00e61f2a70de37d449c5bce30cee92727c63de8694290c4461012a29b55a20d7",
+    "00eec5f6c5365dc1b2cf17de9841cfd0a592bd998306b23a75b05240f5d3da12",
+    "00f8a10fc0bc92c84df4cc45176f7dfb56cffb675007135a7be297333d304eed",
+    "00ffd709c35293d6656ae3cfd60aeff04dd5776a97de554d3e2370752b8227ab",
+    "010090e82d29da3b0d907116ea6277f1ee6969e442a99ffe902319092fb7220a",
+    "010306862d224a9b76fd6f320305c90f32414cf3ad3530e6f369720de695c182",
+    "01189103cbcde1e4076563aeac634c6bcedf1c8e10487f02b0635a214a3923bf",
+    "011d4bd91d349c2377a0dfefde8077f3bed5bf83ac0cc1efd9b727c8f8ce0ca0",
+    "011e634910ef90cf53d0be0b0b8571d6a3e220f4362f804daff324c74eafa2a4",
+    "01200bda3bb47fc3e5b308435112864c8aba650e812c77b57a61fd72bd11d568",
+    "0126d3d88e5f892d3326b1313515a58228b37bad5ce8c52ec6822bf55dc220ad",
+    "01280804da0b0ee39ee87a424862da156b858e7591f2341e6bc2e86e92174871",
+    "012945d017023090ff17709b6675eb415620c2d2a9e2efde2f9cb3c15a168e56",
+    "012dec689b501fdae14a261689f021563596611bb65e50426ffc5b23a32f7479",
+    "012fc4ef5c5f4c1df2996d88d189a11840cb62e0f90b1d8cfc5f5dd1664be124",
+    "013238a8cf5d775981c8a2eccf1049a4ab3bbdcaadd4d663b473cca69999b910",
+    "013368f81a8e137641fed3c57d84730f7f10e6dd37e7b7484384e3d5d0594361",
+    "01379bf3927813ab95fa7296fe7802a702fba7f6f69f0b1391172b9bbd3c92de",
+    "013845ad779a79d9170882b7586e3d871070025879092e0b4a6f45f774c676cb",
+    "01393ba32a049aa0f6c0ea367aa7b33affc18ceab4bca2dc2be47ca67b4c1307",
+    "013d702749b36465e0b73484bdcf7ea9ba2e4ed7b5f8e8a4de4f303f6404ece5",
+    "014283e7963ce15e12555c69d931f94a3bb7e001c538fea8d79ecea0d8ed1d6b",
+    "014aacab58f42acb7282d670eb8267d4c54ef9151f442ccb18aaea8c681ce705",
+    "014f9e4d86353ce84fca60f5edf1c6e1114aa0fa81fd19defab791afc42ebaec",
+    "0151aa03e4758e151b60cf07e8942c5af148cdd618dbbd19847a8c9c96c43530",
+    "01616bbe48a3d065cc08955d289fa2ab5f0fb23213583c9010a040b95378f22e",
+    "016357a6c72df1679140f4691e000c271fe576f6ad2364e2958d1995b3c80df2",
+    "016695f7f37efe393ffc308ff90d5a1e822c4d2a761935a72604bbf6f7f1eced",
+    "01670c4b45d6e74dbf4f40f7b4a6e11cf1ceffa141573a556ec9b923137a6fcb",
+    "0177632b9decc9133fef99c678341f98660947ff9b5772469d9f70e72341cdb7",
+    "017db79659bfbe9ba43194d64d0a1b28f2f1353f4b4173c5549bac3375320b3e",
+    "018e9c24eeeb7e47e16f240d22713c64181c0f8d991204847ad2abaadaeca7f1",
+    "019890ac403ac8ea060717fbaf724bafa9add0fa0ae1e9928027e33b31a4f186",
+    "019c42e6159ac4fb39ad4b12c29217d8dcdf94721650292d359364e0554a5482",
+    "025cf974a27c5a18707dcb7242dd7f8a0162807153eb0d41b612a4006d4b7bfa",
+    "02620713459481989730846b7015f0c3662bfb89853d02fa848d2653618c87c3",
+    "0266bd7734cc295d754dda777532f122d13e204b44b5c8e9c0921f5c751b11ef",
+    "026ce2a42c9dbaa5848a4115031560c1ddf35c5069a0fb6f2b38c808ab754166",
+    "02a7ccced03cf9d4391e5b6493f8cfdaba7ebc53841e17b149d0a5e63987ab99",
+    "02bf1b6371b2887ce14c3c05419abb810243bc69df2c17b081f3b6bd2956712a",
+    "02e28451a5df61b0ca18e44ccdba738cd9d224820da7629fdc5864e0ad677c01",
+    "02e93c2477666679b308fa8ed44be7a69d1a6b575d0bf62e548d5a03b71e5be3",
+    "02f80f7cb9d3b1fb45adb6a0acd628a2a808bb5159d2c179ec0aef111859c7bc",
+    "02f91a0c91bb61c27fb43306f63fd673fe0518c6089479163ee19ae1eab19be2",
+    "02fc09a2f8939f11ee89f0a91ab53ba98d7d4822c1c30cc39c39489dca7ab1f6",
+    "035b83c88cd99478f4fcec0053e5d1845ff0fb4fbdff85aec4691c70c771ddb6",
+    "035bc23ee4a4c98d6dc1016401b399aeda66b06d17d632c09df967a6ebc80b57",
+    "038fbece2d95ad909e4d2bdb00e433cf6386ced84cddd83c1eea556aa6cce98a",
+    "03a43028adcb69ccc138fd2120c2f1ea25c6138166a341e9877084d8769b6c5b",
+    "03c907a425dedbb02a94c2057d5b0ada6a05c1e53b654abe7ee72981bbb9e2ca",
+    "03d72f603791c64f693d120c1096198edf3cb25404738d8a3ea892fd736cbd8c",
+    "03f96018f9e3eeba98d4bb33b9a4bb4e51ce023d7ae26e1e41fceae50b6b271b",
+    "046de52726714a436eb3f1f2e633cda3afaa8ea90c3f53041123537f34b643f4",
+    "04ebda52778ec942b7e35e55f1ee783cfb319de2868eb80585da2e95a7c93260",
+    "0500c01803602b9303d941bffbf961ea39650b5c17729798eb78bef086e59c08",
+    "079d0f30dab2bdd8552ca1693f04e31c0b9288e7b352eb037d51f394e76b5087",
+    "0beb3a3d1c111e52f26f2cc89f80fa2c302d7b23bca24d51dd5a902310ce037b",
+    "1d0337e9621b0606ac819063402aa301351995f778cd4e4fd62b642cd0a11582",
+    "302a0e54f08ca43901daf1934f7baa043e60248eaf20701029d152781f170739",
+    "3b46f35a213bb7bc7d2f09082900a2d1588c74176f0e9d388029ded15b02f3be",
+    "40806823e74991ba6ff87b19788796d7fe26cba41f28e2ec1cfa69e69f5c8eaf",
+    "46abb719f89828ef8c5c212b105d9a1b18a5f0610c5426fb47077575e8bab78d",
+    "51fb784acd10f528772419656195c8c93af94b1b03943f2a40ea5ca74df70d82",
+    "618492bc6a2f6571447a1310e5b437c51053f8d4ab8434c7a96728463f8618cb",
+    "62078bfe194d167b9ab83e36bb6a0c43ad07252b213d07535154acff8a989bac"
+  ],
+  "qwen_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "rater_version": "qwen-cped-13-quote-v1",
+  "rater_fingerprint": "a18d809b639935ec50e78b5ced3ae99147b74ba7c2502125b09ea7b66cb8a24d",
+  "classifier_sha256": "32f1324704a4e0d9f376f453e1c7d93bf01538a4a3df1be44aa174ff72453871",
+  "qwen_status": {
+    "ok": 129,
+    "unsupported_language": 1
+  },
+  "methods": {
+    "desktop_gated": {
+      "n": 130,
+      "correct": 6,
+      "incorrect": 16,
+      "abstained": 108,
+      "coverage": 0.1692,
+      "accuracy_all": 0.0462,
+      "accuracy_accepted": 0.2727,
+      "macro_f1_all": 0.0551,
+      "per_class": {
+        "anger": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "astonished": {
+          "support": 10,
+          "predicted": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "depress": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "disgust": {
+          "support": 10,
+          "predicted": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "fear": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "grateful": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.8333,
+          "recall": 0.5,
+          "f1": 0.625
+        },
+        "happy": {
+          "support": 10,
+          "predicted": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "negative-other": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "neutral": {
+          "support": 10,
+          "predicted": 12,
+          "precision": 0.0833,
+          "recall": 0.1,
+          "f1": 0.0909
+        },
+        "positive-other": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "relaxed": {
+          "support": 10,
+          "predicted": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "sadness": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "worried": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "desktop_top1_on_eligible": {
+      "n": 130,
+      "correct": 19,
+      "incorrect": 109,
+      "abstained": 2,
+      "coverage": 0.9846,
+      "accuracy_all": 0.1462,
+      "accuracy_accepted": 0.1484,
+      "macro_f1_all": 0.141,
+      "per_class": {
+        "anger": {
+          "support": 10,
+          "predicted": 12,
+          "precision": 0.25,
+          "recall": 0.3,
+          "f1": 0.2727
+        },
+        "astonished": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.3333,
+          "recall": 0.2,
+          "f1": 0.25
+        },
+        "depress": {
+          "support": 10,
+          "predicted": 13,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "disgust": {
+          "support": 10,
+          "predicted": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "fear": {
+          "support": 10,
+          "predicted": 3,
+          "precision": 0.3333,
+          "recall": 0.1,
+          "f1": 0.1538
+        },
+        "grateful": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.8333,
+          "recall": 0.5,
+          "f1": 0.625
+        },
+        "happy": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.1667,
+          "recall": 0.1,
+          "f1": 0.125
+        },
+        "negative-other": {
+          "support": 10,
+          "predicted": 8,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "neutral": {
+          "support": 10,
+          "predicted": 54,
+          "precision": 0.0926,
+          "recall": 0.5,
+          "f1": 0.1562
+        },
+        "positive-other": {
+          "support": 10,
+          "predicted": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "relaxed": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.1667,
+          "recall": 0.1,
+          "f1": 0.125
+        },
+        "sadness": {
+          "support": 10,
+          "predicted": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "worried": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.1667,
+          "recall": 0.1,
+          "f1": 0.125
+        }
+      }
+    },
+    "qwen_quote_review": {
+      "n": 130,
+      "correct": 26,
+      "incorrect": 103,
+      "abstained": 1,
+      "coverage": 0.9923,
+      "accuracy_all": 0.2,
+      "accuracy_accepted": 0.2016,
+      "macro_f1_all": 0.1582,
+      "per_class": {
+        "anger": {
+          "support": 10,
+          "predicted": 5,
+          "precision": 0.4,
+          "recall": 0.2,
+          "f1": 0.2667
+        },
+        "astonished": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "depress": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "disgust": {
+          "support": 10,
+          "predicted": 6,
+          "precision": 0.5,
+          "recall": 0.3,
+          "f1": 0.375
+        },
+        "fear": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "grateful": {
+          "support": 10,
+          "predicted": 9,
+          "precision": 0.8889,
+          "recall": 0.8,
+          "f1": 0.8421
+        },
+        "happy": {
+          "support": 10,
+          "predicted": 2,
+          "precision": 0.5,
+          "recall": 0.1,
+          "f1": 0.1667
+        },
+        "negative-other": {
+          "support": 10,
+          "predicted": 14,
+          "precision": 0.0714,
+          "recall": 0.1,
+          "f1": 0.0833
+        },
+        "neutral": {
+          "support": 10,
+          "predicted": 82,
+          "precision": 0.122,
+          "recall": 1.0,
+          "f1": 0.2174
+        },
+        "positive-other": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "relaxed": {
+          "support": 10,
+          "predicted": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "sadness": {
+          "support": 10,
+          "predicted": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "worried": {
+          "support": 10,
+          "predicted": 9,
+          "precision": 0.1111,
+          "recall": 0.1,
+          "f1": 0.1053
+        }
+      }
+    }
+  },
+  "qwen_vs_gated": {
+    "only_qwen_correct": 20,
+    "only_desktop_correct": 0,
+    "both_correct": 6,
+    "exploratory_mcnemar_exact_two_sided_p": 1.9073486328125e-06
+  },
+  "qwen_vs_forced": {
+    "only_qwen_correct": 14,
+    "only_desktop_correct": 7,
+    "both_correct": 12,
+    "exploratory_mcnemar_exact_two_sided_p": 0.18924713134765625
+  },
+  "limitations": "Class-balanced exploratory check of public scripted dialogue; 10 per class, pretraining overlap unknown. Research-only 13-class Qwen rater. The desktop uses its offline CPED classifier for this task and offers Qwen for semantic and dimensional review."
+}

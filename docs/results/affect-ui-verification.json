@@ -1,0 +1,255 @@
+{
+  "design": "Offscreen desktop UI; real file analysis and local model inference. TXT examples scripted; no human outcome measurement.",
+  "entry_points": [
+    "file picker",
+    "transcription opt-in",
+    "content interval selection",
+    "manual edit",
+    "optional local Qwen text review",
+    "export JSON"
+  ],
+  "english_txt": {
+    "input": "Thank you so much, I love it!",
+    "models": [
+      "goemotions-28-word-tfidf-ovr-v1",
+      "emobank-tfidf-ridge-v1"
+    ],
+    "labels": [
+      {
+        "id": "gratitude",
+        "name_zh": "感激",
+        "score": 0.999063,
+        "threshold": 0.3
+      },
+      {
+        "id": "love",
+        "name_zh": "喜爱",
+        "score": 0.995037,
+        "threshold": 0.175
+      }
+    ],
+    "label_status": "ok",
+    "dimension_scale": [
+      1,
+      5
+    ],
+    "interval_level": 0.8,
+    "dimensions": {
+      "valence": {
+        "score": 4.0856,
+        "interval": [
+          3.7572,
+          4.414
+        ]
+      },
+      "arousal": {
+        "score": 3.7845,
+        "interval": [
+          3.5115,
+          4.0575
+        ]
+      },
+      "dominance": {
+        "score": 3.2604,
+        "interval": [
+          3.0314,
+          3.4894
+        ]
+      }
+    }
+  },
+  "chinese_txt": {
+    "input": "我今天非常开心，听到这个好消息时兴奋地跳了起来。",
+    "source": "txt",
+    "dimensions": {
+      "model": "qwen3:8b",
+      "version": "qwen-zh-expressed-va-v1",
+      "scope": "expressed_text",
+      "scale": [
+        1,
+        9
+      ],
+      "status": "ok",
+      "valence": 9,
+      "arousal": 7,
+      "evidence": "我今天非常开心，听到这个好消息时兴奋地跳了起来。",
+      "calibrated": {
+        "valence": 6.856790999024662,
+        "arousal": 5.769011863224006
+      },
+      "calibration_version": "cvas-zh-affine-v1",
+      "calibration_n": 188,
+      "calibration_scope": "academic_research_CVAS"
+    },
+    "ui_labels_verified": [
+      "中文表达估计（1–9，中文句库校准）　愉悦度 6.86　激活度 5.77",
+      "模型原始等级　愉悦度 9　激活度 7"
+    ]
+  },
+  "public_video": {
+    "source": "RAVDESS / Zenodo record 1188976",
+    "file": "01-01-08-01-01-01-06.mp4",
+    "sha256": "e172ea50d6d09fab1df01e11f7b6c042c6adf32c6607b2cd84300e6feac63b3d",
+    "transcript": "Kids are talking by the door.",
+    "time_s": [
+      0.896,
+      3.104
+    ],
+    "whole": {
+      "models": [
+        "goemotions-28-word-tfidf-ovr-v1",
+        "emobank-tfidf-ridge-v1"
+      ],
+      "labels": [
+        {
+          "id": "neutral",
+          "name_zh": "中性表达",
+          "score": 0.488042,
+          "threshold": 0.225
+        },
+        {
+          "id": "annoyance",
+          "name_zh": "烦恼",
+          "score": 0.267144,
+          "threshold": 0.15
+        }
+      ],
+      "label_status": "ok",
+      "dimension_scale": [
+        1,
+        5
+      ],
+      "interval_level": 0.8,
+      "dimensions": {
+        "valence": {
+          "score": 2.9353,
+          "interval": [
+            2.6069,
+            3.2637
+          ]
+        },
+        "arousal": {
+          "score": 2.9734,
+          "interval": [
+            2.7004,
+            3.2464
+          ]
+        },
+        "dominance": {
+          "score": 3.0577,
+          "interval": [
+            2.8287,
+            3.2867
+          ]
+        }
+      }
+    },
+    "segment": {
+      "models": [
+        "goemotions-28-word-tfidf-ovr-v1",
+        "emobank-tfidf-ridge-v1"
+      ],
+      "labels": [
+        {
+          "id": "neutral",
+          "name_zh": "中性表达",
+          "score": 0.488042,
+          "threshold": 0.225
+        },
+        {
+          "id": "annoyance",
+          "name_zh": "烦恼",
+          "score": 0.267144,
+          "threshold": 0.15
+        }
+      ],
+      "label_status": "ok",
+      "dimension_scale": [
+        1,
+        5
+      ],
+      "interval_level": 0.8,
+      "dimensions": {
+        "valence": {
+          "score": 2.9353,
+          "interval": [
+            2.6069,
+            3.2637
+          ]
+        },
+        "arousal": {
+          "score": 2.9734,
+          "interval": [
+            2.7004,
+            3.2464
+          ]
+        },
+        "dominance": {
+          "score": 3.0577,
+          "interval": [
+            2.8287,
+            3.2867
+          ]
+        }
+      }
+    },
+    "verified_recalculation_after_scripted_substitution": true,
+    "manual_edit": {
+      "text": "Kids are talking by the door",
+      "change": "punctuation only",
+      "models": [
+        "goemotions-28-word-tfidf-ovr-v1",
+        "emobank-tfidf-ridge-v1"
+      ],
+      "labels": [
+        {
+          "id": "neutral",
+          "name_zh": "中性表达",
+          "score": 0.488042,
+          "threshold": 0.225
+        },
+        {
+          "id": "annoyance",
+          "name_zh": "烦恼",
+          "score": 0.267144,
+          "threshold": 0.15
+        }
+      ],
+      "label_status": "ok",
+      "dimension_scale": [
+        1,
+        5
+      ],
+      "interval_level": 0.8,
+      "dimensions": {
+        "valence": {
+          "score": 2.9353,
+          "interval": [
+            2.6069,
+            3.2637
+          ]
+        },
+        "arousal": {
+          "score": 2.9734,
+          "interval": [
+            2.7004,
+            3.2464
+          ]
+        },
+        "dominance": {
+          "score": 3.0577,
+          "interval": [
+            2.8287,
+            3.2867
+          ]
+        }
+      }
+    }
+  },
+  "verified_json_round_trips": [
+    "english TXT",
+    "video/segment/manual correction",
+    "chinese TXT/Qwen"
+  ],
+  "screenshot": "docs/images/feature-tour/text-affect-profile.png"
+}

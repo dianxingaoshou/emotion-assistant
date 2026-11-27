@@ -143,3 +143,6 @@ def test_history_delayed_discomfort_cannot_be_hidden_by_immediate_positive_resul
     assert latest["latest_loop_state"] == "discomfort" and latest["latest_discomfort"] is True
     assert latest["latest_loop_caption"] == "延迟不适优先"
     assert latest["latest_followup_status"] == "completed"
+    assert latest["latest_ratings"] == {
+        "activity": "breathing", "status": "completed", "pre": 7, "post": 4,
+        "followup": {"status": "completed", "distress": 8}}

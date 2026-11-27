@@ -10,6 +10,7 @@ import cv2
 import numpy as np
 
 from .models import CANONICAL, ModelHub
+from .native_expression import expression_profile
 from .core import FusionEngine, interval_duration, interval_union
 from .content_fusion import summarize_content
 from .content_timeline import iter_content_features, predict_content_interval
@@ -257,6 +258,11 @@ def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, tran
             "decision_counts": dict(Counter(r["decision"] for r in intervals)),
             "audio_status": audio_status, "audio_samples": audio, "audio_valid_count": sum(s["eligible"] for s in audio),
             "audio_sampling_windows_s": windows, "issues": issues, "transcripts": transcripts}
+    result["expression_profiles"] = {}
+    if kind != "audio":
+        result["expression_profiles"]["visual"] = expression_profile(visual, "visual", still=kind == "image")
+    if kind != "image":
+        result["expression_profiles"]["audio"] = expression_profile(audio, "audio")
     if kind == "image":
         # A still image has no measured time support.
         result["content_intervals"] = []
@@ -277,7 +283,8 @@ def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, tran
                                       "accepted_s": accepted_seconds}
     if transcribe and kind != "image":
         from .english_polarity import predict_english_polarity
-        utterances = [row["text"] for row in transcripts if row.get("valid") and row.get("text")]
+        from .expression_profile import text_expression_profile
+        utterances = [row["text"] for row in transcripts if row.get("valid") and not row.get("stale") and row.get("text")]
         result["transcription_status"] = "available" if utterances else "no_usable_transcript"
         if utterances:
             if refine_file_intensity:
@@ -289,8 +296,12 @@ def analyze_media(path, *, model_dir, on_sample, cancelled, model_hub=None, tran
                     summary.update(segment_weighted_intensity=summary["intensity"],
                                    segment_weighted_intensity_covered_seconds=summary["intensity_covered_seconds"],
                                    intensity=refined["intensity"], intensity_covered_seconds=refined["covered_seconds"])
-            polarity = predict_english_polarity(" ".join(utterances))
+            full_text = " ".join(utterances)
+            polarity = predict_english_polarity(full_text)
             if polarity:
                 result["semantic_context"] = {"english_polarity": polarity}
+            profile = text_expression_profile(full_text)
+            if profile is not None:
+                result.setdefault("semantic_context", {})["expression_profile"] = profile
     check()
     return result

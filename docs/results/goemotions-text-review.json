@@ -1,0 +1,155 @@
+{
+  "dataset": {
+    "repository": "google-research/google-research/goemotions",
+    "commit": "7951440944924ac61b6e2f9a2a3c715834005c40",
+    "sha256": {
+      "test.tsv": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4",
+      "emotions.txt": "45c3ef86782d2a4d7fedcd6d8c111aa0d0e94720689bd164fac94fefb4495a89",
+      "sentiment_mapping.json": "801f6f028082141bd38541a4b14d65b33bdc55d29c7b2aaa029fefecf206f76b"
+    },
+    "split": "test"
+  },
+  "task": "expressed content polarity",
+  "selection": {
+    "official_test_count": 5427,
+    "eligible_by_class": {
+      "negative": 1070,
+      "neutral": 1606,
+      "positive": 1863
+    },
+    "excluded": {
+      "missing": 0,
+      "ambiguous": 677,
+      "cross_polarity": 211
+    },
+    "per_class": 20,
+    "sample_count": 60,
+    "seed": "goemotions-text-review-v1",
+    "ordered_ids_sha256": "455b3a91b13114ea845a46d86dbffc54db547045dd4ba7aee7c757c3e43bd289"
+  },
+  "model": {
+    "model": "qwen3:8b",
+    "manifest_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "quantization": "Q4_K_M",
+    "ollama": "0.40.18",
+    "review_version": "semantic-review-v2",
+    "review_source_sha256": "9653812ca5de83d11e4b5a11f62f8662550390724105b14b2ff6f30a274d01e0"
+  },
+  "baseline_asset_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "baseline": {
+    "correct": 23,
+    "incorrect": 33,
+    "abstained": 4,
+    "coverage": 0.9333333333333333,
+    "accuracy_all": 0.38333333333333336,
+    "accuracy_classified": 0.4107142857142857,
+    "macro_f1_all": 0.3871615312791783,
+    "per_class": {
+      "negative": {
+        "support": 20,
+        "correct": 9,
+        "incorrect": 11,
+        "abstained": 0,
+        "f1": 0.45
+      },
+      "neutral": {
+        "support": 20,
+        "correct": 4,
+        "incorrect": 14,
+        "abstained": 2,
+        "f1": 0.23529411764705882
+      },
+      "positive": {
+        "support": 20,
+        "correct": 10,
+        "incorrect": 8,
+        "abstained": 2,
+        "f1": 0.47619047619047616
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 9,
+        "neutral": 5,
+        "positive": 6,
+        "abstain": 0
+      },
+      "neutral": {
+        "negative": 8,
+        "neutral": 4,
+        "positive": 6,
+        "abstain": 2
+      },
+      "positive": {
+        "negative": 3,
+        "neutral": 5,
+        "positive": 10,
+        "abstain": 2
+      }
+    }
+  },
+  "semantic_review": {
+    "correct": 37,
+    "incorrect": 22,
+    "abstained": 1,
+    "coverage": 0.9833333333333333,
+    "accuracy_all": 0.6166666666666667,
+    "accuracy_classified": 0.6271186440677966,
+    "macro_f1_all": 0.600791810152974,
+    "per_class": {
+      "negative": {
+        "support": 20,
+        "correct": 19,
+        "incorrect": 1,
+        "abstained": 0,
+        "f1": 0.7037037037037037
+      },
+      "neutral": {
+        "support": 20,
+        "correct": 7,
+        "incorrect": 12,
+        "abstained": 1,
+        "f1": 0.45161290322580644
+      },
+      "positive": {
+        "support": 20,
+        "correct": 11,
+        "incorrect": 9,
+        "abstained": 0,
+        "f1": 0.6470588235294118
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 19,
+        "neutral": 0,
+        "positive": 1,
+        "abstain": 0
+      },
+      "neutral": {
+        "negative": 10,
+        "neutral": 7,
+        "positive": 2,
+        "abstain": 1
+      },
+      "positive": {
+        "negative": 5,
+        "neutral": 4,
+        "positive": 11,
+        "abstain": 0
+      }
+    }
+  },
+  "paired": {
+    "both_correct": 17,
+    "baseline_only": 6,
+    "review_only": 20,
+    "neither_correct": 17,
+    "accuracy_delta": 0.23333333333333334,
+    "exact_mcnemar_two_sided_p": 0.009355306625366211
+  },
+  "review_status_counts": {
+    "ok": 60
+  },
+  "review_latency_seconds_median": 1.547
+}

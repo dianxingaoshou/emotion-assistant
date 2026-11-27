@@ -1,0 +1,157 @@
+{
+  "dataset": {
+    "repository": "google-research/google-research/goemotions",
+    "commit": "7951440944924ac61b6e2f9a2a3c715834005c40",
+    "sha256": {
+      "test.tsv": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4",
+      "emotions.txt": "45c3ef86782d2a4d7fedcd6d8c111aa0d0e94720689bd164fac94fefb4495a89",
+      "sentiment_mapping.json": "801f6f028082141bd38541a4b14d65b33bdc55d29c7b2aaa029fefecf206f76b"
+    },
+    "split": "test"
+  },
+  "task": "expressed content polarity",
+  "selection": {
+    "official_test_count": 5427,
+    "eligible_by_class": {
+      "negative": 1070,
+      "neutral": 1606,
+      "positive": 1863
+    },
+    "excluded": {
+      "missing": 0,
+      "ambiguous": 677,
+      "cross_polarity": 211
+    },
+    "per_class": 60,
+    "offset_per_class": 20,
+    "sample_count": 180,
+    "seed": "goemotions-text-review-v1",
+    "ordered_ids_sha256": "0f1028d7425a644132e854b600e756e51ee9ea4c30b088069f43d1f7203d8c62"
+  },
+  "model": {
+    "model": "qwen3:8b",
+    "manifest_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "quantization": "Q4_K_M",
+    "ollama": "0.40.18",
+    "review_version": "semantic-review-v2",
+    "review_source_sha256": "9653812ca5de83d11e4b5a11f62f8662550390724105b14b2ff6f30a274d01e0"
+  },
+  "baseline_asset_sha256": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+  "baseline": {
+    "correct": 76,
+    "incorrect": 98,
+    "abstained": 6,
+    "coverage": 0.9666666666666667,
+    "accuracy_all": 0.4222222222222222,
+    "accuracy_classified": 0.4367816091954023,
+    "macro_f1_all": 0.4161978553459284,
+    "per_class": {
+      "negative": {
+        "support": 60,
+        "correct": 27,
+        "incorrect": 31,
+        "abstained": 2,
+        "f1": 0.453781512605042
+      },
+      "neutral": {
+        "support": 60,
+        "correct": 14,
+        "incorrect": 45,
+        "abstained": 1,
+        "f1": 0.3218390804597701
+      },
+      "positive": {
+        "support": 60,
+        "correct": 35,
+        "incorrect": 22,
+        "abstained": 3,
+        "f1": 0.47297297297297297
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 27,
+        "neutral": 7,
+        "positive": 24,
+        "abstain": 2
+      },
+      "neutral": {
+        "negative": 16,
+        "neutral": 14,
+        "positive": 29,
+        "abstain": 1
+      },
+      "positive": {
+        "negative": 16,
+        "neutral": 6,
+        "positive": 35,
+        "abstain": 3
+      }
+    }
+  },
+  "semantic_review": {
+    "correct": 110,
+    "incorrect": 63,
+    "abstained": 7,
+    "coverage": 0.9611111111111111,
+    "accuracy_all": 0.6111111111111112,
+    "accuracy_classified": 0.6358381502890174,
+    "macro_f1_all": 0.6177519937638664,
+    "per_class": {
+      "negative": {
+        "support": 60,
+        "correct": 47,
+        "incorrect": 11,
+        "abstained": 2,
+        "f1": 0.6911764705882353
+      },
+      "neutral": {
+        "support": 60,
+        "correct": 27,
+        "incorrect": 29,
+        "abstained": 4,
+        "f1": 0.4954128440366973
+      },
+      "positive": {
+        "support": 60,
+        "correct": 36,
+        "incorrect": 23,
+        "abstained": 1,
+        "f1": 0.6666666666666666
+      }
+    },
+    "confusion_true_by_predicted": {
+      "negative": {
+        "negative": 47,
+        "neutral": 6,
+        "positive": 5,
+        "abstain": 2
+      },
+      "neutral": {
+        "negative": 22,
+        "neutral": 27,
+        "positive": 7,
+        "abstain": 4
+      },
+      "positive": {
+        "negative": 7,
+        "neutral": 16,
+        "positive": 36,
+        "abstain": 1
+      }
+    }
+  },
+  "paired": {
+    "both_correct": 54,
+    "baseline_only": 22,
+    "review_only": 56,
+    "neither_correct": 48,
+    "accuracy_delta": 0.18888888888888888,
+    "exact_mcnemar_two_sided_p": 0.00014948153872377523
+  },
+  "review_status_counts": {
+    "ok": 176,
+    "invalid_response": 4
+  },
+  "review_latency_seconds_median": 0.781
+}

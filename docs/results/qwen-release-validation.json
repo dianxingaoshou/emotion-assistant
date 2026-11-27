@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-27",
+  "runtime": "Windows, Python 3.12",
+  "offline_acceptance": true,
+  "pytest": {
+    "tests": 527,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "closed_loop": true,
+  "ui": {
+    "desktop": {
+      "passed": true,
+      "checks": 47,
+      "real_devices_opened": false
+    },
+    "regulation": {
+      "passed": true,
+      "checks": 63,
+      "real_devices_opened": false
+    },
+    "ui_contracts": {
+      "passed": true,
+      "checks": 97,
+      "real_devices_opened": false
+    }
+  },
+  "scope": "Software regressions and scripted desktop workflows. Recognition metrics use separate official labeled datasets. No human intervention outcomes."
+}

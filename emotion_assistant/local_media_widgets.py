@@ -17,8 +17,12 @@ from PySide6.QtWidgets import (
 
 from .local_media import AUDIO_EXTENSIONS, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS, MediaCancelled, analyze_media
 from .fusion_explanation import evidence_text
-from .text_file import MAX_TEXT_BYTES, text_polarity_summary
+from .native_expression import format_expression
+from .text_file import MAX_TEXT_BYTES, analyze_text, text_polarity_summary
 from .content_widgets import ContentReadout
+from .research_text_review import format_research_review
+from .expression_profile import text_expression_profile, format_expression_profile
+from .semantic_review_worker import SemanticReviewQueue
 from .paths import MODELS
 from .ui_theme import COLORS, RADIUS, SPACE
 from .ui_widgets import LABEL_ORDER, SignalDistribution
@@ -117,6 +121,9 @@ class LocalMediaPage(QWidget):
         self._closing = False
         self._cancel_requested = False
         self.result = None
+        self._review_queue = SemanticReviewQueue(self)
+        self._review_queue.finished.connect(self._finish_semantic_review)
+        self._review_request = None
         self._strategy_provider = strategy_provider
         self._timer = QTimer(self)
         self._timer.setInterval(100)
@@ -130,8 +137,11 @@ class LocalMediaPage(QWidget):
         self.choose_button = _button("选择本地文件", True)
         self.choose_button.clicked.connect(self._choose)
         toolbar.addWidget(self.choose_button)
+        self.type_button = _button("输入文字")
+        self.type_button.clicked.connect(self._type_text)
+        toolbar.addWidget(self.type_button)
         self.transcribe = QCheckBox("转写本次文件语音")
-        self.transcribe.setToolTip("让本次英文转写参与发言内容分析。导出的 JSON 包含自动转写和你确认的校对文字。")
+        self.transcribe.setToolTip("分析本次文件的中英文转写。导出的 JSON 包含自动转写和你确认的校对文字。")
         toolbar.addWidget(self.transcribe)
         self.cancel_button = _button("取消检测")
         self.cancel_button.clicked.connect(self.cancel)
@@ -185,13 +195,28 @@ class LocalMediaPage(QWidget):
         self.content_intervals.setAccessibleName("选择要查看的发言时段")
         self.content_intervals.currentIndexChanged.connect(self._show_content_result)
         result_layout.addWidget(self.content_intervals)
-        self.review_button = _button("校对英文转写")
+        self.profile_readout = QLabel()
+        self.profile_readout.setObjectName("bodyNote")
+        self.profile_readout.setTextFormat(Qt.TextFormat.PlainText)
+        self.profile_readout.setWordWrap(True)
+        self.profile_readout.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        result_layout.addWidget(self.profile_readout)
+        self.review_button = _button("校对整段转写")
         self.review_button.clicked.connect(self._review_transcript)
         result_layout.addWidget(self.review_button, 0, Qt.AlignmentFlag.AlignLeft)
         self.reviewed_intensity = QLabel()
         self.reviewed_intensity.setTextFormat(Qt.TextFormat.PlainText)
         self.reviewed_intensity.setWordWrap(True)
         result_layout.addWidget(self.reviewed_intensity)
+        self.semantic_button = _button("本地大模型复核文字")
+        self.semantic_button.setToolTip("仅将当前文字发送到本机 Ollama。成功结果随文件检测 JSON 导出。")
+        self.semantic_button.clicked.connect(self._request_semantic_review)
+        result_layout.addWidget(self.semantic_button, 0, Qt.AlignmentFlag.AlignLeft)
+        self.semantic_readout = QLabel()
+        self.semantic_readout.setTextFormat(Qt.TextFormat.PlainText)
+        self.semantic_readout.setWordWrap(True)
+        self.semantic_readout.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        result_layout.addWidget(self.semantic_readout)
         self.cue_caption = QLabel("声画线索")
         self.cue_caption.setObjectName("muted")
         result_layout.addWidget(self.cue_caption)
@@ -248,6 +273,7 @@ class LocalMediaPage(QWidget):
         self.details.clear()
         self.status.setText("正在读取文件…")
         self.choose_button.setEnabled(False)
+        self.type_button.setEnabled(False)
         self.export_button.setEnabled(False)
         self.export_button.hide()
         self.cancel_button.setEnabled(True)
@@ -263,6 +289,27 @@ class LocalMediaPage(QWidget):
         self._timer.start()
         return True
 
+    def _type_text(self):
+        if self._worker is not None or self._closing:
+            return
+        text, accepted = QInputDialog.getMultiLineText(
+            self, "输入文字", "输入或粘贴一段中文或英文，在本机分析它表达的情绪。")
+        if not accepted:
+            return
+        try:
+            result = analyze_text(text)
+        except ValueError as exc:
+            self.status.setText(str(exc))
+            return
+        self._reset_scores()
+        self._path = None
+        self.result = result
+        self.filename.setText("手动输入")
+        self.filename.setToolTip("")
+        self._show_summary()
+        self.export_button.setEnabled(True)
+        self.export_button.show()
+
     def cancel(self):
         if self._worker is not None:
             self._cancel_requested = True
@@ -271,6 +318,7 @@ class LocalMediaPage(QWidget):
             self.status.setText("正在取消检测…")
 
     def stop_for_close(self):
+        self._clear_semantic_request()
         if self._worker is None:
             return True
         self._closing = True
@@ -283,6 +331,10 @@ class LocalMediaPage(QWidget):
         self.sample_caption.clear()
 
     def _reset_scores(self):
+        self._clear_semantic_request()
+        self.profile_readout.clear()
+        self.profile_readout.hide()
+        self.semantic_button.hide()
         self.content_readout.set_result(None)
         self.content_intervals.hide()
         self.content_intervals.clear()
@@ -321,11 +373,9 @@ class LocalMediaPage(QWidget):
         if observation.get("eligible") and scores:
             top = max(scores, key=scores.get)
             frame_label = f"四类线索：{LABELS[top]} {scores[top]:.1%}"
-            raw = observation.get("raw_scores")
-            if raw:
-                raw_top = max(raw, key=raw.get)
-                label = "轻蔑" if raw_top == "contempt" else LABELS.get(raw_top, raw_top)
-                frame_label = f"八类表情：{label} {raw[raw_top]:.1%}　·　" + frame_label
+            profile = observation.get("expression_profile")
+            if profile:
+                frame_label = format_expression(profile) + "\n" + frame_label
         else:
             reason = observation.get("rejection_reason") or observation.get("reason")
             if observation.get("valid") and reason == "ok":
@@ -354,6 +404,7 @@ class LocalMediaPage(QWidget):
         self._refresh_sample()
         self._worker = None
         self.choose_button.setEnabled(True)
+        self.type_button.setEnabled(True)
         self.transcribe.setChecked(False)
         self.transcribe.setEnabled(True)
         self.cancel_button.hide()
@@ -390,7 +441,8 @@ class LocalMediaPage(QWidget):
             self.content_intervals.clear()
             self.content_intervals.addItem("全部发言时段", -1)
             for i, row in enumerate(result.get("content_intervals", [])):
-                if "text" in row.get("available_modalities", []) or row.get("intensity") is not None:
+                if ("text" in row.get("available_modalities", []) or row.get("intensity") is not None
+                        or self._utterance_for(row)):
                     self.content_intervals.addItem(f"发言 {row['t_start']:.1f}–{row['t_end']:.1f} 秒", i)
             self.content_intervals.blockSignals(False)
             self.content_intervals.setVisible(self.content_intervals.count() > 1)
@@ -404,10 +456,10 @@ class LocalMediaPage(QWidget):
             polarity = text_polarity_summary(context)
             self._completed_status = "文本分析完成"
             self.status.setText(self._completed_status)
-            lines = [] if show_content else [polarity or "本段未获得可用的英文极性分数。"]
+            lines = [polarity] if polarity and not show_content else []
             if context.get("need_hint") in NEEDS:
                 lines.append("文本提及可能的需要：" + NEEDS[context["need_hint"]] + "，需要本人确认。")
-            lines.append("结果描述文字表达的倾向。导出包含选择的原文。")
+            lines.append("导出结果包含本次原文。")
             self.details.setText("\n".join(lines))
             return
         valid, total = result["valid_count"], result["sampled_count"]
@@ -420,7 +472,7 @@ class LocalMediaPage(QWidget):
         decisions = result.get("decision_counts", {})
         accepted = sum(count for k, count in decisions.items() if k != "abstain")
         scores = result["scores"]
-        lines = []
+        lines = [format_expression(profile) for profile in result.get("expression_profiles", {}).values()]
         if kind != "audio":
             lines.append(f"画面通过检查 {valid}/{total} 帧")
         if kind != "image":
@@ -476,6 +528,10 @@ class LocalMediaPage(QWidget):
         self._show_interval(chosen)
 
     def _show_content_result(self, index):
+        self._clear_semantic_request()
+        self.profile_readout.clear()
+        self.profile_readout.hide()
+        self.semantic_button.hide()
         if index < 0 or not self.result:
             return
         source = self.content_intervals.itemData(index)
@@ -495,12 +551,100 @@ class LocalMediaPage(QWidget):
         else:
             self.reviewed_intensity.clear()
         if whole_file:
-            self.content_readout.set_result(self.result.get("content_summary"),
+            content = self.result.get("content_summary") or {}
+            self.content_readout.set_result(content,
                                             automatic_transcript=self.result.get("kind") != "text")
         else:
-            row = self.result["content_intervals"][source]
-            self.content_readout.set_result(row, f"发言内容 {row['t_start']:.1f}–{row['t_end']:.1f} 秒",
+            content = self.result["content_intervals"][source]
+            self.content_readout.set_result(content, f"发言内容 {content['t_start']:.1f}–{content['t_end']:.1f} 秒",
                                             automatic_transcript=True)
+        target = self._semantic_target()
+        if target:
+            record, _, origin = target
+            transcript = self._utterance_for(record) if origin == "asr_segment" else record
+            context = (transcript or {}).get("semantic_context") or {}
+            profile = record.get("expression_profile") or context.get("expression_profile")
+            profile_text = format_expression_profile(profile)
+            if profile and profile.get("language") == "zh":
+                # The English polarity/intensity panel describes a different task.
+                if not content.get("scores") and not content.get("candidate_scores"):
+                    self.content_readout.hide()
+                self.reviewed_intensity.hide()
+            if profile_text:
+                self.profile_readout.setText(profile_text)
+                self.profile_readout.show()
+            labels = {"txt": "文件文字", "typed": "输入文字", "asr_segment": "本段转写",
+                      "asr": "整段转写", "user_edited": "校对文字"}
+            self.semantic_button.setText("本地大模型复核" + labels[origin])
+            self.semantic_button.show()
+            saved = record.get("semantic_review")
+            if saved:
+                self.semantic_readout.setText(format_research_review(saved))
+                self.semantic_readout.show()
+
+    def _utterance_for(self, interval):
+        if interval.get("timing_issue"):
+            return None
+        matches = [r for r in self.result.get("transcripts", [])
+                   if r.get("valid") and not r.get("stale") and r.get("text")
+                   and (r.get("t_start"), r.get("t_end")) == (interval["t_start"], interval["t_end"])]
+        return matches[0] if len(matches) == 1 else None
+
+    def _semantic_target(self):
+        result = self.result
+        if not result:
+            return None
+        if result["kind"] == "text" and result.get("text"):
+            return result, result["text"], result.get("text_source", "txt")
+        if result.get("transcription_status") != "available":
+            return None
+        index = self.content_intervals.currentData()
+        if index is not None and index >= 0:
+            row = result["content_intervals"][index]
+            utterance = self._utterance_for(row)
+            return (row, utterance["text"], "asr_segment") if utterance else None
+        edited = result.get("reviewed_transcript")
+        if edited and edited.get("text"):
+            return edited, edited["text"], "user_edited"
+        text = self._original_transcript()
+        return (result, text, "asr") if text else None
+
+    def _original_transcript(self):
+        return " ".join(r["text"].strip() for r in self.result.get("transcripts", [])
+                        if r.get("valid") and not r.get("stale") and r.get("text"))
+
+    def _clear_semantic_request(self):
+        self._review_queue.clear()
+        self._review_request = None
+        self.semantic_button.setEnabled(True)
+        self.semantic_readout.clear()
+        self.semantic_readout.hide()
+
+    def _request_semantic_review(self):
+        target = self._semantic_target()
+        if not target:
+            return
+        record, text, origin = target
+        request_id = self._review_queue.submit(text)
+        self._review_request = request_id, record, text, origin
+        self.semantic_button.setEnabled(False)
+        self.semantic_readout.setText("正在本机复核文字…")
+        self.semantic_readout.show()
+
+    def _finish_semantic_review(self, request_id, review):
+        if self._review_request is None or self._review_request[0] != request_id:
+            return
+        _, record, text, origin = self._review_request
+        self._review_request = None
+        self.semantic_button.setEnabled(True)
+        target = self._semantic_target()
+        if not target or target[0] is not record or target[1:] != (text, origin):
+            self.semantic_readout.hide()
+            return
+        if review.get("status") == "ok":
+            record["semantic_review"] = {**review, "text_source": origin}
+        self.semantic_readout.setText(format_research_review(review))
+        self.semantic_readout.show()
 
     def _review_transcript(self):
         from .english_intensity import predict_english_intensity
@@ -508,14 +652,13 @@ class LocalMediaPage(QWidget):
         result = self.result
         if not result or result.get("transcription_status") != "available":
             return
-        original = " ".join(row["text"].strip() for row in result.get("transcripts", [])
-                            if row.get("valid") and not row.get("stale") and row.get("text"))
+        original = self._original_transcript()
         if not original:
             return
         previous = result.get("reviewed_transcript") or {}
         edited, accepted = QInputDialog.getMultiLineText(
-            self, "校对本次文件的英文转写",
-            "对照原音修正漏词和错词，或清空以撤销校对。确认后按整段英文估分，导出时会包含校对文字。",
+            self, "校对本次文件的转写",
+            "对照原音修正漏词和错词，或清空以撤销校对。可复核校对后的文字，英文另估整段强度。导出将包含校对文字。",
             previous.get("text", original))
         if not accepted or result is not self.result:
             return
@@ -523,12 +666,19 @@ class LocalMediaPage(QWidget):
         if len(edited) > MAX_TEXT_BYTES or len(edited.encode("utf-8")) > MAX_TEXT_BYTES:
             self.status.setText("校对文字过长，请缩短至 16 KiB 后重试。")
             return
+        if edited == previous.get("text"):
+            return
         if not edited or edited == original:
             result.pop("reviewed_transcript", None)
         else:
             result["reviewed_transcript"] = {"source": "user_edited", "text": edited,
                                               "method": "reviewed_english_text_v1",
                                               "intensity": predict_english_intensity(edited)}
+            profile = text_expression_profile(edited)
+            if profile is not None:
+                result["reviewed_transcript"]["expression_profile"] = profile
+                if profile["language"] == "zh":
+                    result["reviewed_transcript"]["method"] = "reviewed_chinese_text_v1"
         self._show_content_result(self.content_intervals.currentIndex())
         self.status.setText(self._completed_status)
 
@@ -551,8 +701,9 @@ class LocalMediaPage(QWidget):
     def _export(self):
         if self.result is None:
             return
+        stem = self._path.stem if self._path else "输入文字"
         target, _ = QFileDialog.getSaveFileName(
-            self, "导出文件检测结果", f"{self._path.stem}-表情检测.json", "JSON 文件 (*.json)")
+            self, "导出检测结果", f"{stem}-检测.json", "JSON 文件 (*.json)")
         if not target:
             return
         try:
@@ -561,10 +712,10 @@ class LocalMediaPage(QWidget):
                 output = output.with_suffix(".json")
                 if output.exists():
                     raise ValueError("同名 JSON 文件已存在。请选择新名称，或输入含 .json 的全名确认覆盖。")
-            if output.resolve() == self._path.resolve() or (
+            if self._path and (output.resolve() == self._path.resolve() or (
                 output.exists() and self._path.exists() and output.samefile(self._path)
-            ):
-                raise ValueError("请选择新的 JSON 文件名，以保留原始照片或视频。")
+            )):
+                raise ValueError("请选择新的 JSON 文件名，以保留原始文件。")
             if output.suffix.lower() != ".json":
                 raise ValueError("请选择 .json 格式的文件名。")
             data = json.dumps(self.result, ensure_ascii=False, indent=2, allow_nan=False).encode("utf-8")

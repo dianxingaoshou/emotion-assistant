@@ -124,6 +124,7 @@ def test_file_review_preserves_automatic_result_and_exports_only_confirmed_edits
     monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
     from PySide6.QtWidgets import QApplication, QFileDialog, QInputDialog
     from emotion_assistant.english_intensity import predict_english_intensity
+    from emotion_assistant.expression_profile import english_expression_profile
     from emotion_assistant.local_media_widgets import LocalMediaPage
 
     app = QApplication.instance() or QApplication([])
@@ -158,7 +159,8 @@ def test_file_review_preserves_automatic_result_and_exports_only_confirmed_edits
         page.review_button.click()
         expected = predict_english_intensity(corrected)
         assert page.result["reviewed_transcript"] == {"text": corrected, "source": "user_edited",
-                                                     "method": "reviewed_english_text_v1", "intensity": expected}
+                                                     "method": "reviewed_english_text_v1", "intensity": expected,
+                                                     "expression_profile": english_expression_profile(corrected)}
         assert "校对后" in page.reviewed_intensity.text() and "+0.45" in page.content_readout.intensity.text()
         page.content_intervals.setCurrentIndex(1)
         assert page.review_button.isHidden() and page.reviewed_intensity.isHidden()
