@@ -14,6 +14,8 @@
 
 ## 在桌面中看结果
 
+[观看本地文件检测与反馈演示（MP4）](docs/images/progress/desktop-walkthrough.mp4)。视频从选择本地文件开始，展示声画检测、逐时段检查、英文转写校对和结果导出，末段演示独立的模拟调节会话。
+
 **本地文件检测。** 下图为实际检测的 RAVDESS 视频。8 帧抽样画面通过检查，人声没有通过质量门槛，程序采用视觉线索，整段正向得分为 64.7%。左侧是单帧，右侧是整段汇总。视频来自 Livingstone 和 Russo（2018），截帧及界面标注沿用素材许可。[RAVDESS 数据来源](https://zenodo.org/records/1188976) · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ![真实 RAVDESS 视频在本地文件检测页的画面、人脸框及声画结果](docs/images/feature-tour/local-video.png)
