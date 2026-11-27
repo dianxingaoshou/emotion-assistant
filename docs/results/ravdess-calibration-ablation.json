@@ -1,0 +1,37 @@
+{
+  "protocol": "ravdess-paired-temperature-gate-replay-v1",
+  "reference": "ravdess-recognition.json",
+  "selected_media_sha256": "9753d59df1386aa7728bb18f229ed2241005c4fa5c8aec9e40e9e14cc273e93e",
+  "calibration_version": "c814382199df5ddaac1b7c812fddb3291991808048a7ef187b7f753671dce964",
+  "cohort": "Same unique audiovisual rater label and valid visual/audio pair as primary_common_clips.",
+  "n": 62,
+  "actors": 8,
+  "scoring": "Top class on every clip, before acceptance thresholds. Lower multiclass Brier is better.",
+  "design": "Cross the saved raw/temperature-scaled branch distributions with the saved quality/gated weights. No refitting or threshold selection.",
+  "methods": {
+    "quality_v2": {
+      "correct": 58,
+      "accuracy": 0.9354838709677419,
+      "macro_f1": 0.9363603709508883,
+      "brier": 0.19651482329560277
+    },
+    "temperature_only": {
+      "correct": 61,
+      "accuracy": 0.9838709677419355,
+      "macro_f1": 0.98380355276907,
+      "brier": 0.223685407539673
+    },
+    "gate_only": {
+      "correct": 61,
+      "accuracy": 0.9838709677419355,
+      "macro_f1": 0.98380355276907,
+      "brier": 0.11457873520046657
+    },
+    "calibrated_fusion": {
+      "correct": 61,
+      "accuracy": 0.9838709677419355,
+      "macro_f1": 0.98380355276907,
+      "brier": 0.15204510028121382
+    }
+  }
+}
