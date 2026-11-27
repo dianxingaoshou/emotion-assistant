@@ -7,6 +7,7 @@ import io
 from pathlib import Path
 import re
 import struct
+import tempfile
 import time
 import urllib.request
 import zipfile
@@ -19,6 +20,19 @@ VIDEO_URL = "https://drive.usercontent.google.com/download?id=1PW6a-4zWMocrBGQER
 SAMPLE_SEED = "chsims-conflict-v1"
 LABEL_SHA256 = "c7cdb97d9270b8cd975fd01cbf9b79e3526162be73634a50e0c622acdf16ae15"
 CACHE = ROOT / ".runtime" / "chsims"
+
+
+def write_atomic(destination, data):
+    """Publish a complete file even with another preparer running in this cache."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    stream = tempfile.NamedTemporaryFile(dir=destination.parent, suffix=".part", delete=False)
+    temp = Path(stream.name)
+    try:
+        with stream:
+            stream.write(data)
+        temp.replace(destination)
+    finally:
+        temp.unlink(missing_ok=True)
 
 
 def cohort(labels, limit=48):
@@ -39,7 +53,10 @@ def cohort(labels, limit=48):
 def read_range(left, right):
     for attempt in range(4):
         try:
-            request = urllib.request.Request(VIDEO_URL, headers={"Range": f"bytes={left}-{right}"})
+            # Vary the request URL on retries: some shared caches keep a partial
+            # response for a different Range of this same multi-gigabyte file.
+            url = VIDEO_URL if not attempt else f"{VIDEO_URL}&slice={left}-{right}&retry={attempt}"
+            request = urllib.request.Request(url, headers={"Range": f"bytes={left}-{right}"})
             with urllib.request.urlopen(request, timeout=90) as response:
                 if response.status != 206 or not response.headers.get("Content-Range", "").startswith(
                         f"bytes {left}-{right}/"):
@@ -73,14 +90,25 @@ def fetch_selected(data, limit):
     labels = data / "label.csv"
     if not labels.exists():
         with urllib.request.urlopen(LABEL_URL, timeout=60) as response:
-            labels.write_bytes(response.read(2**20))
+            write_atomic(labels, response.read(2**20))
     selected = cohort(labels, limit)
-    with urllib.request.urlopen(urllib.request.Request(VIDEO_URL, method="HEAD"), timeout=60) as response:
-        size = int(response.headers["Content-Length"])
+    fetch_members(data, selected)
+
+
+def fetch_members(data, selected, *, workers=5):
+    """Fetch the precise official MP4 members requested by a predeclared split."""
+    if not selected or any(not re.fullmatch(r"video_[0-9]{4}/[0-9]{4}", key) for key in selected):
+        raise ValueError("Expected official video/clip IDs")
+    request = urllib.request.Request(VIDEO_URL, headers={"Range": "bytes=0-0"})
+    with urllib.request.urlopen(request, timeout=60) as response:
+        match = re.fullmatch(r"bytes 0-0/([0-9]+)", response.headers.get("Content-Range", ""))
+        if response.status != 206 or not match:
+            raise ValueError("Expected archive size in the official host's Content-Range")
+        size = int(match.group(1))
     with zipfile.ZipFile(ArchiveTail(size)) as archive:
         videos = {"/".join(Path(item.filename).with_suffix("").parts[-2:]): item
                   for item in archive.infolist() if item.filename.lower().endswith(".mp4")}
-    if not selected.keys() <= videos.keys():
+    if not set(selected) <= videos.keys():
         raise ValueError("Missing selected clips in official archive")
 
     def fetch(key):
@@ -103,13 +131,11 @@ def fetch_selected(data, limit):
             raise ValueError("Unsupported official ZIP compression")
         if len(raw) != item.file_size or zlib.crc32(raw) != item.CRC:
             raise ValueError(f"Official ZIP member integrity failure: {key}")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        temp = destination.with_suffix(".part")
-        temp.write_bytes(raw)
-        temp.replace(destination)
+        # Independent split jobs may finish the same already-verified clip.
+        write_atomic(destination, raw)
         return key
 
-    with ThreadPoolExecutor(max_workers=5) as pool:
+    with ThreadPoolExecutor(max_workers=workers) as pool:
         for i, key in enumerate(pool.map(fetch, selected), 1):
             print(f"{i}/{len(selected)} {key}", flush=True)
 

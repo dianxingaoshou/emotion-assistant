@@ -24,6 +24,7 @@ from .research_text_review import format_research_review
 from .expression_profile import text_expression_profile, format_expression_profile
 from .semantic_review_worker import SemanticReviewQueue
 from .conflict_review_widget import ConflictReviewPanel
+from .clip_recognition import analyze_foundation_media, format_clip_result
 from .paths import MODELS
 from .ui_theme import COLORS, RADIUS, SPACE
 from .ui_widgets import LABEL_ORDER, SignalDistribution
@@ -54,11 +55,13 @@ def _annotated_preview(frame, observation):
 class _MediaWorker(QThread):
     """The GUI polls a single preview slot; video frames never queue as signals."""
 
-    def __init__(self, path, parent, transcribe, strategy):
+    def __init__(self, path, parent, transcribe, strategy, foundation=False, *, adaptive=False):
         super().__init__(parent)
         self.path = path
         self.transcribe = transcribe
         self.strategy = strategy
+        self.foundation = foundation
+        self.adaptive = adaptive
         self.summary = None
         self.error = None
         self.was_cancelled = False
@@ -69,9 +72,12 @@ class _MediaWorker(QThread):
 
     def run(self):
         try:
-            self.summary = analyze_media(self.path, model_dir=MODELS, on_sample=self._publish,
-                                         cancelled=self.isInterruptionRequested, transcribe=self.transcribe,
-                                         strategy=self.strategy, on_status=self._publish_stage)
+            options = dict(model_dir=MODELS, on_sample=self._publish, cancelled=self.isInterruptionRequested,
+                           transcribe=self.transcribe, strategy=self.strategy, on_status=self._publish_stage)
+            if self.foundation:
+                self.summary = analyze_foundation_media(self.path, adaptive=self.adaptive, **options)
+            else:
+                self.summary = analyze_media(self.path, **options)
         except MediaCancelled:
             self.was_cancelled = True
         except Exception as exc:
@@ -144,6 +150,9 @@ class LocalMediaPage(QWidget):
         self.transcribe = QCheckBox("转写本次文件语音")
         self.transcribe.setToolTip("分析本次文件的中英文转写。导出的 JSON 包含自动转写和你确认的校对文字。")
         toolbar.addWidget(self.transcribe)
+        self.foundation = QCheckBox("中文短片融合识别")
+        self.foundation.setToolTip("对 30 秒以内的中文片段估计表达倾向。允许转写时，本机使用文字语义向量；无文字时使用可用声画。")
+        toolbar.addWidget(self.foundation)
         self.cancel_button = _button("取消检测")
         self.cancel_button.clicked.connect(self.cancel)
         self.cancel_button.hide()
@@ -159,6 +168,15 @@ class LocalMediaPage(QWidget):
         self.export_button.hide()
         toolbar.addWidget(self.export_button)
         layout.addLayout(toolbar)
+        self.foundation_policy = QComboBox()
+        self.foundation_policy.setAccessibleName("本次中文短片的融合算法")
+        self.foundation_policy.addItem("固定权重（v1）", False)
+        self.foundation_policy.addItem("自适应权重（v2）", True)
+        self.foundation_policy.setToolTip("选择文件前设置。在中文短片对照中，v1 判对的负向片段更多，"
+                                          "v2 找回了更多中性和正向片段。")
+        self.foundation_policy.hide()
+        self.foundation.toggled.connect(self.foundation_policy.setVisible)
+        layout.addWidget(self.foundation_policy, 0, Qt.AlignmentFlag.AlignLeft)
 
         panels = QHBoxLayout()
         panels.setSpacing(SPACE["lg"])
@@ -190,6 +208,11 @@ class LocalMediaPage(QWidget):
         self.progress.setTextVisible(False)
         self.progress.hide()
         result_layout.addWidget(self.progress)
+        self.clip_readout = QLabel()
+        self.clip_readout.setObjectName("bodyNote")
+        self.clip_readout.setWordWrap(True)
+        self.clip_readout.setTextFormat(Qt.TextFormat.PlainText)
+        result_layout.addWidget(self.clip_readout)
         self.content_readout = ContentReadout()
         result_layout.addWidget(self.content_readout)
         self.content_intervals = QComboBox()
@@ -283,10 +306,13 @@ class LocalMediaPage(QWidget):
         self.cancel_button.show()
         self.progress.setRange(0, 0)
         self.progress.show()
-        transcribe = self.transcribe.isChecked() and self._path.suffix.lower() in AUDIO_EXTENSIONS | VIDEO_EXTENSIONS
+        has_tracks = self._path.suffix.lower() in AUDIO_EXTENSIONS | VIDEO_EXTENSIONS
         strategy = self._strategy_provider() if self._strategy_provider else None
-        self._worker = _MediaWorker(self._path, self, transcribe, strategy)
+        self._worker = _MediaWorker(self._path, self, has_tracks and self.transcribe.isChecked(), strategy,
+                                    has_tracks and self.foundation.isChecked(), adaptive=self.foundation_policy.currentData())
         self.transcribe.setEnabled(False)
+        self.foundation.setEnabled(False)
+        self.foundation_policy.setEnabled(False)
         self._worker.finished.connect(self._finished)
         self._worker.start()
         self._timer.start()
@@ -335,6 +361,8 @@ class LocalMediaPage(QWidget):
         self.sample_caption.clear()
 
     def _reset_scores(self):
+        self.clip_readout.clear()
+        self.clip_readout.hide()
         self.conflict_panel.clear()
         self._clear_semantic_request()
         self.profile_readout.clear()
@@ -412,6 +440,8 @@ class LocalMediaPage(QWidget):
         self.type_button.setEnabled(True)
         self.transcribe.setChecked(False)
         self.transcribe.setEnabled(True)
+        self.foundation.setEnabled(True)
+        self.foundation_policy.setEnabled(True)
         self.cancel_button.hide()
         self.progress.hide()
         if worker.was_cancelled or self._cancel_requested:
@@ -438,6 +468,10 @@ class LocalMediaPage(QWidget):
 
         result = self.result
         kind = result["kind"]
+        clip_text = format_clip_result(result.get("foundation_clip"))
+        self.clip_readout.setText(clip_text)
+        self.clip_readout.setVisible(bool(clip_text))
+        self.cue_caption.setVisible(bool(clip_text))
         summary = result.get("content_summary")
         show_content = bool(summary) and (kind == "text" or result.get("transcription_status") or
                                           result.get("transcripts"))
@@ -508,7 +542,7 @@ class LocalMediaPage(QWidget):
             if kind == "video" or kind == "audio":
                 lines.append("分数按有输出的时段长度汇总，含暂缓时段的模型分数。")
         else:
-            lines.append("暂缓判断：当前没有足够可靠的依据。")
+            lines.append("分时段声画判断暂缓：缺少有效声画线索。" if clip_text else "暂缓判断：当前没有足够可靠的依据。")
         if decisions.get("abstain"):
             lines.append(f"暂缓判断 {decisions['abstain']}/{len(intervals)} 个时段")
         lines.extend(f"{_media_reason(reason)}（{count} 帧）" for reason, count in result["reasons"].items())

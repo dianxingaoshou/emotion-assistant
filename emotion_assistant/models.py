@@ -321,6 +321,22 @@ class ModelHub:
             reason = None
         return audio, metrics, reason
 
+    def audio_representation(self, samples, t_start, t_end):
+        """Read the 768-dimensional frozen encoder output before the emotion classifier."""
+        import numpy as np
+        from .foundation_embeddings import AUDIO_DIM
+
+        audio, _, reason = self._audio_input(samples, t_start, t_end)
+        if reason or not self.load_audio_emotion()["audio"]["ready"]:
+            return None
+        with self._audio_lock:
+            result = self._audio_model.generate(input=audio, fs=16000, granularity="utterance",
+                                                extract_embedding=True, cache={})
+        feature = np.asarray(result[0]["feats"], dtype=np.float32)
+        if feature.shape != (AUDIO_DIM,) or not np.isfinite(feature).all() or np.linalg.norm(feature) < 1e-6:
+            return None
+        return feature
+
     def analyze_audio_emotion(self, samples, session_id: str, t_start: float, t_end: float,
                               vad_metrics=None) -> dict:
         """Return acoustic evidence immediately, without calling or waiting for ASR."""

@@ -11,9 +11,10 @@ from emotion_assistant.ui import MainWindow
 class PendingReviews(QObject):
     finished = Signal(int, object)
 
-    def __init__(self, parent):
+    def __init__(self, parent, *, callback=None):
         super().__init__(parent)
         self.texts = []
+        self.callback = callback
 
     def submit(self, text):
         self.texts.append(text)
@@ -21,6 +22,37 @@ class PendingReviews(QObject):
 
     def clear(self):
         pass  # Simulate a response that arrives after cancellation.
+
+
+def test_switching_live_fusion_policy_replays_selection_and_discards_old_result(monkeypatch):
+    app = QApplication.instance() or QApplication([])
+    monkeypatch.setattr(live_semantic_review, "SemanticReviewQueue", PendingReviews)
+    monkeypatch.setattr(live_semantic_review, "recognize_cues",
+                        lambda text, *, audio, visual, adaptive: {"name": "v2" if adaptive else "v1"})
+    monkeypatch.setattr(live_semantic_review, "format_clip_result", lambda result: result["name"])
+    panel = live_semantic_review.LiveSemanticReview()
+    try:
+        panel.observe("utt", "挺好的", 2.)
+        assert not panel.foundation.isChecked() and panel.foundation_policy.isHidden()
+        panel.foundation.setChecked(True)
+        assert not panel.foundation_policy.isHidden() and panel.foundation_policy.currentData() is False
+        queue = panel.foundation_queue
+        first = queue.callback(queue.texts[-1])
+        panel.foundation_policy.setCurrentIndex(1)
+        assert len(queue.texts) == 2 and queue.texts[-1] == ("挺好的", None, None, True)
+        second = queue.callback(queue.texts[-1])
+        assert first["name"] == "v1" and second["name"] == "v2"
+        queue.finished.emit(1, first)
+        assert "正在识别" in panel.foundation_readout.text()
+        queue.finished.emit(2, second)
+        assert panel.foundation_readout.text() == "v2"
+        panel.clear()
+        queue.finished.emit(2, second)
+        assert panel.foundation_readout.isHidden() and panel.foundation_policy.isHidden()
+        assert panel.foundation_policy.currentData() is False
+    finally:
+        panel.close()
+        app.processEvents()
 
 
 def test_live_review_is_optional_pinned_and_scoped_to_consent(tmp_path, monkeypatch):

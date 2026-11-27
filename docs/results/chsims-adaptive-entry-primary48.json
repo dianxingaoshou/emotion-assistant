@@ -1,0 +1,41 @@
+{
+  "entry": "emotion_assistant.clip_recognition.analyze_foundation_media",
+  "cohort": "primary48",
+  "clips": 48,
+  "matched": 48,
+  "correct": 27,
+  "qwen_used": 48,
+  "audio_vector_used": 48,
+  "mismatched_ids": [],
+  "expert_mismatches": [],
+  "max_class_score_difference": 0.0,
+  "track_check_id": "video_0001/0027",
+  "track_checks": {
+    "hide_text": {
+      "modalities": [
+        "audio",
+        "visual"
+      ],
+      "label": "neutral",
+      "passed": true
+    },
+    "hide_visual": {
+      "modalities": [
+        "text",
+        "audio"
+      ],
+      "label": "neutral",
+      "passed": true
+    },
+    "only_visual": {
+      "modalities": [
+        "visual"
+      ],
+      "label": "neutral",
+      "passed": true
+    }
+  },
+  "passed": true,
+  "head_sha256": "f7c5ae8fe83399abe95a53099a5087c16aed6f47048eae2d713a2e7c78a23393",
+  "adaptive_sha256": "06c5fad9ec329da91615a87a035bfcce2c13b46375532ce3cae3a0d277371959"
+}

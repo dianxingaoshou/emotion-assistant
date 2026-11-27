@@ -1,0 +1,1623 @@
+{
+  "version": "chsims-foundation-v1-error-analysis",
+  "head_sha256": "f7c5ae8fe83399abe95a53099a5087c16aed6f47048eae2d713a2e7c78a23393",
+  "class_order": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "text_coefficients": {
+    "low": 0.25,
+    "high": 1.0
+  },
+  "source_study_sha256": "e8bb43ea1bcdf942c0e468e823566ba03381bf30d7a8923667dce7f2887607f5",
+  "caption_control": "Post-prediction only. Replace ASR with official caption, re-embed locally; retain the original AV values, classifiers and fusion weights.",
+  "primary48": {
+    "text_av_pairing": {
+      "conflict": {
+        "total": 21,
+        "new_errors": 4,
+        "corrected": 3,
+        "unchanged_correctness": 14
+      },
+      "agree": {
+        "total": 27,
+        "new_errors": 0,
+        "corrected": 0,
+        "unchanged_correctness": 27
+      },
+      "missing": {}
+    },
+    "cases": [
+      {
+        "id": "video_0001/0027",
+        "gold": "neutral",
+        "new_error": true,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.3579090512341002,
+            "neutral": 0.472712687270398,
+            "positive": 0.16937826149550167
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.39488290989788993,
+              "neutral": 0.4352830165320678,
+              "positive": 0.16983407357004227
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.46882541976947273,
+              "neutral": 0.3604289467086882,
+              "positive": 0.17074563352183902
+            }
+          },
+          "qwen_low": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.3827634969623297,
+              "neutral": 0.4448702996064413,
+              "positive": 0.1723662034312289
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.43246888787983706,
+              "neutral": 0.389189445643888,
+              "positive": 0.17834166647627486
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5815570622361689,
+              "neutral": 0.22217824805254846,
+              "positive": 0.19626468971128258
+            }
+          },
+          "audio_embedding": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.26674583842132127,
+              "neutral": 0.4533693801930304,
+              "positive": 0.27988478138564826
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.038929773350418216,
+              "neutral": 0.9274285456184128,
+              "positive": 0.03364168103116897
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.7182042836657102,
+              "neutral": 0.20644949326761297,
+              "positive": 0.07534622306667677
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.6906112985361251,
+            "neutral": 0.13590890155643662,
+            "positive": 0.17347979990743828
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.33338028052056834,
+          "audio_embedding": 0.33338028052056834,
+          "audio_scores": 0.1320122605701192,
+          "visual_scores": 0.2012271783887441
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": -0.8,
+          "audio": -0.4,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 1,
+          "reference_characters": 19,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.559148627099026,
+              "neutral": 0.21998020169825175,
+              "positive": 0.22087117120272215
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.42499835748778936,
+              "neutral": 0.38845666033369536,
+              "positive": 0.18654498217851515
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0020/0012",
+        "gold": "positive",
+        "new_error": true,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "positive",
+          "scores": {
+            "negative": 0.3549828685157101,
+            "neutral": 0.05422093453131947,
+            "positive": 0.5907961969529705
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.43048291307402253,
+              "neutral": 0.05920702830107326,
+              "positive": 0.5103100586249043
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5437329799114912,
+              "neutral": 0.06668616895570395,
+              "positive": 0.38958085113280494
+            }
+          },
+          "qwen_low": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.3739538727444418,
+              "neutral": 0.11129754296312418,
+              "positive": 0.5147485842924341
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4024103790875393,
+              "neutral": 0.19691245561083126,
+              "positive": 0.4006771653016295
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.44983788965936855,
+              "neutral": 0.33960397669034303,
+              "positive": 0.2105581336502885
+            }
+          },
+          "audio_embedding": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.3549828685157101,
+              "neutral": 0.05422093453131947,
+              "positive": 0.5907961969529705
+            }
+          },
+          "audio_scores": null,
+          "visual_scores": null
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.7324830913072723,
+            "neutral": 0.07915140338008841,
+            "positive": 0.18836550531263935
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.5,
+          "audio_embedding": 0.5,
+          "audio_scores": 0.0,
+          "visual_scores": 0.0
+        },
+        "official_annotations": {
+          "overall": 0.8,
+          "text": 0.0,
+          "audio": 0.4,
+          "visual": 0.8
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 6,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4604958476042201,
+              "neutral": 0.287034724292577,
+              "positive": 0.25246942810320305
+            }
+          },
+          "fused": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.4077393580599651,
+              "neutral": 0.17062782941194823,
+              "positive": 0.42163281252808676
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0025/0012",
+        "gold": "positive",
+        "new_error": true,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "positive",
+          "scores": {
+            "negative": 0.36788698510415807,
+            "neutral": 0.05097318831967862,
+            "positive": 0.5811398265761634
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.44467644461476774,
+              "neutral": 0.046724160941893605,
+              "positive": 0.5085993944433387
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5745892247846788,
+              "neutral": 0.03953563580857306,
+              "positive": 0.3858751394067481
+            }
+          },
+          "qwen_low": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.44957890065652373,
+              "neutral": 0.049453015701429265,
+              "positive": 0.5009680836420471
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.58778567974379,
+              "neutral": 0.04688118029024682,
+              "positive": 0.3653331399659631
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.8721665529077368,
+              "neutral": 0.041589248847403414,
+              "positive": 0.08624419824485988
+            }
+          },
+          "audio_embedding": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.43374240336490477,
+              "neutral": 0.06161037428075507,
+              "positive": 0.5046472223543402
+            }
+          },
+          "audio_scores": null,
+          "visual_scores": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.14330523489197294,
+              "neutral": 0.01469799785604206,
+              "positive": 0.8419967672519849
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.8419039694293506,
+            "neutral": 0.024744182974816804,
+            "positive": 0.13335184759583263
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.43606504938801016,
+          "audio_embedding": 0.43606504938801016,
+          "audio_scores": 0.0,
+          "visual_scores": 0.1278699012239796
+        },
+        "official_annotations": {
+          "overall": 0.6,
+          "text": -0.2,
+          "audio": 0.2,
+          "visual": 1.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 9,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.8902508107405571,
+              "neutral": 0.03125158813370645,
+              "positive": 0.07849760112573641
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5956715925288044,
+              "neutral": 0.042373287760572066,
+              "positive": 0.36195511971062355
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0034/0024",
+        "gold": "negative",
+        "new_error": true,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.5126928225481078,
+            "neutral": 0.15896647958670682,
+            "positive": 0.3283406978651853
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5320114187142205,
+              "neutral": 0.15442386867990615,
+              "positive": 0.31356471260587326
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5625707535516546,
+              "neutral": 0.14723808941605845,
+              "positive": 0.29019115703228704
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.46281225543238513,
+              "neutral": 0.1693093609184364,
+              "positive": 0.3678783836491784
+            }
+          },
+          "qwen_high": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.38390812910439087,
+              "neutral": 0.1856703620534256,
+              "positive": 0.4304215088421835
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.24025542800683816,
+              "neutral": 0.2154571693482865,
+              "positive": 0.5442874026448753
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5271511370785582,
+              "neutral": 0.11287933663756916,
+              "positive": 0.35996952628387263
+            }
+          },
+          "audio_scores": null,
+          "visual_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.3874568361355959,
+              "neutral": 0.5581671468577005,
+              "positive": 0.05437601700670365
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.6182070199605058,
+            "neutral": 0.1341556734667131,
+            "positive": 0.24763730657278119
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.4727129829609653,
+          "audio_embedding": 0.4727129829609653,
+          "audio_scores": 0.0,
+          "visual_scores": 0.05457403407806948
+        },
+        "official_annotations": {
+          "overall": -0.6,
+          "text": -0.6,
+          "audio": -1.0,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 16,
+          "qwen_text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.21628467988776365,
+              "neutral": 0.21981052589471167,
+              "positive": 0.5639047942175246
+            }
+          },
+          "fused": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.37257684525721724,
+              "neutral": 0.1877282502123789,
+              "positive": 0.43969490453040394
+            }
+          }
+        }
+      }
+    ]
+  },
+  "audit48": {
+    "text_av_pairing": {
+      "conflict": {
+        "total": 21,
+        "new_errors": 0,
+        "corrected": 4,
+        "unchanged_correctness": 17
+      },
+      "agree": {
+        "total": 27,
+        "new_errors": 0,
+        "corrected": 1,
+        "unchanged_correctness": 26
+      },
+      "missing": {}
+    },
+    "cases": [
+      {
+        "id": "video_0015/0028",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.555028117900808,
+            "neutral": 0.28332089545240235,
+            "positive": 0.16165098664678967
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5193075771922088,
+              "neutral": 0.28761347281438987,
+              "positive": 0.19307894999340128
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4471917842462959,
+              "neutral": 0.2962797083780326,
+              "positive": 0.2565285073756715
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5205865278275532,
+              "neutral": 0.2824358626315654,
+              "positive": 0.19697760954088142
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4510527937580428,
+              "neutral": 0.28064907994598154,
+              "positive": 0.26829812629597555
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.23709686454100326,
+              "neutral": 0.2751511334467926,
+              "positive": 0.48775200201220403
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5184470585976192,
+              "neutral": 0.15617415727181821,
+              "positive": 0.3253787841305626
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.1090023358682364,
+              "neutral": 0.8806169479284771,
+              "positive": 0.010380716203286502
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6184469970372968,
+              "neutral": 0.3749008095009657,
+              "positive": 0.006652193461737602
+            }
+          }
+        },
+        "character_expert": {
+          "label": "positive",
+          "scores": {
+            "negative": 0.2252908364913254,
+            "neutral": 0.32294579366232573,
+            "positive": 0.4517633698463488
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.327037128448318,
+          "audio_embedding": 0.327037128448318,
+          "audio_scores": 0.019579866199931815,
+          "visual_scores": 0.3263458769034322
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": -0.2,
+          "audio": 0.2,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 4,
+          "reference_characters": 12,
+          "qwen_text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.35749739128139035,
+              "neutral": 0.22640753607101305,
+              "positive": 0.41609507264759654
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4904282362868839,
+              "neutral": 0.2647081138299657,
+              "positive": 0.2448636498831504
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0025/0023",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.5844939383197403,
+            "neutral": 0.18097878610266716,
+            "positive": 0.23452727557759245
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6042384692200227,
+              "neutral": 0.15831706368516676,
+              "positive": 0.2374444670948105
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6385475079611106,
+              "neutral": 0.11893897380860849,
+              "positive": 0.24251351823028086
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.538624443848519,
+              "neutral": 0.18548232950720364,
+              "positive": 0.2758932266442773
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.45891942219998016,
+              "neutral": 0.1933079013538462,
+              "positive": 0.34777267644617355
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.28606413478332,
+              "neutral": 0.21027912152007172,
+              "positive": 0.5036567436966083
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.515496679898941,
+              "neutral": 0.20580826484441853,
+              "positive": 0.27869505525664046
+            }
+          },
+          "audio_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.9515417542715497,
+              "neutral": 0.036729939150132875,
+              "positive": 0.011728306578317308
+            }
+          },
+          "visual_scores": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.3311862779985237,
+              "neutral": 0.30102308764926117,
+              "positive": 0.36779063435221515
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.7129530928279053,
+            "neutral": 0.03354020089884246,
+            "positive": 0.2535067062732522
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.4207840994153089,
+          "audio_embedding": 0.4207840994153089,
+          "audio_scores": 0.11149242775600719,
+          "visual_scores": 0.046939373413374966
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": 0.2,
+          "audio": 0.0,
+          "visual": -0.6
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 4,
+          "reference_characters": 32,
+          "qwen_text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.2062708361226887,
+              "neutral": 0.3322939387035978,
+              "positive": 0.46143522517371355
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.42534367088368963,
+              "neutral": 0.24464979631773978,
+              "positive": 0.33000653279857056
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0034/0019",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.5400967072281888,
+            "neutral": 0.20834104436194228,
+            "positive": 0.2515622484098688
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5320178899742429,
+              "neutral": 0.19854781951364997,
+              "positive": 0.269434290512107
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5193054709862999,
+              "neutral": 0.18313769528366805,
+              "positive": 0.29755683373003206
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4951373657489935,
+              "neutral": 0.19664713108356927,
+              "positive": 0.3082155031674372
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4243916156794041,
+              "neutral": 0.17824617949245097,
+              "positive": 0.3973622048281448
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.2967547344186626,
+              "neutral": 0.14504785915504592,
+              "positive": 0.5581974064262913
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5946679113526153,
+              "neutral": 0.12790181525611163,
+              "positive": 0.277430273391273
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.010908184670104381,
+              "neutral": 0.9883772830560461,
+              "positive": 0.0007145322738495315
+            }
+          },
+          "visual_scores": null
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.4963701920288383,
+            "neutral": 0.1553353157114572,
+            "positive": 0.3482944922597045
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.4754834943306383,
+          "audio_embedding": 0.4754834943306383,
+          "audio_scores": 0.04903301133872341,
+          "visual_scores": 0.0
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": 0.6,
+          "audio": -0.2,
+          "visual": -0.4
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 5,
+          "reference_characters": 22,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6010797801876367,
+              "neutral": 0.096450014675308,
+              "positive": 0.30247020513705525
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5690931518539674,
+              "neutral": 0.15513870658228823,
+              "positive": 0.27576814156374435
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0045/0076",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "agree",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.5451109206952692,
+            "neutral": 0.19558093398653836,
+            "positive": 0.25930814531819235
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.508877372311267,
+              "neutral": 0.21851615780462072,
+              "positive": 0.27260646988411225
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4366685805520655,
+              "neutral": 0.2642231027352971,
+              "positive": 0.29910831671263743
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5394959628156921,
+              "neutral": 0.19908613280226406,
+              "positive": 0.2614179043820438
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5283060754779648,
+              "neutral": 0.20607154225421515,
+              "positive": 0.26562238226782003
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.49505324077592705,
+              "neutral": 0.2268299876988465,
+              "positive": 0.2781167715252265
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.38939465448819266,
+              "neutral": 0.22230916936167236,
+              "positive": 0.388296176150135
+            }
+          },
+          "audio_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.42691649648150853,
+              "neutral": 0.30144619224726016,
+              "positive": 0.2716373112712312
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.8633333624923437,
+              "neutral": 0.09184866082961343,
+              "positive": 0.044817976678042826
+            }
+          }
+        },
+        "character_expert": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.2220867046195874,
+            "neutral": 0.40004980399175716,
+            "positive": 0.37786349138865544
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.33570963025817446,
+          "audio_embedding": 0.33570963025817446,
+          "audio_scores": 0.11980819066492385,
+          "visual_scores": 0.20877254881872717
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": -0.2,
+          "audio": 0.0,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 28,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4439678084751402,
+              "neutral": 0.24922769626487645,
+              "positive": 0.30680449525998327
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5111562038886888,
+              "neutral": 0.2135906687155474,
+              "positive": 0.27525312739576385
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0047/0025",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.3240650289643252,
+            "neutral": 0.4157391266314557,
+            "positive": 0.26019584440421906
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.39275249463411005,
+              "neutral": 0.36260226558786346,
+              "positive": 0.24464523977802646
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5081964811959946,
+              "neutral": 0.27329439824350693,
+              "positive": 0.21850912056049848
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.39147637467245333,
+              "neutral": 0.37048867860881074,
+              "positive": 0.23803494671873593
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5047755685233489,
+              "neutral": 0.29443561619769554,
+              "positive": 0.20078881527895548
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.7349930816912301,
+              "neutral": 0.13990012214881015,
+              "positive": 0.1251067961599598
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4090617109348426,
+              "neutral": 0.2623563119654652,
+              "positive": 0.3285819770996922
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.013809823688135953,
+              "neutral": 0.9756176483194349,
+              "positive": 0.010572527992429123
+            }
+          },
+          "visual_scores": null
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.7427720910757929,
+            "neutral": 0.09182589500417661,
+            "positive": 0.16540201392003057
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.4397619932731158,
+          "audio_embedding": 0.4397619932731158,
+          "audio_scores": 0.12047601345376831,
+          "visual_scores": 0.0
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": 0.0,
+          "audio": 0.0,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 13,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.7855580663675806,
+              "neutral": 0.11129149407492206,
+              "positive": 0.10315043955749734
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5270121269744453,
+              "neutral": 0.2818546288911133,
+              "positive": 0.19113324413444124
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0047/0045",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.36115213785722783,
+            "neutral": 0.43834012493051966,
+            "positive": 0.20050773721225237
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4112506397799788,
+              "neutral": 0.389328020314255,
+              "positive": 0.19942133990576622
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4973044291300784,
+              "neutral": 0.30514032678288927,
+              "positive": 0.19755524408703237
+            }
+          },
+          "qwen_low": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.38966303168774924,
+              "neutral": 0.41544929420806154,
+              "positive": 0.19488767410418925
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.43863596216894113,
+              "neutral": 0.376129900425058,
+              "positive": 0.18523413740600098
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5424279694054751,
+              "neutral": 0.29279735806006785,
+              "positive": 0.16477467253445713
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.44657812482933706,
+              "neutral": 0.2878635173974973,
+              "positive": 0.26555835777316555
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.008251984829994296,
+              "neutral": 0.9908588544864876,
+              "positive": 0.0008891606835180905
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.595744858031081,
+              "neutral": 0.3568010923742357,
+              "positive": 0.047454049594683315
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.6796846836747179,
+            "neutral": 0.1267150291668835,
+            "positive": 0.19360028715839858
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.4274360440105919,
+          "audio_embedding": 0.4274360440105919,
+          "audio_scores": 0.12010375068357554,
+          "visual_scores": 0.02502416129524081
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": 0.0,
+          "audio": 0.0,
+          "visual": 0.0
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 13,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6355492396454824,
+              "neutral": 0.2434125963122071,
+              "positive": 0.12103816404231046
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.4784393495335711,
+              "neutral": 0.3550210732291468,
+              "positive": 0.16653957723728213
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0051/0055",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "conflict",
+        "without_text": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.3865305865912987,
+            "neutral": 0.39613390888874933,
+            "positive": 0.21733550451995187
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.37774746501310374,
+              "neutral": 0.3628070877204181,
+              "positive": 0.2594454472664781
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.3613417129963556,
+              "neutral": 0.30055683207651074,
+              "positive": 0.33810145492713356
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.37621008842051834,
+              "neutral": 0.3755016949531999,
+              "positive": 0.24828821662628173
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.35693271281188854,
+              "neutral": 0.33696334815136925,
+              "positive": 0.30610393903674216
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.3080998196545562,
+              "neutral": 0.239339117029808,
+              "positive": 0.45256106331563584
+            }
+          },
+          "audio_embedding": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.34186021356321605,
+              "neutral": 0.35438688580568023,
+              "positive": 0.30375290063110366
+            }
+          },
+          "audio_scores": {
+            "label": "neutral",
+            "scores": {
+              "negative": 0.13697553155176098,
+              "neutral": 0.847922449758446,
+              "positive": 0.015102018689792999
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.7855601263674934,
+              "neutral": 0.05820884526144513,
+              "positive": 0.15623102837106148
+            }
+          }
+        },
+        "character_expert": {
+          "label": "positive",
+          "scores": {
+            "negative": 0.319783134086843,
+            "neutral": 0.1428662758207764,
+            "positive": 0.5373505900923806
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.3773758046160886,
+          "audio_embedding": 0.3773758046160886,
+          "audio_scores": 0.12489324474007428,
+          "visual_scores": 0.12035514602774854
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": 0.0,
+          "audio": -0.2,
+          "visual": -0.4
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 2,
+          "reference_characters": 10,
+          "qwen_text": {
+            "label": "positive",
+            "scores": {
+              "negative": 0.3240510153453685,
+              "neutral": 0.23675636202038394,
+              "positive": 0.4391926226342475
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.3629523081202976,
+              "neutral": 0.3359886789015616,
+              "positive": 0.3010590129781408
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0054/0026",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "agree",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.6242148558560343,
+            "neutral": 0.1763964912494724,
+            "positive": 0.19938865289449334
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6452318811290226,
+              "neutral": 0.17674007661582763,
+              "positive": 0.1780280422551497
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6820296737242378,
+              "neutral": 0.1773416452434364,
+              "positive": 0.14062868103232587
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6317802034990245,
+              "neutral": 0.17450148995741616,
+              "positive": 0.1937183065435593
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6450260406173368,
+              "neutral": 0.17118361487247868,
+              "positive": 0.18379034451018458
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6741959411581698,
+              "neutral": 0.16387701089040685,
+              "positive": 0.16192704795142338
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.551912578961466,
+              "neutral": 0.18083790282665488,
+              "positive": 0.2672495182118792
+            }
+          },
+          "audio_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.8186614903394549,
+              "neutral": 0.17961397479873614,
+              "positive": 0.0017245348618089298
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.7094381115439672,
+              "neutral": 0.07157044191601816,
+              "positive": 0.21899144654001462
+            }
+          }
+        },
+        "character_expert": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.7630655448841419,
+            "neutral": 0.17866641595283714,
+            "positive": 0.05826803916302099
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.41638120972161696,
+          "audio_embedding": 0.41638120972161696,
+          "audio_scores": 0.1451408902140833,
+          "visual_scores": 0.022096690342682867
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": -0.2,
+          "audio": 0.8,
+          "visual": 0.6
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": false,
+          "character_edits": 6,
+          "reference_characters": 16,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5509883665777624,
+              "neutral": 0.2249441794455757,
+              "positive": 0.22406745397666192
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5937247216666804,
+              "neutral": 0.19661083638975377,
+              "positive": 0.20966444194356584
+            }
+          }
+        }
+      },
+      {
+        "id": "video_0054/0069",
+        "gold": "neutral",
+        "new_error": false,
+        "text_av": "agree",
+        "without_text": {
+          "label": "negative",
+          "scores": {
+            "negative": 0.6726169185913856,
+            "neutral": 0.17644014638298777,
+            "positive": 0.15094293502562656
+          }
+        },
+        "factorial": {
+          "char_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6287500916162584,
+              "neutral": 0.22417078910049493,
+              "positive": 0.14707911928324674
+            }
+          },
+          "char_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5432692881622957,
+              "neutral": 0.31718079165162416,
+              "positive": 0.1395499201860801
+            }
+          },
+          "qwen_low": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.661149331555725,
+              "neutral": 0.18067678999186593,
+              "positive": 0.15817387845240902
+            }
+          },
+          "qwen_high": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6388030936105386,
+              "neutral": 0.18893249765543466,
+              "positive": 0.1722644087340268
+            }
+          }
+        },
+        "experts": {
+          "text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5761306490990673,
+              "neutral": 0.21208652392675123,
+              "positive": 0.21178282697418144
+            }
+          },
+          "audio_embedding": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6807327149704889,
+              "neutral": 0.08089320914438869,
+              "positive": 0.2383740758851223
+            }
+          },
+          "audio_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.8245020155223617,
+              "neutral": 0.15430640771403242,
+              "positive": 0.021191576763605873
+            }
+          },
+          "visual_scores": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5811466153499159,
+              "neutral": 0.35648636547921614,
+              "positive": 0.06236701917086804
+            }
+          }
+        },
+        "character_expert": {
+          "label": "neutral",
+          "scores": {
+            "negative": 0.30352911693502005,
+            "neutral": 0.5780374171917226,
+            "positive": 0.11843346587325733
+          }
+        },
+        "qwen_normalized_weights": {
+          "text": 0.3504521955171994,
+          "audio_embedding": 0.3504521955171994,
+          "audio_scores": 0.10073401853206126,
+          "visual_scores": 0.19836159043353987
+        },
+        "official_annotations": {
+          "overall": 0.0,
+          "text": -0.4,
+          "audio": 0.6,
+          "visual": 0.4
+        },
+        "caption_control": {
+          "exact_equal": false,
+          "normalized_equal": true,
+          "character_edits": 0,
+          "reference_characters": 14,
+          "qwen_text": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.5148798384670809,
+              "neutral": 0.22432584583944296,
+              "positive": 0.2607943156934762
+            }
+          },
+          "fused": {
+            "label": "negative",
+            "scores": {
+              "negative": 0.6173376125473505,
+              "neutral": 0.19322179489137925,
+              "positive": 0.1894405925612701
+            }
+          }
+        }
+      }
+    ]
+  }
+}

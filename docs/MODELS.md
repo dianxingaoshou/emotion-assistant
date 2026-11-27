@@ -41,6 +41,10 @@
 
 ## 固定的官方来源
 
+中文短片可选的自适应融合参数 `emotion_assistant/assets/chsims-adaptive-v2.json` 与 v1 基座的 SHA-256 绑定。用按影视来源留出的训练预测学习类别校准和动态权重。缺文字时，千问与字符分支共用声画策略。桌面可查看每个模型的实际权重与校正前后的首选类别。[训练、验证、缺路实测与使用边界](CHSIMS_ADAPTIVE.md)
+
+中文短片识别另用本地的 **Qwen3-Embedding-0.6B** 提取 1,024 维语义向量，使用 **emotion2vec+ seed** 的 768 维语音向量，并结合原声学、表情分数。仓库分发 CH-SIMS 训练得到的轻量分类参数 `emotion_assistant/assets/chsims-foundation-v1.npz`，桌面只需 NumPy 即可执行分类和缺路加权。首次安装语义编码器用 `.\scripts\start_text_review.ps1 -PullEmbedding`。Ollama 清单 SHA-256 为 `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`。未启动该模型时，中文原话仍可用等容量的字符分类器。调节聊天和按需复核继续使用原有的 Qwen3:8B。[数据划分、训练与实测](CHSIMS_FOUNDATION.md) · [Qwen 官方说明](https://qwenlm.github.io/blog/qwen3-embedding/)
+
 | 用途 | 模型及版本 | 本地位置 | 实现依据 |
 |---|---|---|---|
 | 人脸检测 | OpenCV YuNet 2023mar；仓库 `48b10fa505aeb51fbd127fc60a5c660040e823b7` | `models/visual/face_detection_yunet_2023mar.onnx` | [OpenCV 官方模型与许可证](https://github.com/opencv/opencv_zoo/tree/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet) |

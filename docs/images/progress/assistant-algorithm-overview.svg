@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1120" viewBox="0 0 1040 1120" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
   <title id="title">桌面情绪线索助手的识别、千问复核与调节反馈流程</title>
-  <desc id="desc">实时或文件声画经过质量检查，在同一发言时段与获准转写的文字对齐。出现分歧时，用户可以让千问读取原话与各路观测，复核表达并给出核对问题。本人决定是否调节。在聊天框中可随时停止、更换活动或只聊天。活动结束后可填写即时与延迟自评。</desc>
+  <desc id="desc">实时或文件声画经过质量检查，按时间与获准转写的文字对齐。中文短片可用千问语义向量、语音向量和声画分数估计表达倾向。遇到分歧时可单独请求千问复核。本人决定是否调节，也可以停止、更换活动或只聊天，活动结束后可填写即时与延迟自评。</desc>
   <style>
     text { font-family: "Microsoft YaHei","Noto Sans CJK SC","PingFang SC",sans-serif; fill: #1c303a; }
     .title { font-size: 36px; font-weight: 700; }
@@ -45,12 +45,12 @@
   </g>
   <g aria-label="本地中文与英文文本算法">
     <rect x="528" y="280" width="452" height="204" rx="12" fill="#eff5f8" stroke="#b3cddc" stroke-width="1.5"/>
-    <text x="550" y="319" class="heading blue">文字表达的离线分析</text>
+    <text x="550" y="319" class="heading blue">文字分析与中文短片融合</text>
     <text x="550" y="353" class="body">中文：CPED 13 类候选，愉悦度与激活度</text>
     <text x="550" y="380" class="body">英文：GoEmotions 多标签与 EmoBank 三维</text>
     <path d="M550 397H957" stroke="#c0d4df"/>
-    <text x="550" y="426" class="body">英文极性以文本为主，可和同期声画对照</text>
-    <text x="550" y="455" class="small">结果随所选原文显示，低于相应门槛时暂缓。</text>
+    <text x="550" y="426" class="body">中文短片：千问语义向量＋语音向量</text>
+    <text x="550" y="455" class="small">结合声画分数估计三类倾向，缺一路用其余证据。</text>
   </g>
   <path d="M264 485V504" class="solid"/>
   <path d="M259 500l5 9 5-9z" class="arrow"/>
