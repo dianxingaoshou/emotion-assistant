@@ -1,0 +1,123 @@
+{
+  "dataset": "RAVDESS audiovisual speech",
+  "selection": "从留出集中选取默认质量加权和完整校准的最高类别不同、且校准后与观察者标签一致的演员 06 片段，用于解释分数变化。总体指标见同批 62 段的汇总。",
+  "clip_id": "01-01-08-01-01-01-06",
+  "actor_id": 6,
+  "split": "test",
+  "clip_seconds": 3.2426875,
+  "media_sha256": "e172ea50d6d09fab1df01e11f7b6c042c6adf32c6607b2cd84300e6feac63b3d",
+  "reference": {
+    "label": "unmapped",
+    "votes": {
+      "unmapped": 10
+    },
+    "winning_votes": 10
+  },
+  "shared_input": {
+    "audio": {
+      "age_seconds": 0,
+      "coverage": 1,
+      "model_version": "emotion2vec_plus_seed@7be9a30d52bd",
+      "quality": 0.23077887440383435,
+      "scores": {
+        "negative": 0.0001009267288788383,
+        "neutral": 0.0000019607010493425812,
+        "positive": 0.000013609106381744664,
+        "uncertain": 0.99988350346369
+      },
+      "speech_seconds": 3.2426875
+    },
+    "visual": {
+      "age_seconds": 0,
+      "coverage": 1,
+      "model_version": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+      "quality": 0.36432561034160643,
+      "scores": {
+        "negative": 0.8312542747362459,
+        "neutral": 0.10589708665108806,
+        "positive": 0.009526279845602953,
+        "uncertain": 0.05332235876706303
+      }
+    }
+  },
+  "quality_v2": {
+    "weights": {
+      "visual": 0.6122044442287286,
+      "audio": 0.3877955557712715
+    },
+    "scores": {
+      "positive": 0.005837308409417553,
+      "neutral": 0.064831427429824,
+      "negative": 0.508936700214576,
+      "uncertain": 0.42039456394618246
+    },
+    "decision_threshold": null,
+    "conflict": false,
+    "decision": "ask",
+    "decision_reasons": [
+      "negative_candidate"
+    ]
+  },
+  "calibrated_fusion": {
+    "calibration_version": "c814382199df5ddaac1b7c812fddb3291991808048a7ef187b7f753671dce964",
+    "temperature": {
+      "visual": 1.8929097916143545,
+      "audio": 3.2222239804328674
+    },
+    "reliability": {
+      "audio": 0.8492116903741215,
+      "visual": 0.3139253327701481
+    },
+    "per_modality_output_scores": {
+      "audio": {
+        "positive": 0.027946396179386004,
+        "neutral": 0.01531779169074007,
+        "negative": 0.05204517432276133,
+        "uncertain": 0.9046906378071125
+      },
+      "visual": {
+        "positive": 0.05664708178392983,
+        "neutral": 0.20218324919972747,
+        "negative": 0.6004583691102865,
+        "uncertain": 0.14071129990605613
+      }
+    },
+    "weights": {
+      "visual": 0.3685213863986521,
+      "audio": 0.6314786136013479
+    },
+    "scores": {
+      "positive": 0.03852321262896433,
+      "neutral": 0.08418170916197051,
+      "negative": 0.25414716518517416,
+      "uncertain": 0.6231479130238909
+    },
+    "decision_threshold": 0.3602586197848964,
+    "conflict": false,
+    "decision": "abstain",
+    "decision_reasons": [
+      "unmapped_class"
+    ]
+  },
+  "provenance": {
+    "protocol": "docs/RECOGNITION_EXPERIMENT.md",
+    "clip_seconds_basis": "实验按 16 kHz 重采样后的音频样本数除以 16000 计算分析时长。",
+    "illustration": {
+      "file": "docs/images/progress/actor06-fusion-frame.jpg",
+      "selection": "从同一 MP4 取显示时刻最接近容器时长中点的帧，等比缩放到 640 × 360。",
+      "pts": 49049,
+      "time_base": "1/30000",
+      "sha256": "4960105561bd22214205819381c32dac4ca5753e2b4b9a86179ace749655e91a",
+      "dataset": "https://zenodo.org/records/1188976",
+      "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    "reference_source": "https://doi.org/10.1371/journal.pone.0196391.s008",
+    "rating_sheet": "Speech_EmoCategory",
+    "score_key": "四类分数中的 uncertain 对应人工标签 unmapped（未映射）。",
+    "feature_archive": "reports/ravdess/features.jsonl",
+    "votes_archive": "reports/ravdess/rater-votes.json",
+    "predictions_archive": "reports/ravdess/heldout-predictions.json",
+    "parameters_archive": "reports/ravdess/research-calibration.json",
+    "evaluation_script": "scripts/bench_real_ravdess_eval.py"
+  }
+}
