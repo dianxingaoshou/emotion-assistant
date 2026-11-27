@@ -1,0 +1,92 @@
+{
+  "unit": "milliseconds of elapsed wall-clock time",
+  "scope": "Warm desktop recognition functions, with or without opt-in localhost Qwen. Excludes application startup, audio transcription, UI scheduling/rendering and time spent reading or choosing.",
+  "protocol": "A single client alternated English and Chinese. Text profiles, followed by optional reviews, were executed serially with no cached model responses. One disjoint text per language warmed the models first. All subsequent calls including abstentions enter the quantiles. English review uses one semantic request and an offline reference when supported. A valid Chinese semantic review is followed by a second request for grounded valence and arousal.",
+  "selection": "Order distinct stripped texts by SHA256(desktop-text-latency-v1|language|text). First warms each language, next 12 are timed. Labels and predictions are unused.",
+  "percentiles": "Median and linearly interpolated 90th percentile (inclusive); small descriptive samples.",
+  "sources": {
+    "en": {
+      "url": "https://raw.githubusercontent.com/google-research/google-research/7951440944924ac61b6e2f9a2a3c715834005c40/goemotions/data/test.tsv",
+      "sha256": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4"
+    },
+    "zh": {
+      "url": "https://raw.githubusercontent.com/NYCU-NLP/Chinese-EmoBank/eaf0ca0fd6ec9e48e701231eee490d58bd074c12/ChineseEmoBank/CVAS_SD/CVAS_all.csv",
+      "sha256": "d7b78e2ed06fccbee57d8ec88ac29389c1a9356dfd93b7ac3878c89d89eea3d9"
+    }
+  },
+  "backend": {
+    "model": "qwen3:8b",
+    "manifest_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "quantization": "Q4_K_M",
+    "ollama": "0.40.18",
+    "resident_in_vram_after_warmup": true
+  },
+  "os": "Windows",
+  "python": "3.12.6",
+  "results": {
+    "en": {
+      "n": 12,
+      "cohort_sha256": "c25633d480cb0568ad72c88a22c7227581f8a3b0f707bf2d67b53e665c73a843",
+      "text_length_characters": {
+        "p50": 59.5,
+        "p90": 80.8
+      },
+      "offline_text_profile_ms": {
+        "p50": 0.3394,
+        "p90": 0.4165
+      },
+      "optional_review_ms": {
+        "p50": 5130.1655,
+        "p90": 5652.945
+      },
+      "sequential_offline_plus_review_ms": {
+        "p50": 5130.5498,
+        "p90": 5653.1675
+      },
+      "offline_category_status": {
+        "ok": 12
+      },
+      "offline_dimensions_status": {
+        "ok": 12
+      },
+      "semantic_review_status": {
+        "ok": 12
+      }
+    },
+    "zh": {
+      "n": 12,
+      "cohort_sha256": "842de86323020d2ce9db3ad0fb4ed9435a69457f40892b872146df72897dc1d5",
+      "text_length_characters": {
+        "p50": 12.5,
+        "p90": 18.7
+      },
+      "offline_text_profile_ms": {
+        "p50": 0.3109,
+        "p90": 0.4017
+      },
+      "optional_review_ms": {
+        "p50": 5060.4447,
+        "p90": 5306.585
+      },
+      "sequential_offline_plus_review_ms": {
+        "p50": 5060.7686,
+        "p90": 5306.9429
+      },
+      "offline_category_status": {
+        "below_threshold": 9,
+        "ok": 3
+      },
+      "offline_dimensions_status": {
+        "ok": 12
+      },
+      "semantic_review_status": {
+        "ok": 12
+      },
+      "qwen_dimensions_status": {
+        "ok": 11,
+        "insufficient_evidence": 1
+      }
+    }
+  },
+  "limitations": "One workstation, one pass after warm-up. Timings depend on the hardware, model serving configuration and text. These modules produce different information; latency is separate from quality. No individual texts, predictions or host identifiers are included."
+}
