@@ -1,0 +1,4750 @@
+{
+  "dataset": "original CH-SIMS v1, official test",
+  "seed": "chsims-conflict-v1",
+  "label_csv_sha256": "c7cdb97d9270b8cd975fd01cbf9b79e3526162be73634a50e0c622acdf16ae15",
+  "test_population": 457,
+  "sample_n": 48,
+  "sources": 26,
+  "targets": {
+    "negative": 26,
+    "positive": 14,
+    "neutral": 8
+  },
+  "asr_clips": 48,
+  "aligned_utterances": 68,
+  "source_models": {
+    "face": "YuNet-2023mar@48b10fa505ae",
+    "visual": "EmotiEffLib/enet_b0_8_best_afew@520a051c64cd",
+    "audio": "emotion2vec_plus_seed@7be9a30d52bd",
+    "asr": "SenseVoiceSmall@3847d57b6bdf"
+  },
+  "extraction": {
+    "source_sha256_lf": "3a7c079a45614f55909a85c872727cc07669b7e91856fdec417ff4dbaf13f013",
+    "assets": {
+      "models/visual/face_detection_yunet_2023mar.onnx": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+      "models/vad/silero_vad.onnx": "2623a2953f6ff3d2c1e61740c6cdb7168133479b267dfef114a4a3cc5bdd788f",
+      "models/emotion2vec_plus_seed/config.yaml": "50674ec187406b4f1208925594ceaf1f28f16a22333b5f2ac5b3d0cbffdd670e",
+      "models/emotion2vec_plus_seed/configuration.json": "8b6a745213025c7d4565f9f074cfef1b5cd5ef76e38e2a8f7f8a3db271e735b2",
+      "models/emotion2vec_plus_seed/tokens.txt": "654625c18ef0f0583441a3b811c20904f2cf30febb716f32e14810b8e6bb715c",
+      "models/visual/enet_b0_8_best_afew.onnx": "7aa2ea31c1311f4f8aa9d3fdb085d418dd4e7a48c4b9ed41df8c044f91d0213f",
+      "models/SenseVoiceSmall/config.yaml": "f71e239ba36705564b5bf2d2ffd07eece07b8e3f2bbf6d2c99d8df856339ac19",
+      "models/SenseVoiceSmall/configuration.json": "02810a7f8e9e8aee10370a265f7e799728ce25b4c00cdbf4602b303ee395a38e",
+      "models/SenseVoiceSmall/am.mvn": "29b3c740a2c0cfc6b308126d31d7f265fa2be74f3bb095cd2f143ea970896ae5",
+      "models/SenseVoiceSmall/chn_jpn_yue_eng_ko_spectok.bpe.model": "aa87f86064c3730d799ddf7af3c04659151102cba548bce325cf06ba4da4e6a8",
+      "models/emotion2vec_plus_seed/model.pt": "327e861049c7105a3f8589edfd16543a7cdc0c1926f1b64de975d98e0650cdd3",
+      "models/SenseVoiceSmall/model.pt": "833ca2dcfdf8ec91bd4f31cfac36d6124e0c459074d5e909aec9cabe6204a3ea",
+      "asr-character-intensity.json.gz": "22db0448d6597475af0568b29563c57c9f3138a11aba1c4c2f12c7e8c26a8f15",
+      "chinese-dimensions-v1.npz": "e5e73aa857d413a336f7c95b42891b25c5a820a6a7b47d5367e274de7bed7f0a",
+      "content-policy.json": "bae09daa80fe300735a2daa3287e93f0a1be8b15b7d89b24dd2e4fbab022ad42",
+      "cped-emotions-v1.npz": "32f1324704a4e0d9f376f453e1c7d93bf01538a4a3df1be44aa174ff72453871",
+      "emobank-vad.json.gz": "82ee41ea3859e30d4b2f39494803e1505f4eb0189151cd5b553c9b76f32a812b",
+      "english-intensity.json.gz": "e3d20b8d43b19267fd9b461963339ca59dcd54aa703123cb9b2a5f96452f0804",
+      "english-polarity.json.gz": "12855fae1fe020751e03aa368cc0264d2fb7295b5f10abadbd15ca0975d61dde",
+      "goemotions-fine-v1.npz": "1eb4bcd758ab5254594134930538e7ea88516a7ee080b7e1df9b43fc1610bef6",
+      "goemotions-reference.json.gz": "87aec5ced9d772712d76978003f3a13462929fa9051351e0bb8b4a16706677e4",
+      "single-cue-calibration.json": "7933a0b21b9b2fa6a02dcd927741aa5d400189c7dbd399c50d5aca690e2ff35a",
+      "data/fusion-policy.json": null,
+      "data/calibration.json": null
+    },
+    "libraries": {
+      "numpy": "1.26.4",
+      "torch": "2.6.0",
+      "onnxruntime": "1.22.1",
+      "funasr": "1.2.6",
+      "av": "14.2.0",
+      "opencv-python-headless": "4.11.0.86"
+    }
+  },
+  "extraction_fingerprint": "361e3b36dc7651754a70342c4ab563f27c1953df4996e9f6310df101f4fc5ecc",
+  "review_model": {
+    "name": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "quantization": "Q4_K_M"
+  },
+  "review_version": "aligned-cue-review-v1",
+  "review_code_sha256": "37ff4bf97c29068bfc4a3b0054627dbed131acd58a62b3eb6b7319be99d5c0f6",
+  "unique_model_requests": 95,
+  "independent_av_coverage_when_hiding_text": {
+    "audio_detected": 36,
+    "visual_detected": 39,
+    "either_detected": 45,
+    "any_accepted_av_seconds": 38
+  },
+  "qwen_identical_triggers_text_only_vs_multimodal": {
+    "all_clips": {
+      "before": {
+        "n": 48,
+        "correct": 19,
+        "wrong": 29,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3958,
+        "accepted_accuracy": 0.3958,
+        "macro_f1": 0.2849
+      },
+      "after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.2978
+      },
+      "before_only_correct": 4,
+      "after_only_correct": 6,
+      "mcnemar_exact_p": 0.753906,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.0678,
+        0.1622
+      ],
+      "common_before": {
+        "n": 48,
+        "correct": 19,
+        "wrong": 29,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3958,
+        "accepted_accuracy": 0.3958,
+        "macro_f1": 0.2849
+      },
+      "common_after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.2978
+      }
+    },
+    "triggered_clips": {
+      "before": {
+        "n": 31,
+        "correct": 12,
+        "wrong": 19,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3871,
+        "accepted_accuracy": 0.3871,
+        "macro_f1": 0.2906
+      },
+      "after": {
+        "n": 31,
+        "correct": 14,
+        "wrong": 17,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4516,
+        "accepted_accuracy": 0.4516,
+        "macro_f1": 0.3222
+      },
+      "before_only_correct": 4,
+      "after_only_correct": 6,
+      "mcnemar_exact_p": 0.753906,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.0968,
+        0.2917
+      ],
+      "common_before": {
+        "n": 31,
+        "correct": 12,
+        "wrong": 19,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3871,
+        "accepted_accuracy": 0.3871,
+        "macro_f1": 0.2906
+      },
+      "common_after": {
+        "n": 31,
+        "correct": 14,
+        "wrong": 17,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4516,
+        "accepted_accuracy": 0.4516,
+        "macro_f1": 0.3222
+      }
+    }
+  },
+  "train_majority": {
+    "label": "negative",
+    "n": 48,
+    "correct": 26,
+    "wrong": 22,
+    "abstain": 0,
+    "coverage": 1.0,
+    "accuracy": 0.5417,
+    "accepted_accuracy": 0.5417,
+    "macro_f1": 0.2342
+  },
+  "legacy_file_content_summary": {
+    "n": 48,
+    "correct": 0,
+    "wrong": 0,
+    "abstain": 48,
+    "coverage": 0.0,
+    "accuracy": 0.0,
+    "accepted_accuracy": null,
+    "macro_f1": 0.0
+  },
+  "conditions": {
+    "observed": {
+      "before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.2978
+      },
+      "before_only_correct": 5,
+      "after_only_correct": 6,
+      "mcnemar_exact_p": 1.0,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.0962,
+        0.1489
+      ],
+      "common_before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "common_after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.2978
+      },
+      "triggered_clips": 31,
+      "triggered_comparison": {
+        "before": {
+          "n": 31,
+          "correct": 13,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4194,
+          "accepted_accuracy": 0.4194,
+          "macro_f1": 0.3088
+        },
+        "after": {
+          "n": 31,
+          "correct": 14,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4516,
+          "accepted_accuracy": 0.4516,
+          "macro_f1": 0.3222
+        },
+        "before_only_correct": 5,
+        "after_only_correct": 6,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.1379,
+          0.2593
+        ],
+        "common_before": {
+          "n": 31,
+          "correct": 13,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4194,
+          "accepted_accuracy": 0.4194,
+          "macro_f1": 0.3088
+        },
+        "common_after": {
+          "n": 31,
+          "correct": 14,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4516,
+          "accepted_accuracy": 0.4516,
+          "macro_f1": 0.3222
+        }
+      },
+      "no_trigger_comparison": {
+        "before": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "after": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "common_after": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        }
+      },
+      "quality_coverage_modal_vote": {
+        "n": 48,
+        "correct": 22,
+        "wrong": 26,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4583,
+        "accepted_accuracy": 0.4583,
+        "macro_f1": 0.3543
+      },
+      "human_disagreement": {
+        "before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "after": {
+          "n": 25,
+          "correct": 6,
+          "wrong": 19,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.24,
+          "accepted_accuracy": 0.24,
+          "macro_f1": 0.1667
+        },
+        "before_only_correct": 5,
+        "after_only_correct": 3,
+        "mcnemar_exact_p": 0.726562,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.2593,
+          0.125
+        ],
+        "common_before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "common_after": {
+          "n": 25,
+          "correct": 6,
+          "wrong": 19,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.24,
+          "accepted_accuracy": 0.24,
+          "macro_f1": 0.1667
+        }
+      },
+      "complete_available_cues": 24,
+      "utterance_statuses": {
+        "no_request": 34,
+        "ok": 34
+      }
+    },
+    "qwen_text_only": {
+      "before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "after": {
+        "n": 48,
+        "correct": 19,
+        "wrong": 29,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3958,
+        "accepted_accuracy": 0.3958,
+        "macro_f1": 0.2849
+      },
+      "before_only_correct": 1,
+      "after_only_correct": 0,
+      "mcnemar_exact_p": 1.0,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.0714,
+        0.0
+      ],
+      "common_before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "common_after": {
+        "n": 48,
+        "correct": 19,
+        "wrong": 29,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.3958,
+        "accepted_accuracy": 0.3958,
+        "macro_f1": 0.2849
+      },
+      "triggered_clips": 31,
+      "triggered_comparison": {
+        "before": {
+          "n": 31,
+          "correct": 13,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4194,
+          "accepted_accuracy": 0.4194,
+          "macro_f1": 0.3088
+        },
+        "after": {
+          "n": 31,
+          "correct": 12,
+          "wrong": 19,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.3871,
+          "accepted_accuracy": 0.3871,
+          "macro_f1": 0.2906
+        },
+        "before_only_correct": 1,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.12,
+          0.0
+        ],
+        "common_before": {
+          "n": 31,
+          "correct": 13,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4194,
+          "accepted_accuracy": 0.4194,
+          "macro_f1": 0.3088
+        },
+        "common_after": {
+          "n": 31,
+          "correct": 12,
+          "wrong": 19,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.3871,
+          "accepted_accuracy": 0.3871,
+          "macro_f1": 0.2906
+        }
+      },
+      "no_trigger_comparison": {
+        "before": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "after": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        },
+        "common_after": {
+          "n": 17,
+          "correct": 7,
+          "wrong": 10,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4118,
+          "accepted_accuracy": 0.4118,
+          "macro_f1": 0.2333
+        }
+      },
+      "quality_coverage_modal_vote": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "human_disagreement": {
+        "before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "after": {
+          "n": 25,
+          "correct": 7,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.28,
+          "accepted_accuracy": 0.28,
+          "macro_f1": 0.2254
+        },
+        "before_only_correct": 1,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.15,
+          0.0
+        ],
+        "common_before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "common_after": {
+          "n": 25,
+          "correct": 7,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.28,
+          "accepted_accuracy": 0.28,
+          "macro_f1": 0.2254
+        }
+      },
+      "complete_available_cues": 0,
+      "utterance_statuses": {
+        "no_request": 34,
+        "ok": 34
+      }
+    },
+    "hide_audio": {
+      "before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "after": {
+        "n": 48,
+        "correct": 23,
+        "wrong": 25,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4792,
+        "accepted_accuracy": 0.4792,
+        "macro_f1": 0.3139
+      },
+      "before_only_correct": 2,
+      "after_only_correct": 5,
+      "mcnemar_exact_p": 0.453125,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.0217,
+        0.1579
+      ],
+      "common_before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "common_after": {
+        "n": 48,
+        "correct": 23,
+        "wrong": 25,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4792,
+        "accepted_accuracy": 0.4792,
+        "macro_f1": 0.3139
+      },
+      "triggered_clips": 18,
+      "triggered_comparison": {
+        "before": {
+          "n": 18,
+          "correct": 6,
+          "wrong": 12,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.3333,
+          "accepted_accuracy": 0.3333,
+          "macro_f1": 0.2594
+        },
+        "after": {
+          "n": 18,
+          "correct": 9,
+          "wrong": 9,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "accepted_accuracy": 0.5,
+          "macro_f1": 0.3891
+        },
+        "before_only_correct": 2,
+        "after_only_correct": 5,
+        "mcnemar_exact_p": 0.453125,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.0588,
+          0.4615
+        ],
+        "common_before": {
+          "n": 18,
+          "correct": 6,
+          "wrong": 12,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.3333,
+          "accepted_accuracy": 0.3333,
+          "macro_f1": 0.2594
+        },
+        "common_after": {
+          "n": 18,
+          "correct": 9,
+          "wrong": 9,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "accepted_accuracy": 0.5,
+          "macro_f1": 0.3891
+        }
+      },
+      "no_trigger_comparison": {
+        "before": {
+          "n": 30,
+          "correct": 14,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4667,
+          "accepted_accuracy": 0.4667,
+          "macro_f1": 0.2333
+        },
+        "after": {
+          "n": 30,
+          "correct": 14,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4667,
+          "accepted_accuracy": 0.4667,
+          "macro_f1": 0.2333
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 30,
+          "correct": 14,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4667,
+          "accepted_accuracy": 0.4667,
+          "macro_f1": 0.2333
+        },
+        "common_after": {
+          "n": 30,
+          "correct": 14,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4667,
+          "accepted_accuracy": 0.4667,
+          "macro_f1": 0.2333
+        }
+      },
+      "quality_coverage_modal_vote": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.3415
+      },
+      "human_disagreement": {
+        "before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "after": {
+          "n": 25,
+          "correct": 9,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.36,
+          "accepted_accuracy": 0.36,
+          "macro_f1": 0.2451
+        },
+        "before_only_correct": 2,
+        "after_only_correct": 3,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.0909,
+          0.1905
+        ],
+        "common_before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "common_after": {
+          "n": 25,
+          "correct": 9,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.36,
+          "accepted_accuracy": 0.36,
+          "macro_f1": 0.2451
+        }
+      },
+      "complete_available_cues": 0,
+      "utterance_statuses": {
+        "no_request": 49,
+        "ok": 19
+      }
+    },
+    "hide_visual": {
+      "before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.3219
+      },
+      "before_only_correct": 4,
+      "after_only_correct": 5,
+      "mcnemar_exact_p": 1.0,
+      "source_bootstrap_delta_accuracy_95": [
+        -0.1071,
+        0.1628
+      ],
+      "common_before": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "common_after": {
+        "n": 48,
+        "correct": 21,
+        "wrong": 27,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4375,
+        "accepted_accuracy": 0.4375,
+        "macro_f1": 0.3219
+      },
+      "triggered_clips": 21,
+      "triggered_comparison": {
+        "before": {
+          "n": 21,
+          "correct": 9,
+          "wrong": 12,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4286,
+          "accepted_accuracy": 0.4286,
+          "macro_f1": 0.2581
+        },
+        "after": {
+          "n": 21,
+          "correct": 10,
+          "wrong": 11,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4762,
+          "accepted_accuracy": 0.4762,
+          "macro_f1": 0.3271
+        },
+        "before_only_correct": 4,
+        "after_only_correct": 5,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.24,
+          0.3684
+        ],
+        "common_before": {
+          "n": 21,
+          "correct": 9,
+          "wrong": 12,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4286,
+          "accepted_accuracy": 0.4286,
+          "macro_f1": 0.2581
+        },
+        "common_after": {
+          "n": 21,
+          "correct": 10,
+          "wrong": 11,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4762,
+          "accepted_accuracy": 0.4762,
+          "macro_f1": 0.3271
+        }
+      },
+      "no_trigger_comparison": {
+        "before": {
+          "n": 27,
+          "correct": 11,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4074,
+          "accepted_accuracy": 0.4074,
+          "macro_f1": 0.3162
+        },
+        "after": {
+          "n": 27,
+          "correct": 11,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4074,
+          "accepted_accuracy": 0.4074,
+          "macro_f1": 0.3162
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 27,
+          "correct": 11,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4074,
+          "accepted_accuracy": 0.4074,
+          "macro_f1": 0.3162
+        },
+        "common_after": {
+          "n": 27,
+          "correct": 11,
+          "wrong": 16,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.4074,
+          "accepted_accuracy": 0.4074,
+          "macro_f1": 0.3162
+        }
+      },
+      "quality_coverage_modal_vote": {
+        "n": 48,
+        "correct": 20,
+        "wrong": 28,
+        "abstain": 0,
+        "coverage": 1.0,
+        "accuracy": 0.4167,
+        "accepted_accuracy": 0.4167,
+        "macro_f1": 0.2932
+      },
+      "human_disagreement": {
+        "before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "after": {
+          "n": 25,
+          "correct": 7,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.28,
+          "accepted_accuracy": 0.28,
+          "macro_f1": 0.2289
+        },
+        "before_only_correct": 3,
+        "after_only_correct": 2,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          -0.2105,
+          0.1429
+        ],
+        "common_before": {
+          "n": 25,
+          "correct": 8,
+          "wrong": 17,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.32,
+          "accepted_accuracy": 0.32,
+          "macro_f1": 0.2451
+        },
+        "common_after": {
+          "n": 25,
+          "correct": 7,
+          "wrong": 18,
+          "abstain": 0,
+          "coverage": 1.0,
+          "accuracy": 0.28,
+          "accepted_accuracy": 0.28,
+          "macro_f1": 0.2289
+        }
+      },
+      "complete_available_cues": 0,
+      "utterance_statuses": {
+        "no_request": 46,
+        "ok": 22
+      }
+    },
+    "hide_text": {
+      "before": {
+        "n": 48,
+        "correct": 0,
+        "wrong": 0,
+        "abstain": 48,
+        "coverage": 0.0,
+        "accuracy": 0.0,
+        "accepted_accuracy": null,
+        "macro_f1": 0.0
+      },
+      "after": {
+        "n": 48,
+        "correct": 0,
+        "wrong": 0,
+        "abstain": 48,
+        "coverage": 0.0,
+        "accuracy": 0.0,
+        "accepted_accuracy": null,
+        "macro_f1": 0.0
+      },
+      "before_only_correct": 0,
+      "after_only_correct": 0,
+      "mcnemar_exact_p": 1.0,
+      "source_bootstrap_delta_accuracy_95": [
+        0.0,
+        0.0
+      ],
+      "common_before": {
+        "n": 0,
+        "correct": 0,
+        "wrong": 0,
+        "abstain": 0,
+        "coverage": null,
+        "accuracy": null,
+        "accepted_accuracy": null,
+        "macro_f1": null
+      },
+      "common_after": {
+        "n": 0,
+        "correct": 0,
+        "wrong": 0,
+        "abstain": 0,
+        "coverage": null,
+        "accuracy": null,
+        "accepted_accuracy": null,
+        "macro_f1": null
+      },
+      "triggered_clips": 0,
+      "triggered_comparison": {
+        "before": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        },
+        "after": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": null,
+        "common_before": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        },
+        "common_after": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        }
+      },
+      "no_trigger_comparison": {
+        "before": {
+          "n": 48,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 48,
+          "coverage": 0.0,
+          "accuracy": 0.0,
+          "accepted_accuracy": null,
+          "macro_f1": 0.0
+        },
+        "after": {
+          "n": 48,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 48,
+          "coverage": 0.0,
+          "accuracy": 0.0,
+          "accepted_accuracy": null,
+          "macro_f1": 0.0
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        },
+        "common_after": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        }
+      },
+      "quality_coverage_modal_vote": {
+        "n": 48,
+        "correct": 17,
+        "wrong": 23,
+        "abstain": 8,
+        "coverage": 0.8333,
+        "accuracy": 0.3542,
+        "accepted_accuracy": 0.425,
+        "macro_f1": 0.3786
+      },
+      "human_disagreement": {
+        "before": {
+          "n": 25,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 25,
+          "coverage": 0.0,
+          "accuracy": 0.0,
+          "accepted_accuracy": null,
+          "macro_f1": 0.0
+        },
+        "after": {
+          "n": 25,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 25,
+          "coverage": 0.0,
+          "accuracy": 0.0,
+          "accepted_accuracy": null,
+          "macro_f1": 0.0
+        },
+        "before_only_correct": 0,
+        "after_only_correct": 0,
+        "mcnemar_exact_p": 1.0,
+        "source_bootstrap_delta_accuracy_95": [
+          0.0,
+          0.0
+        ],
+        "common_before": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        },
+        "common_after": {
+          "n": 0,
+          "correct": 0,
+          "wrong": 0,
+          "abstain": 0,
+          "coverage": null,
+          "accuracy": null,
+          "accepted_accuracy": null,
+          "macro_f1": null
+        }
+      },
+      "complete_available_cues": 0,
+      "utterance_statuses": {
+        "no_request": 68
+      }
+    }
+  },
+  "clips": {
+    "observed": [
+      {
+        "id": "video_0042/0006",
+        "sha256": "5ee87e6384f73da88c41f291094c522b5ef506d93ed55c0e6e9580eb4ff23680",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 6.0400000000000045
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 6.04,
+            "cues": {
+              "text": "negative",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0056/0074",
+        "sha256": "c2105dc4d2329702c47c4c246ba37b73591236212709175dcefaf1b0e2b89f24",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.0854375000000016
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.0854,
+            "cues": {
+              "text": "negative",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0043/0030",
+        "sha256": "4639ff4ef3d35e3e42febece199ae493df8aabb3ce315e4a1b57802661bcd345",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.8400000000000007
+        },
+        "windows": 2,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 5.6,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 2.84,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0036/0015",
+        "sha256": "01a6f85968cdda80fe8891b322dba1360e74d308aa4fb4acc1c2fa889671e518",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 2.400000000000002
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.4,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.669,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0034/0013",
+        "sha256": "2f3601ed4b36bf3193968a0deb95196781a6232d387ef3c3834683e703b0323c",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 4.166687500000003
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 4.1667,
+            "cues": {
+              "text": "neutral",
+              "audio": "positive"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0030/0015",
+        "sha256": "7a19e1743e9c8598c43d3e6fa4d0970a7924d8c7e61f6cbf2186a2cd7c608853",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 3.0960000000000027
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 3.096,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0028/0004",
+        "sha256": "f69705471d67c84550bea6863ce47e2ca2466202e18c9621715151f1f57476b4",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.9440000000000017
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.464,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.656,
+            "cues": {
+              "text": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0050",
+        "sha256": "4830562b56a13f8eecb93a9dcadcf2dfcbc9e727743884508f5c7f438b660e59",
+        "gold": "neutral",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.416687500000003
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 4.4167,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0032",
+        "sha256": "4969b8ad596006e820998d93b2139449d8bc9706eea4ffe76d33ad70848b4624",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 6.5,
+            "cues": {
+              "text": "neutral",
+              "audio": "positive",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0025/0017",
+        "sha256": "740cdef4297529c049b041b96484cf26db62f4d27522cbf5b91ff75d9c67a085",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 3.1703125000000023
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 3.1703,
+            "cues": {
+              "text": "neutral",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0015/0035",
+        "sha256": "b2b25d46b82651ff7bb3ad75fda014b25910e5dd4d0c56951b48c9217ff7b811",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 3.7000000000000006
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.304,
+            "cues": {
+              "text": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.7493,
+            "cues": {
+              "text": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0028/0023",
+        "sha256": "2b9b20ee7d7dd4ea243803acba0cbd1eee1493bc95939398fc8832b0165c0337",
+        "gold": "neutral",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 3.0400000000000023
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.656,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0041",
+        "sha256": "3b46b90d3ec4fe5448ea54a20015fe38275c057e3948b9f34cc376e6804def5e",
+        "gold": "neutral",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 6.000000000000004
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "positive",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 5.936,
+            "cues": {
+              "text": "neutral",
+              "audio": "positive",
+              "visual": "positive"
+            },
+            "triggered": true,
+            "candidate": "positive"
+          }
+        ]
+      },
+      {
+        "id": "video_0056/0043",
+        "sha256": "ac5a9fffcafcacde5288ffe77e9ac3a7f3d48b4d38ece69300de64a60b9d3aa7",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 1.0
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.7974,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0109",
+        "sha256": "52221ffcdbad8a899bbe9232069d88611ec8dd7a50a1075e807e985efdd1681c",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.1667,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0043/0009",
+        "sha256": "f5a060fed0df59551b8dfbb20405e0d477cc75af1602873dd7745486c7006eae",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.240000000000003
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 4.24,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "positive"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0028",
+        "sha256": "caeab8d9e9f9e5e5b459edc252df2de247bbac973fcd9887dfe3d20d453770e9",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 3.083312500000002
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.7633,
+            "cues": {
+              "text": "negative",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0023/0010",
+        "sha256": "4afab181d2d24679e37a30a0c6ef9a1d82ecce429a112345ed1c3bea3748674a",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 3.125
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.824,
+            "cues": {
+              "text": "negative",
+              "visual": "positive"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 0.896,
+            "cues": {
+              "visual": "positive"
+            },
+            "triggered": false,
+            "candidate": null
+          }
+        ]
+      },
+      {
+        "id": "video_0038/0012",
+        "sha256": "78cd756483fcee1871bb625268c878bf4f3887677d2fa1cffe5076d1e702544e",
+        "gold": "positive",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.416687500000002
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.4167,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0001/0027",
+        "sha256": "24b4b43223c49cb1af9a2960b8bf3a3f753c76a01d041cb4f54271ab2d355f6b",
+        "gold": "neutral",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 3.2,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0030/0010",
+        "sha256": "5e72ea3c00f96ae7e03beafb5a0b10038b355d01778052248eae466c6af05af5",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 0.98
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.504,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 0.92,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0026/0012",
+        "sha256": "b6e8f2b47db7675509ae7fabac41fdf8ed41a16ebfcfaf6a4f068adc710862d8",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.375
+        },
+        "windows": 2,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.272,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "neutral"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.399,
+            "cues": {
+              "text": "neutral",
+              "visual": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0188",
+        "sha256": "1d638d52a4ff15534e603b86bb691c79031fb2c112da6229add9501dade36446",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 1.3333333333333335
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.3333,
+            "cues": {
+              "text": "negative",
+              "visual": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0041/0005",
+        "sha256": "211001f0b56d02a4cc6872c2870154ac32f73dacb1aa5dffa2627a9c27888925",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0.31199999999999806
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.496,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0068",
+        "sha256": "ba35339cbb1298914da3e15a4b3c3514e2e7ee8eb490d205f4e29a9760b50f92",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.541687500000002
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.5417,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0045/0047",
+        "sha256": "f52447fa63682feb24666b68cf8a4db86e0a8bf47580e473a072a8500adf440f",
+        "gold": "neutral",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.040000000000003
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 4.04,
+            "cues": {
+              "text": "negative",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0025/0018",
+        "sha256": "0ecad4385ffc608b30234dd42897aadc7a505500f4cbc2a71cec31c0d668b00c",
+        "gold": "positive",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.416687500000003
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 4.4167,
+            "cues": {
+              "text": "negative",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0034/0015",
+        "sha256": "955364e3dbcf6c2bfb69be705272175b42f1a0c3ff823320986318815cba7a31",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 2.784000000000002
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.784,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.495,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0047/0070",
+        "sha256": "424ce91cf204164bd58247a596e0dc22fd636eb79a948e1e438f28690f765005",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.032000000000002
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.032,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0023/0002",
+        "sha256": "d65560aa4a7f6b159511124fddc7ab19ae3b909855759da8ac518390b365395b",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.656,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 0.9123,
+            "cues": {
+              "text": "positive"
+            },
+            "triggered": false,
+            "candidate": "positive"
+          }
+        ]
+      },
+      {
+        "id": "video_0020/0001",
+        "sha256": "eed971165402239fc90e4463ae32133d534245b90a39775320817ad4ab315b2d",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 6.1455000000000055
+        },
+        "windows": 2,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.952,
+            "cues": {
+              "text": "positive"
+            },
+            "triggered": false,
+            "candidate": "positive"
+          },
+          {
+            "duration_s": 4.96,
+            "cues": {
+              "text": "neutral",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0047/0046",
+        "sha256": "6126188fa42e2aa4d08f9079d480841da7fd49e2fa1930dc1fc604716ef72548",
+        "gold": "neutral",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.56,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0025/0012",
+        "sha256": "ded394bf734c8f69b4834dbec53fe3c52fdfcda948b0eef67c870b12cee89816",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 1.583333333333333
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "positive",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.888,
+            "cues": {
+              "visual": "positive"
+            },
+            "triggered": false,
+            "candidate": null
+          },
+          {
+            "duration_s": 1.4393,
+            "cues": {
+              "text": "negative",
+              "visual": "positive"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0034/0024",
+        "sha256": "97644324e03f2a24e282be0978d7dd3f56e41cf524ca2ca1a642778dc1bfd7da",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 2.5
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.728,
+            "cues": {
+              "text": "neutral",
+              "visual": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.9053,
+            "cues": {
+              "text": "neutral",
+              "visual": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0046/0032",
+        "sha256": "10960ad2e21a9369551993c21aa600262e24db43ba07077e703ced18502a9fc8",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": true,
+          "accepted_seconds": 1.12
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.952,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.784,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0047/0032",
+        "sha256": "239329d1c3889fecc7f5cb314e0dfa81ff8be0db7daf0d22c3f59586982a9029",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 2.0800000000000014
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.08,
+            "cues": {
+              "text": "negative",
+              "audio": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0024/0079",
+        "sha256": "273f51cd49f4b8d6fec698382f68996de7d0a8c147a6558da9c2ad4047bef3b6",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0.9166666666666665
+        },
+        "windows": 2,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.08,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.4207,
+            "cues": {
+              "text": "negative",
+              "visual": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0031/0020",
+        "sha256": "9e1ecdc91f9be38ad7d135678db08d995d116aa93758a89b35459b57d598c0e0",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 4.005999999999997
+        },
+        "windows": 3,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 3
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.272,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 3.04,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.728,
+            "cues": {
+              "text": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0060/0023",
+        "sha256": "b3dffc518234e2cbf090c018a3999e3232ba3a08a0692f2f544274ab3555862d",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.738812500000002
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.7388,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0045/0045",
+        "sha256": "f5db8190c9013a878f6fd3f9e9d7763fd361b906ab7518070375c9d1340bdbee",
+        "gold": "negative",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 6.960000000000005
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "neutral",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 6.96,
+            "cues": {
+              "text": "neutral",
+              "audio": "negative",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0041/0021",
+        "sha256": "de695764a9843c6f5746c98f044b0c76bd5ae9ece5d3c085f1ab493c90e6d235",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": false,
+          "accepted_seconds": 2.1440000000000015
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.144,
+            "cues": {
+              "text": "negative",
+              "audio": "neutral"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.336,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0029/0007",
+        "sha256": "fd56e6b6343e2e79d4008aa558c0fa3892430b33adc460255c71a78e9ff48aba",
+        "gold": "positive",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 3.3920000000000026
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 3.392,
+            "cues": {
+              "text": "negative",
+              "audio": "positive"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          },
+          {
+            "duration_s": 1.4293,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0020/0012",
+        "sha256": "2051c0fc1c18172ecc82060e4c1291ea91b78c5de013461dada5f2c779ebb89e",
+        "gold": "positive",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": false,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 0.9813,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0054/0098",
+        "sha256": "316710b99927548cad17d9b533e356f74d7569667a28d260a8974a6353432635",
+        "gold": "neutral",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 2.0833,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      },
+      {
+        "id": "video_0021/0003",
+        "sha256": "b8b5f7a2bca918784e20f342636133819f4ad92fbb519b1b7a8653c65d5ddf51",
+        "gold": "negative",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": false,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": false,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "no_request": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.7067,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0048/0021",
+        "sha256": "ee0f082059762dc48944551b5017f0ef413c3a587c1ee7e1f61e22e74d68b2c9",
+        "gold": "neutral",
+        "human_channel_disagreement": true,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 0
+        },
+        "windows": 1,
+        "all_three": true,
+        "cue_vote": "negative",
+        "before": "negative",
+        "after": "negative",
+        "statuses": {
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 3.544,
+            "cues": {
+              "text": "negative",
+              "audio": "positive",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0011/0021",
+        "sha256": "bc8529f22b8729e8cee5da5cc97d005f95d734bd02f4c7466c3b70e7da75d8a1",
+        "gold": "positive",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": false,
+          "visual_detected": false,
+          "accepted_seconds": 0
+        },
+        "windows": 2,
+        "all_three": false,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 2
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.952,
+            "cues": {
+              "text": "neutral"
+            },
+            "triggered": false,
+            "candidate": "neutral"
+          },
+          {
+            "duration_s": 1.6,
+            "cues": {
+              "text": "negative"
+            },
+            "triggered": false,
+            "candidate": "negative"
+          }
+        ]
+      },
+      {
+        "id": "video_0024/0062",
+        "sha256": "47e7af82d0a6a56113b95db30597ce2768ec7e20f33fd1dadf6b6a4a28a41262",
+        "gold": "positive",
+        "human_channel_disagreement": false,
+        "legacy": null,
+        "asr": true,
+        "av": {
+          "audio_detected": true,
+          "visual_detected": true,
+          "accepted_seconds": 2.875000000000003
+        },
+        "windows": 2,
+        "all_three": true,
+        "cue_vote": "neutral",
+        "before": "neutral",
+        "after": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        },
+        "utterance_trace": [
+          {
+            "duration_s": 1.76,
+            "cues": {
+              "text": "positive"
+            },
+            "triggered": false,
+            "candidate": "positive"
+          },
+          {
+            "duration_s": 2.115,
+            "cues": {
+              "text": "neutral",
+              "audio": "neutral",
+              "visual": "negative"
+            },
+            "triggered": true,
+            "candidate": "neutral"
+          }
+        ]
+      }
+    ],
+    "qwen_text_only": [
+      {
+        "id": "video_0042/0006",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0056/0074",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0030",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 2
+        }
+      },
+      {
+        "id": "video_0036/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0013",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0030/0015",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0028/0004",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0054/0050",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0032",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0025/0017",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0015/0035",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0028/0023",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0041",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0056/0043",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0109",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0043/0009",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0028",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0010",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0038/0012",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0001/0027",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0030/0010",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0026/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0188",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0041/0005",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0068",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0045/0047",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0018",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0047/0070",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0002",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0001",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0047/0046",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0025/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0034/0024",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0046/0032",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0032",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0024/0079",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0031/0020",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 3
+        }
+      },
+      {
+        "id": "video_0060/0023",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0045/0045",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0041/0021",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0029/0007",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0020/0012",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0098",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0021/0003",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0048/0021",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0011/0021",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0024/0062",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      }
+    ],
+    "hide_audio": [
+      {
+        "id": "video_0042/0006",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0056/0074",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0030",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0036/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0034/0013",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0030/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0028/0004",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0054/0050",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0032",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0025/0017",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0015/0035",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0028/0023",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0041",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0056/0043",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0109",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0043/0009",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0028",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0010",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0038/0012",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0001/0027",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0030/0010",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0026/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0188",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0041/0005",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0068",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0045/0047",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0018",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0070",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0002",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0001",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0047/0046",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0025/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0034/0024",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0046/0032",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0032",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0024/0079",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0031/0020",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 2,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0060/0023",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0045/0045",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0041/0021",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0029/0007",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0012",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0098",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0021/0003",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0048/0021",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0011/0021",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0024/0062",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      }
+    ],
+    "hide_visual": [
+      {
+        "id": "video_0042/0006",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0056/0074",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0030",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 2
+        }
+      },
+      {
+        "id": "video_0036/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0013",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0030/0015",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0028/0004",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0054/0050",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0032",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0025/0017",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0015/0035",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0028/0023",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0054/0041",
+        "before": "neutral",
+        "after": "positive",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0056/0043",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0109",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0009",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0028",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0010",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0038/0012",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0001/0027",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0030/0010",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0026/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0188",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0041/0005",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0068",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0045/0047",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0018",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0015",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0047/0070",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0002",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0001",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0047/0046",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0012",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0034/0024",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0046/0032",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0032",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0024/0079",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0031/0020",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2,
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0060/0023",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0045/0045",
+        "before": "neutral",
+        "after": "negative",
+        "cue_vote": "neutral",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0041/0021",
+        "before": "negative",
+        "after": "neutral",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0029/0007",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1,
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0020/0012",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0098",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0021/0003",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0048/0021",
+        "before": "negative",
+        "after": "negative",
+        "cue_vote": "negative",
+        "statuses": {
+          "ok": 1
+        }
+      },
+      {
+        "id": "video_0011/0021",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0024/0062",
+        "before": "neutral",
+        "after": "neutral",
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      }
+    ],
+    "hide_text": [
+      {
+        "id": "video_0042/0006",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0056/0074",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0030",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0036/0015",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0034/0013",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0030/0015",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0028/0004",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0054/0050",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0032",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0017",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0015/0035",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0028/0023",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0041",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0056/0043",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0109",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0043/0009",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0028",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0010",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0038/0012",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0001/0027",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0030/0010",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0026/0012",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0054/0188",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0041/0005",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0068",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0045/0047",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0018",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0034/0015",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0070",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0023/0002",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0001",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0046",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0025/0012",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0034/0024",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0046/0032",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0047/0032",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0024/0079",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0031/0020",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 3
+        }
+      },
+      {
+        "id": "video_0060/0023",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0045/0045",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0041/0021",
+        "before": null,
+        "after": null,
+        "cue_vote": "neutral",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0029/0007",
+        "before": null,
+        "after": null,
+        "cue_vote": "positive",
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0020/0012",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0054/0098",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0021/0003",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0048/0021",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 1
+        }
+      },
+      {
+        "id": "video_0011/0021",
+        "before": null,
+        "after": null,
+        "cue_vote": null,
+        "statuses": {
+          "no_request": 2
+        }
+      },
+      {
+        "id": "video_0024/0062",
+        "before": null,
+        "after": null,
+        "cue_vote": "negative",
+        "statuses": {
+          "no_request": 2
+        }
+      }
+    ]
+  }
+}

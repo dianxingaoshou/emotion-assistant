@@ -33,6 +33,7 @@ from .regulation import ACTIVITIES as ACTIVITY_LIBRARY, NEEDS
 from .ai_activity import activity_context
 from .ai_activity_widget import AiActivitySuggestions
 from .regulation_widgets import DistressTimeline, RecommendationCards, OutcomeCard
+from .regulation_chat_widget import RegulationChat
 from .native_expression import format_expression
 from .trial_widgets import PromptTimingFeedback, TrialPage
 from .local_media_widgets import LocalMediaPage
@@ -867,7 +868,13 @@ class MainWindow(QMainWindow):
         self.activity_status = QLabel("先确认自己此刻的需要，再开始一次短时调整。")
         self.activity_status.setObjectName("muted")
         self.activity_status.setWordWrap(True)
-        outer.addWidget(self.activity_status)
+        status_row = QHBoxLayout()
+        status_row.addWidget(self.activity_status, 1)
+        open_chat = _button("打开调节对话")
+        open_chat.setObjectName("secondary")
+        open_chat.clicked.connect(lambda: self.regulation_tabs.setCurrentWidget(self.regulation_chat))
+        status_row.addWidget(open_chat)
+        outer.addLayout(status_row)
         columns = QHBoxLayout()
         columns.setSpacing(SPACE["xl"])
         setup, setup_l = _card("从你的需要开始")
@@ -1133,6 +1140,8 @@ class MainWindow(QMainWindow):
         self.regulation_tabs.addTab(scroll, "本次调节")
         self.regulation_tabs.addTab(self._personal_feedback_page(), "个人方法反馈")
         self.regulation_tabs.addTab(self._followup_page(), "稍后复测")
+        self.regulation_chat = RegulationChat(self._apply_chat_turn, lambda: self.regulation_tabs.setCurrentIndex(0))
+        self.regulation_tabs.addTab(self.regulation_chat, "调节对话")
         return self.regulation_tabs
 
     def _personal_feedback_page(self):
@@ -1465,6 +1474,8 @@ class MainWindow(QMainWindow):
         self.history_table.itemSelectionChanged.connect(self._history_selected)
         self.tabs.currentChanged.connect(lambda index: self.controller.refresh_history() if index == 2 else None)
         self.regulation_tabs.currentChanged.connect(self._regulation_tab_changed)
+        if hasattr(self.controller, "chat_switch_finished"):
+            self.controller.chat_switch_finished.connect(self._chat_switch_finished)
         self.need_combo.currentIndexChanged.connect(self._context_changed)
         self.available_combo.currentIndexChanged.connect(self._context_changed)
         self.recommendation_cards.chosen.connect(self._choose_recommendation)
@@ -1912,9 +1923,15 @@ class MainWindow(QMainWindow):
             return
         end = _number(result.get("t_end"))
         start = _number(result.get("t_start"))
-        if start is None or end is None or end < self._content_end:
+        if start is None or end is None:
+            return
+        if result.get("historical_review_only"):
+            self.live_review.observe_content(result)
+            return
+        if end < self._content_end:
             return
         self._content_end = end
+        self.live_review.observe_content(result)
         self.live_content.set_result(result, f"发言内容 {start:.1f}–{end:.1f} 秒", automatic_transcript=True)
 
     def _on_transcript(self, result: dict) -> None:
@@ -2036,6 +2053,7 @@ class MainWindow(QMainWindow):
             return
         active_session = self.session_state in ("running", "paused")
         state = self.activity_state
+        self._sync_chat()
         observing = state in ("observing", "idle", "cooldown", "completed", "cancelled")
         confirming = state in ("confirming", "pending", "requested")
         ready = state in ("ready", "confirmed")
@@ -2190,8 +2208,27 @@ class MainWindow(QMainWindow):
 
     def _regulation_tab_changed(self, index):
         self._sync_action_hierarchy()
-        if index:
+        if index in (1, 2):
             self._refresh_recommendations()
+
+    def _sync_chat(self):
+        enabled = self.session_state in ("running", "paused") and not self._active_trial
+        self.regulation_chat.set_context(self.session_id if enabled else None, self.activity_state,
+            self.activity_current, getattr(self.controller, "chat_mode", "open"), bool(self._active_trial))
+
+    def _apply_chat_turn(self, turn):
+        message, chosen = self.controller.apply_regulation_chat(
+            turn, self.activity_combo.currentData(), self.need_combo.currentData(),
+            min(self.available_combo.currentData(), self.duration_combo.currentData()), self.session_id)
+        if chosen:
+            self._choose_recommendation(chosen)
+        self._sync_chat()
+        return message
+
+    def _chat_switch_finished(self, chosen, message):
+        if chosen:
+            self._choose_recommendation(chosen)
+        self.regulation_chat.activity_update(message)
 
     def _invalidate_personal_view(self, *_args):
         if self.session_state in ("running", "paused", "stopping"):
@@ -2377,7 +2414,8 @@ class MainWindow(QMainWindow):
             self._clear_context_hint()
         if state in ("confirming", "pending", "requested") and old_state not in ("confirming", "pending", "requested"):
             self.tabs.setCurrentIndex(1)
-            self.regulation_tabs.setCurrentIndex(0)
+            if self.regulation_tabs.currentWidget() is not self.regulation_chat:
+                self.regulation_tabs.setCurrentIndex(0)
             self._manual_activity_choice = False
             self.followup_optin.setChecked(False)
             self.completion_preference.setCurrentIndex(0)
@@ -2615,6 +2653,7 @@ class MainWindow(QMainWindow):
             event.ignore()
             return
         self.live_review.clear()
+        self.regulation_chat.set_context(None, "observing", {}, "open")
         self.ai_activity.set_context(None, None)
         self.breathing.set_running(False)
         self.controller.shutdown()

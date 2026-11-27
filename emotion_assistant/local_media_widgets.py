@@ -23,6 +23,7 @@ from .content_widgets import ContentReadout
 from .research_text_review import format_research_review
 from .expression_profile import text_expression_profile, format_expression_profile
 from .semantic_review_worker import SemanticReviewQueue
+from .conflict_review_widget import ConflictReviewPanel
 from .paths import MODELS
 from .ui_theme import COLORS, RADIUS, SPACE
 from .ui_widgets import LABEL_ORDER, SignalDistribution
@@ -195,6 +196,8 @@ class LocalMediaPage(QWidget):
         self.content_intervals.setAccessibleName("选择要查看的发言时段")
         self.content_intervals.currentIndexChanged.connect(self._show_content_result)
         result_layout.addWidget(self.content_intervals)
+        self.conflict_panel = ConflictReviewPanel()
+        result_layout.addWidget(self.conflict_panel)
         self.profile_readout = QLabel()
         self.profile_readout.setObjectName("bodyNote")
         self.profile_readout.setTextFormat(Qt.TextFormat.PlainText)
@@ -318,6 +321,7 @@ class LocalMediaPage(QWidget):
             self.status.setText("正在取消检测…")
 
     def stop_for_close(self):
+        self.conflict_panel.clear()
         self._clear_semantic_request()
         if self._worker is None:
             return True
@@ -331,6 +335,7 @@ class LocalMediaPage(QWidget):
         self.sample_caption.clear()
 
     def _reset_scores(self):
+        self.conflict_panel.clear()
         self._clear_semantic_request()
         self.profile_readout.clear()
         self.profile_readout.hide()
@@ -443,7 +448,8 @@ class LocalMediaPage(QWidget):
             for i, row in enumerate(result.get("content_intervals", [])):
                 if ("text" in row.get("available_modalities", []) or row.get("intensity") is not None
                         or self._utterance_for(row)):
-                    self.content_intervals.addItem(f"发言 {row['t_start']:.1f}–{row['t_end']:.1f} 秒", i)
+                    suffix = " · 线索有分歧" if (row.get("conflict_evidence") or {}).get("conflict") else ""
+                    self.content_intervals.addItem(f"发言 {row['t_start']:.1f}–{row['t_end']:.1f} 秒{suffix}", i)
             self.content_intervals.blockSignals(False)
             self.content_intervals.setVisible(self.content_intervals.count() > 1)
             self._show_content_result(0)
@@ -473,6 +479,10 @@ class LocalMediaPage(QWidget):
         accepted = sum(count for k, count in decisions.items() if k != "abstain")
         scores = result["scores"]
         lines = [format_expression(profile) for profile in result.get("expression_profiles", {}).values()]
+        conflicts = sum(bool((row.get("conflict_evidence") or {}).get("conflict"))
+                        for row in result.get("content_intervals", ()))
+        if conflicts:
+            lines.append(f"有 {conflicts} 段发言的线索方向不一致，可在发言列表中选择该段并复核。")
         if kind != "audio":
             lines.append(f"画面通过检查 {valid}/{total} 帧")
         if kind != "image":
@@ -529,6 +539,7 @@ class LocalMediaPage(QWidget):
 
     def _show_content_result(self, index):
         self._clear_semantic_request()
+        self.conflict_panel.clear()
         self.profile_readout.clear()
         self.profile_readout.hide()
         self.semantic_button.hide()
@@ -562,6 +573,8 @@ class LocalMediaPage(QWidget):
         if target:
             record, _, origin = target
             transcript = self._utterance_for(record) if origin == "asr_segment" else record
+            if origin == "asr_segment" and transcript:
+                self.conflict_panel.select(record, transcript["text"])
             context = (transcript or {}).get("semantic_context") or {}
             profile = record.get("expression_profile") or context.get("expression_profile")
             profile_text = format_expression_profile(profile)
@@ -585,9 +598,12 @@ class LocalMediaPage(QWidget):
     def _utterance_for(self, interval):
         if interval.get("timing_issue"):
             return None
+        segment_id = interval.get("conflict_segment_id")
         matches = [r for r in self.result.get("transcripts", [])
                    if r.get("valid") and not r.get("stale") and r.get("text")
-                   and (r.get("t_start"), r.get("t_end")) == (interval["t_start"], interval["t_end"])]
+                   and (r.get("t_start"), r.get("t_end")) == (interval["t_start"], interval["t_end"])
+                   and (segment_id is None or segment_id == (r.get("segment_id") or r.get("event_id")
+                                                              or str(float(r["t_end"]))))]
         return matches[0] if len(matches) == 1 else None
 
     def _semantic_target(self):

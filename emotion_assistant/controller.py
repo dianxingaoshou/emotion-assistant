@@ -50,6 +50,7 @@ class Controller(QObject):
     session_changed = Signal(dict)
     devices_ready = Signal(dict)
     intervention_changed = Signal(dict)
+    chat_switch_finished = Signal(str, str)
     history_ready = Signal(list)
     recommendations_ready = Signal(dict)
     _event_received = Signal(object)
@@ -101,6 +102,8 @@ class Controller(QObject):
         self.activity_started = None
         self.task_details = {}
         self.cooldown_until = 0.0
+        self.chat_mode = "open"
+        self._chat_switch = None
         self.negative_start = None
         self.negative_end = None
         self.latest_summary = None
@@ -202,6 +205,8 @@ class Controller(QObject):
             if fields:
                 self.flow.annotate(fields)
                 self._intervention_signal()
+            if fields.get("save_status") and self._chat_switch and self._chat_switch[0] == payload["record_id"]:
+                self._finish_chat_switch(fields["save_status"])
         if payload["success"]:
             if same_profile:
                 if isinstance(payload.get("updated"), dict) and payload["updated"].get("discomfort"):
@@ -392,6 +397,8 @@ class Controller(QObject):
                 "visual_period": capture_config.visual_period, "audio_quality_version": "vad-noise-v1"}
         self._reference_observing_since = 0.
         self.cooldown_until = 0
+        self.chat_mode = "open"
+        self._chat_switch = None
         self.task_details = {}
         self.activity_started = None
         self._session_signal()
@@ -478,7 +485,7 @@ class Controller(QObject):
                 return
             self.transcript_ready.emit(utterance)
             if self.state == "running" and self.transcript_allowed and self.session_id == sid:
-                self._emit_content(self._content_timeline.observe_transcript(utterance))
+                self._emit_content(self._content_timeline.observe_transcript(utterance), utterance)
             if self.state == "running" and self.transcript_allowed and self.session_id == sid:
                 self._write(self.store.save_utterance, sid, utterance, True)
         else:
@@ -501,7 +508,7 @@ class Controller(QObject):
         self.fusion_ready.emit(result)
         if self.state != "running" or self.session_id != result["session_id"]:
             return
-        self._emit_content(self._content_timeline.observe_fusion(result))
+        self._emit_content(self._content_timeline.observe_fusion(result), result)
         if self.state != "running" or self.session_id != result["session_id"]:
             return
         self._write(self.store.save_observation, result["session_id"], result)
@@ -520,9 +527,12 @@ class Controller(QObject):
         self._content_timeline.reset(minimum_start)
         self.content_ready.emit({})
 
-    def _emit_content(self, result):
+    def _emit_content(self, result, event):
         if result is not None and self.state == "running":
             self.content_ready.emit(dict(result, session_id=self.session_id, simulation=self.mode == "simulation"))
+        if self.state == "running" and self.transcript_allowed and event.get("session_id") == self.session_id:
+            for revision in self._content_timeline.historical_reviews(event):
+                self.content_ready.emit(dict(revision, session_id=self.session_id, historical_review_only=True))
 
     def _queue_audio_evidence(self, observation):
         eid = observation.get("event_id")
@@ -643,6 +653,8 @@ class Controller(QObject):
         policy = self.prompt_timing.evaluate(datetime.now(timezone.utc).timestamp(), source, time.monotonic() < self.cooldown_until)
         policy = trial_prompt(policy,condition,negative["ready"],conflict["ready"],
                               self._trial_unwanted_at is not None and time.monotonic()-self._trial_unwanted_at < 3600)
+        if self.chat_mode != "open":
+            policy.update(action="observe", reason="user_requested_quiet_guidance")
         if source and (self.flow.current or {}).get("save_status") in ("failed", "pending"):
             policy.update(action="observe", reason="awaiting_feedback_save")
         self.evidence_changed.emit(dict(negative, timing_reason=policy["reason"],
@@ -917,6 +929,7 @@ class Controller(QObject):
             self.status_changed.emit("请先等待本次反馈保存，失败时可点击重试保存")
             return
         if self.flow.request():
+            self.chat_mode = "open"
             self._request_source = source
             self._request_decision_id = timing_decision_id
             self._offered_decision = None
@@ -972,12 +985,7 @@ class Controller(QObject):
             seconds = context.get("available_seconds", self.regulation_seconds)
             if isinstance(seconds, bool) or not isinstance(seconds, int) or not 1 <= seconds <= 3600:
                 raise ValueError("可用时间应为1至3600秒")
-            history = self.store.list_interventions(self.current_user_id, self.mode)
-            pending_avoids = self._pending_avoids(self.current_user_id)
-            preferences = self.store.get_activity_preferences(self.current_user_id)
-            preferences.update(dict.fromkeys(pending_avoids, "avoid"))
-            excluded = self.store.historical_discomfort(self.current_user_id, self.mode) if len(history) >= 200 else set()
-            candidates, decision = contextual_decision(history, need, seconds, pre, preferences, self.mode, excluded)
+            candidates, decision = self._activity_candidates(need, seconds, pre)
             candidates, decision = trial_order(candidates,decision,self.trial["condition"] if self.trial else None)
             recommendation = next(item for item in candidates if item["activity"] == activity)
             if recommendation.get("blocked") or activity in self._known_discomfort:
@@ -1126,6 +1134,95 @@ class Controller(QObject):
         self.cancel_activity(reason="manual_switch")
         self._pending_previous_id, self._pending_root_id = previous_id, root_id
         self.request_intervention(source="alternative")
+
+    def _activity_candidates(self, need, seconds, pre):
+        history = self.store.list_interventions(self.current_user_id, self.mode)
+        preferences = self.store.get_activity_preferences(self.current_user_id)
+        preferences.update(dict.fromkeys(self._pending_avoids(self.current_user_id), "avoid"))
+        excluded = self.store.historical_discomfort(self.current_user_id, self.mode) if len(history) >= 200 else set()
+        return contextual_decision(history, need, seconds, pre, preferences, self.mode, excluded)
+
+    def apply_regulation_chat(self, turn, selected, need, seconds, session_id):
+        """Apply a current turn using the actual flow; only action metadata is persisted."""
+        if not session_id or self.session_id != session_id or self.state not in ("running", "paused") or self.trial:
+            return "", None
+        before, current = self.flow.state, self.flow.current or {}
+        chosen = None
+        message = turn.message
+        if turn.action != "reply":
+            self._chat_switch = None
+        if turn.action in ("stop", "listen", "discomfort"):
+            self.chat_mode = "listening" if turn.action == "listen" else "quiet"
+            if before == "running" and turn.action == "discomfort":
+                self.activity_checkin("uncomfortable")
+            elif before == "confirming":
+                self.confirm_intervention(False)
+            elif before in ("ready", "running"):
+                self.cancel_activity(reason="chat_" + turn.action)
+            if turn.action == "listen":
+                message = "好，我们先聊聊。活动引导和主动提醒都已停下。你想从哪里说起？"
+            elif turn.action == "discomfort" and before == "running":
+                message = "练习已停止，这种方法已从当前候选中排除。你可以安静休息。"
+            else:
+                message = "好，先停在这里。本次会话的主动提醒已暂停，想回来时由你决定。"
+        elif turn.action == "switch":
+            previous = current.get("activity") if before == "running" else selected
+            candidates, _ = self._activity_candidates(need, seconds, current.get("pre"))
+            chosen = next((item["activity"] for item in candidates
+                           if item["activity"] != previous and not item["blocked"]
+                           and item["activity"] not in self._known_discomfort
+                           and ACTIVITIES[item["activity"]]["min_seconds"] <= seconds), None)
+            if chosen and before == "running":
+                self.chat_mode = "quiet"
+                self._chat_switch = (current["id"], current.get("root_intervention_id") or current["id"], chosen)
+                self.cancel_activity(reason="manual_switch")
+                message = "当前练习已停止。保存本次中止记录后，为你打开另一种方法。"
+            elif chosen:
+                if before in ("observing", "cooldown") and current.get("save_status") not in ("pending", "failed"):
+                    if current.get("stop_reason") == "manual_switch":
+                        self._pending_previous_id = current["id"]
+                        self._pending_root_id = current.get("root_intervention_id") or current["id"]
+                        self.request_intervention(source="alternative")
+                    else:
+                        self.request_intervention()
+                if self.flow.state in ("confirming", "ready"):
+                    self.chat_mode = "open"
+                    message = f"已为你选好另一种活动「{ACTIVITIES[chosen]['title']}」。点「查看本次活动」确认后，再决定是否开始。"
+                else:
+                    chosen = None
+                    message = "暂时无法切换。请到「本次调节」查看上一条活动记录的保存状态。"
+            else:
+                if before in ("ready", "running"):
+                    self.cancel_activity(reason="chat_switch_no_alternative")
+                elif before == "confirming":
+                    self.confirm_intervention(False)
+                self.chat_mode = "quiet"
+                message = "当前时间和偏好下暂时没有其他合适活动。可以继续聊，也可以调整可用时间。"
+        self._write(self.store.append_event, session_id, "regulation_chat_turn", {
+            "action": turn.action, "source": turn.source, "status": turn.status,
+            "state_before": before, "state_after": self.flow.state, "chat_mode": self.chat_mode,
+            "intervention_id": current.get("id"), "suggested_activity": None if self._chat_switch else chosen,
+            "awaiting_switch_save": self._chat_switch is not None and turn.action == "switch",
+        })
+        return message, None if self._chat_switch else chosen
+
+    def _finish_chat_switch(self, save_status):
+        previous, root, choice = self._chat_switch
+        self._chat_switch = None
+        if self.state not in ("running", "paused") or self.flow.state != "cooldown":
+            return
+        self._write(self.store.append_event, self.session_id, "regulation_chat_switch_result", {
+            "intervention_id": previous, "save_status": save_status,
+            "suggested_activity": choice if save_status == "saved" else None,
+        })
+        if save_status == "failed":
+            self.chat_switch_finished.emit("", "当前练习已停止，但记录保存失败。请到「本次调节」重试保存，再选择其他活动。")
+            return
+        self._pending_previous_id, self._pending_root_id = previous, root
+        self.request_intervention(source="alternative")
+        if self.flow.state == "confirming":
+            message = f"另一种活动是「{ACTIVITIES[choice]['title']}」。点「查看本次活动」确认后，再决定是否开始。"
+            self.chat_switch_finished.emit(choice, message)
 
     def complete_activity(self, post, helpfulness, followup_seconds=None,
                           next_step="", preference="unchanged", feedback_note=""):

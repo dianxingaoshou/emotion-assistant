@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QPushButton, QVBox
 
 from .research_text_review import format_research_review
 from .semantic_review_worker import SemanticReviewQueue
+from .conflict_review_widget import ConflictReviewPanel
 
 
 class LiveSemanticReview(QWidget):
@@ -16,6 +17,8 @@ class LiveSemanticReview(QWidget):
         self.queue.finished.connect(self._finish)
         self._request = None
         self._pinned = False
+        self._aligned = {}
+        self.conflict_panel = ConflictReviewPanel()
         self.choices = QComboBox()
         self.choices.setAccessibleName("待复核的发言")
         self.choices.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
@@ -34,6 +37,7 @@ class LiveSemanticReview(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(row)
         layout.addWidget(self.result)
+        layout.addWidget(self.conflict_panel)
         self.choices.currentIndexChanged.connect(self._choose)
         self.review.clicked.connect(self._submit)
         self.hide()
@@ -47,6 +51,8 @@ class LiveSemanticReview(QWidget):
 
     def clear(self):
         self._invalidate()
+        self.conflict_panel.clear()
+        self._aligned.clear()
         self._pinned = False
         with QSignalBlocker(self.choices):
             self.choices.clear()
@@ -56,6 +62,9 @@ class LiveSemanticReview(QWidget):
     def observe(self, segment_id, text, end):
         previous = self.choices.currentData()
         rows = [self.choices.itemData(i) for i in range(self.choices.count())]
+        old = next((row for row in rows if row[0] == segment_id), None)
+        if old and old != (segment_id, text, end):
+            self._aligned.pop(segment_id, None)
         rows = [row for row in rows if row[0] != segment_id]
         if text:
             rows.append((segment_id, text, end))
@@ -81,12 +90,37 @@ class LiveSemanticReview(QWidget):
         self.choices.setToolTip(selected[1])
         if selected != previous:
             self._invalidate()
+        keep = {r[0] for r in rows}
+        self._aligned = {k: v for k, v in self._aligned.items() if k in keep}
+        self._sync_conflict()
         self.show()
+
+    def observe_content(self, record):
+        key = record.get("conflict_segment_id")
+        current = next((self.choices.itemData(i) for i in range(self.choices.count())
+                        if self.choices.itemData(i)[0] == key), None)
+        if current and current[2] == record.get("t_end"):
+            previous = self._aligned.get(key)
+            if previous and previous.get("t_start") == record.get("t_start") and (
+                    previous.get("conflict_evidence") == record.get("conflict_evidence")):
+                return
+            self._aligned[key] = record
+        else:
+            # An ambiguous join may invalidate a previous estimate at the same boundary.
+            for old_key, row in list(self._aligned.items()):
+                if (row.get("t_start"), row.get("t_end")) == (record.get("t_start"), record.get("t_end")):
+                    del self._aligned[old_key]
+        self._sync_conflict()
+
+    def _sync_conflict(self):
+        row = self.choices.currentData()
+        self.conflict_panel.select(self._aligned.get(row[0]) if row else None, row[1] if row else None)
 
     def _choose(self, _index):
         self._pinned = True
         self._invalidate()
         self.choices.setToolTip(self.choices.currentData()[1])
+        self._sync_conflict()
 
     def _submit(self):
         row = self.choices.currentData()

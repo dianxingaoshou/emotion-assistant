@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1120" viewBox="0 0 1040 1120" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
   <title id="title">桌面情绪线索助手的识别、千问复核与调节反馈流程</title>
-  <desc id="desc">实时或文件声画经质量检查和时间对齐后融合，实时会话可依据持续证据和打扰限制询问本人。输入的文字、TXT 或获准的转写由中英文离线模型分析。用户可选中原话交给本地千问复核，核对引文与中文双维估计。复核只供查看。本人主动发起或接受询问后选择调节，记录前后自评、稍后复测和不适，供以后推荐参考。千问直接做中文十三类与双维加权仅用于研究对照。</desc>
+  <desc id="desc">实时或文件声画经过质量检查，在同一发言时段与获准转写的文字对齐。出现分歧时，用户可以让千问读取原话与各路观测，复核表达并给出核对问题。本人决定是否调节。在聊天框中可随时停止、更换活动或只聊天。活动结束后可填写即时与延迟自评。</desc>
   <style>
     text { font-family: "Microsoft YaHei","Noto Sans CJK SC","PingFang SC",sans-serif; fill: #1c303a; }
     .title { font-size: 36px; font-weight: 700; }
@@ -54,7 +54,7 @@
   </g>
   <path d="M264 485V504" class="solid"/>
   <path d="M259 500l5 9 5-9z" class="arrow"/>
-  <path d="M970 246H998V554H983" class="opt"/>
+  <path d="M498 461H512V502H998V554H983 M754 484V502" class="opt"/>
   <path d="M987 549l-9 5 9 5z" class="optional-arrow"/>
 
   <g aria-label="实时提醒">
@@ -63,16 +63,16 @@
     <text x="55" y="583" class="body">检查持续负向线索或高质量声画分歧，</text>
     <text x="55" y="611" class="body">结合专注、勿扰、冷却及近期拒绝决定时机。</text>
   </g>
-  <g aria-label="用户点击后，将所选原话送入千问复核">
+  <g aria-label="可选的文字与跨模态分歧复核">
     <rect x="528" y="512" width="452" height="132" rx="12" fill="#f4f1fa" stroke="#c7bddd" stroke-width="1.5"/>
-    <text x="550" y="550" class="heading violet">点击复核原话 · 本机千问 Qwen3 8B</text>
-    <text x="550" y="583" class="body">核对描述对象、时间、本人感受与原文引据</text>
-    <text x="550" y="611" class="small">中文另列校准双维，英文可对照域内极性模型。</text>
+    <text x="550" y="550" class="heading violet">按需复核 · 本机千问 Qwen3 8B</text>
+    <text x="550" y="583" class="body">可核对原话，也可对照同期声学与表情分数。</text>
+    <text x="550" y="611" class="small">线索冲突时并列各路方向、原文引据和核对问题。</text>
   </g>
   <path d="M264 645V681" class="solid"/>
   <path d="M259 677l5 9 5-9z" class="arrow"/>
   <text x="280" y="672" class="small">询问本人</text>
-  <text x="548" y="671" class="small violet">文字复核供查看。文件检测独立于实时询问。</text>
+  <text x="548" y="671" class="small violet">核对问题供查看，由本人决定是否回应。</text>
 
   <g aria-label="本人决定是否开始调节">
     <rect x="32" y="688" width="976" height="86" rx="12" fill="#fff6e3" stroke="#d9c492" stroke-width="1.5"/>
@@ -83,9 +83,9 @@
   <path d="M259 801l5 9 5-9z" class="arrow"/>
   <g aria-label="选择和执行活动">
     <rect x="32" y="812" width="451" height="128" rx="12" fill="#fff" stroke="#c5d0d5" stroke-width="1.5"/>
-    <text x="55" y="850" class="heading">选择与执行活动</text>
-    <text x="55" y="884" class="body">按需求、时长、偏好和既往不适筛选。</text>
-    <text x="55" y="912" class="small">可请千问推荐候选。本人选择、开始或中止。</text>
+    <text x="55" y="850" class="heading">选择活动，或进入调节对话</text>
+    <text x="55" y="884" class="body">千问衔接本轮与前文，理解用户的反馈。</text>
+    <text x="55" y="912" class="small">明确要求停止、换方法或只聊天时，当场执行。</text>
   </g>
   <path d="M484 875H537" class="solid"/>
   <path d="M533 870l9 5-9 5z" class="arrow"/>

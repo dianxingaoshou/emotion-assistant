@@ -117,6 +117,8 @@ def align_features(features, is_development):
     # video hashes plus original interval timestamps identify our research unit.
     for row in live_rows:
         row.pop("source_ids", None)
+        row.pop("conflict_segment_id", None)
+        row.pop("conflict_evidence", None)
     return {
         "duration_s": features["duration_s"],
         "clip_text": features["clip_text"],
