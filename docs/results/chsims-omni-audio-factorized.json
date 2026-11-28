@@ -1,0 +1,2161 @@
+{
+  "checkpoint_sha256": "1ced01f28486edf70856d0dc6adec8cbcd3ef69aaaf9a91f292a0fb9fd1ac562",
+  "test_ids_sha256": "6753509505dcf751f80946a160abb133d9326f8a40524822b906468a911122a8",
+  "choice": [
+    "speech_and_omni",
+    "speech",
+    0.75
+  ],
+  "groups": {
+    "official": {
+      "metrics": {
+        "accuracy": 0.6827852998065764,
+        "macro_f1": 0.5904802025213985,
+        "correct": 706,
+        "abstain": 0,
+        "confusion": [
+          [
+            364,
+            46,
+            54,
+            0
+          ],
+          [
+            55,
+            40,
+            77,
+            0
+          ],
+          [
+            64,
+            32,
+            302,
+            0
+          ]
+        ],
+        "n": 1034,
+        "predicted_neutral": 118
+      },
+      "comparisons": {
+        "prior_correction": {
+          "n": 1034,
+          "sources": 142,
+          "corrected": 83,
+          "regressed": 91,
+          "reference": {
+            "accuracy": 0.690522243713733,
+            "macro_f1": 0.6050636807234309,
+            "correct": 714,
+            "abstain": 0,
+            "confusion": [
+              [
+                373,
+                37,
+                54,
+                0
+              ],
+              [
+                57,
+                46,
+                69,
+                0
+              ],
+              [
+                66,
+                37,
+                295,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 373,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 46,
+                "total": 172
+              },
+              "positive": {
+                "hits": 295,
+                "total": 398
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.6827852998065764,
+            "macro_f1": 0.5904802025213985,
+            "correct": 706,
+            "abstain": 0,
+            "confusion": [
+              [
+                364,
+                46,
+                54,
+                0
+              ],
+              [
+                55,
+                40,
+                77,
+                0
+              ],
+              [
+                64,
+                32,
+                302,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 364,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 40,
+                "total": 172
+              },
+              "positive": {
+                "hits": 302,
+                "total": 398
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.03435485256402397,
+              0.0171233691331153
+            ],
+            "macro_f1": [
+              -0.0529509029232601,
+              0.01982829491970203
+            ]
+          }
+        },
+        "desktop_calibrated": {
+          "n": 1034,
+          "sources": 142,
+          "corrected": 217,
+          "regressed": 88,
+          "reference": {
+            "accuracy": 0.558027079303675,
+            "macro_f1": 0.48497566385439833,
+            "correct": 577,
+            "abstain": 8,
+            "confusion": [
+              [
+                332,
+                36,
+                90,
+                6
+              ],
+              [
+                74,
+                34,
+                64,
+                0
+              ],
+              [
+                167,
+                18,
+                211,
+                2
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 332,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 34,
+                "total": 172
+              },
+              "positive": {
+                "hits": 211,
+                "total": 398
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.6827852998065764,
+            "macro_f1": 0.5904802025213985,
+            "correct": 706,
+            "abstain": 0,
+            "confusion": [
+              [
+                364,
+                46,
+                54,
+                0
+              ],
+              [
+                55,
+                40,
+                77,
+                0
+              ],
+              [
+                64,
+                32,
+                302,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 364,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 40,
+                "total": 172
+              },
+              "positive": {
+                "hits": 302,
+                "total": 398
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0862222722285829,
+              0.1655641364182525
+            ],
+            "macro_f1": [
+              0.06539650431316019,
+              0.14848430924328687
+            ]
+          }
+        },
+        "omni_calibrated": {
+          "n": 1034,
+          "sources": 142,
+          "corrected": 163,
+          "regressed": 87,
+          "reference": {
+            "accuracy": 0.6092843326885881,
+            "macro_f1": 0.5192975269373007,
+            "correct": 630,
+            "abstain": 0,
+            "confusion": [
+              [
+                357,
+                36,
+                71,
+                0
+              ],
+              [
+                59,
+                33,
+                80,
+                0
+              ],
+              [
+                109,
+                49,
+                240,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 357,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 33,
+                "total": 172
+              },
+              "positive": {
+                "hits": 240,
+                "total": 398
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.6827852998065764,
+            "macro_f1": 0.5904802025213985,
+            "correct": 706,
+            "abstain": 0,
+            "confusion": [
+              [
+                364,
+                46,
+                54,
+                0
+              ],
+              [
+                55,
+                40,
+                77,
+                0
+              ],
+              [
+                64,
+                32,
+                302,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 364,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 40,
+                "total": 172
+              },
+              "positive": {
+                "hits": 302,
+                "total": 398
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.04106757010662779,
+              0.10384511581999317
+            ],
+            "macro_f1": [
+              0.02804939685107756,
+              0.10887088405116105
+            ]
+          }
+        },
+        "omni_selected": {
+          "n": 1034,
+          "sources": 142,
+          "corrected": 152,
+          "regressed": 104,
+          "reference": {
+            "accuracy": 0.6363636363636364,
+            "macro_f1": 0.6009747827929646,
+            "correct": 658,
+            "abstain": 0,
+            "confusion": [
+              [
+                322,
+                109,
+                33,
+                0
+              ],
+              [
+                29,
+                92,
+                51,
+                0
+              ],
+              [
+                43,
+                111,
+                244,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 322,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 92,
+                "total": 172
+              },
+              "positive": {
+                "hits": 244,
+                "total": 398
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.6827852998065764,
+            "macro_f1": 0.5904802025213985,
+            "correct": 706,
+            "abstain": 0,
+            "confusion": [
+              [
+                364,
+                46,
+                54,
+                0
+              ],
+              [
+                55,
+                40,
+                77,
+                0
+              ],
+              [
+                64,
+                32,
+                302,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 364,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 40,
+                "total": 172
+              },
+              "positive": {
+                "hits": 302,
+                "total": 398
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.012581475025234854,
+              0.07872530038721014
+            ],
+            "macro_f1": [
+              -0.04927492035632547,
+              0.026081770954923755
+            ]
+          }
+        },
+        "desktop_acoustic": {
+          "n": 1034,
+          "sources": 142,
+          "corrected": 179,
+          "regressed": 63,
+          "reference": {
+            "accuracy": 0.5705996131528046,
+            "macro_f1": 0.49186888594147943,
+            "correct": 590,
+            "abstain": 8,
+            "confusion": [
+              [
+                327,
+                36,
+                95,
+                6
+              ],
+              [
+                68,
+                32,
+                72,
+                0
+              ],
+              [
+                136,
+                29,
+                231,
+                2
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 327,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 32,
+                "total": 172
+              },
+              "positive": {
+                "hits": 231,
+                "total": 398
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.6827852998065764,
+            "macro_f1": 0.5904802025213985,
+            "correct": 706,
+            "abstain": 0,
+            "confusion": [
+              [
+                364,
+                46,
+                54,
+                0
+              ],
+              [
+                55,
+                40,
+                77,
+                0
+              ],
+              [
+                64,
+                32,
+                302,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 364,
+                "total": 464
+              },
+              "neutral": {
+                "hits": 40,
+                "total": 172
+              },
+              "positive": {
+                "hits": 302,
+                "total": 398
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.08364863974449903,
+              0.1421111634645588
+            ],
+            "macro_f1": [
+              0.06979949788322345,
+              0.12935112183007594
+            ]
+          }
+        }
+      }
+    },
+    "unseen_sources": {
+      "metrics": {
+        "accuracy": 0.5684210526315789,
+        "macro_f1": 0.474028044915958,
+        "correct": 108,
+        "abstain": 0,
+        "confusion": [
+          [
+            55,
+            16,
+            19,
+            0
+          ],
+          [
+            6,
+            4,
+            12,
+            0
+          ],
+          [
+            18,
+            11,
+            49,
+            0
+          ]
+        ],
+        "n": 190,
+        "predicted_neutral": 31
+      },
+      "comparisons": {
+        "prior_correction": {
+          "n": 190,
+          "sources": 15,
+          "corrected": 25,
+          "regressed": 22,
+          "reference": {
+            "accuracy": 0.5526315789473685,
+            "macro_f1": 0.508888135203267,
+            "correct": 105,
+            "abstain": 0,
+            "confusion": [
+              [
+                49,
+                21,
+                20,
+                0
+              ],
+              [
+                3,
+                11,
+                8,
+                0
+              ],
+              [
+                17,
+                16,
+                45,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 49,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 11,
+                "total": 22
+              },
+              "positive": {
+                "hits": 45,
+                "total": 78
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.5684210526315789,
+            "macro_f1": 0.474028044915958,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                16,
+                19,
+                0
+              ],
+              [
+                6,
+                4,
+                12,
+                0
+              ],
+              [
+                18,
+                11,
+                49,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 22
+              },
+              "positive": {
+                "hits": 49,
+                "total": 78
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.07738095238095238,
+              0.10236339057015462
+            ],
+            "macro_f1": [
+              -0.12957828938400343,
+              0.06163603783719443
+            ]
+          }
+        },
+        "desktop_calibrated": {
+          "n": 190,
+          "sources": 15,
+          "corrected": 30,
+          "regressed": 34,
+          "reference": {
+            "accuracy": 0.5894736842105263,
+            "macro_f1": 0.5404861184110632,
+            "correct": 112,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                15,
+                20,
+                0
+              ],
+              [
+                6,
+                10,
+                6,
+                0
+              ],
+              [
+                24,
+                7,
+                47,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 10,
+                "total": 22
+              },
+              "positive": {
+                "hits": 47,
+                "total": 78
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.5684210526315789,
+            "macro_f1": 0.474028044915958,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                16,
+                19,
+                0
+              ],
+              [
+                6,
+                4,
+                12,
+                0
+              ],
+              [
+                18,
+                11,
+                49,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 22
+              },
+              "positive": {
+                "hits": 49,
+                "total": 78
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.125,
+              0.08721027782113318
+            ],
+            "macro_f1": [
+              -0.1399843738023109,
+              0.019467710386135054
+            ]
+          }
+        },
+        "omni_calibrated": {
+          "n": 190,
+          "sources": 15,
+          "corrected": 41,
+          "regressed": 22,
+          "reference": {
+            "accuracy": 0.46842105263157896,
+            "macro_f1": 0.3943735985583206,
+            "correct": 89,
+            "abstain": 0,
+            "confusion": [
+              [
+                60,
+                16,
+                14,
+                0
+              ],
+              [
+                8,
+                6,
+                8,
+                0
+              ],
+              [
+                39,
+                16,
+                23,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 60,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 22
+              },
+              "positive": {
+                "hits": 23,
+                "total": 78
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.5684210526315789,
+            "macro_f1": 0.474028044915958,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                16,
+                19,
+                0
+              ],
+              [
+                6,
+                4,
+                12,
+                0
+              ],
+              [
+                18,
+                11,
+                49,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 22
+              },
+              "positive": {
+                "hits": 49,
+                "total": 78
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.01183431952662717,
+              0.20779651764165033
+            ],
+            "macro_f1": [
+              -0.03445135374195899,
+              0.1720507608506876
+            ]
+          }
+        },
+        "omni_selected": {
+          "n": 190,
+          "sources": 15,
+          "corrected": 56,
+          "regressed": 18,
+          "reference": {
+            "accuracy": 0.3684210526315789,
+            "macro_f1": 0.37500561990902354,
+            "correct": 70,
+            "abstain": 0,
+            "confusion": [
+              [
+                27,
+                57,
+                6,
+                0
+              ],
+              [
+                2,
+                16,
+                4,
+                0
+              ],
+              [
+                9,
+                42,
+                27,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 27,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 16,
+                "total": 22
+              },
+              "positive": {
+                "hits": 27,
+                "total": 78
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.5684210526315789,
+            "macro_f1": 0.474028044915958,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                16,
+                19,
+                0
+              ],
+              [
+                6,
+                4,
+                12,
+                0
+              ],
+              [
+                18,
+                11,
+                49,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 22
+              },
+              "positive": {
+                "hits": 49,
+                "total": 78
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.11458134541984731,
+              0.27273835920177375
+            ],
+            "macro_f1": [
+              0.014223377944770743,
+              0.18866274829024052
+            ]
+          }
+        },
+        "desktop_acoustic": {
+          "n": 190,
+          "sources": 15,
+          "corrected": 34,
+          "regressed": 27,
+          "reference": {
+            "accuracy": 0.531578947368421,
+            "macro_f1": 0.45465548163497777,
+            "correct": 101,
+            "abstain": 0,
+            "confusion": [
+              [
+                51,
+                11,
+                28,
+                0
+              ],
+              [
+                9,
+                5,
+                8,
+                0
+              ],
+              [
+                23,
+                10,
+                45,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 51,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 22
+              },
+              "positive": {
+                "hits": 45,
+                "total": 78
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.5684210526315789,
+            "macro_f1": 0.474028044915958,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                55,
+                16,
+                19,
+                0
+              ],
+              [
+                6,
+                4,
+                12,
+                0
+              ],
+              [
+                18,
+                11,
+                49,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 55,
+                "total": 90
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 22
+              },
+              "positive": {
+                "hits": 49,
+                "total": 78
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.034015538033395104,
+              0.13294874554175382
+            ],
+            "macro_f1": [
+              -0.049526458924265895,
+              0.0938465081836403
+            ]
+          }
+        }
+      }
+    },
+    "audio_text_disagreement": {
+      "metrics": {
+        "accuracy": 0.4669421487603306,
+        "macro_f1": 0.437400504756358,
+        "correct": 113,
+        "abstain": 0,
+        "confusion": [
+          [
+            44,
+            9,
+            17,
+            0
+          ],
+          [
+            28,
+            14,
+            39,
+            0
+          ],
+          [
+            28,
+            8,
+            55,
+            0
+          ]
+        ],
+        "n": 242,
+        "predicted_neutral": 31
+      },
+      "comparisons": {
+        "prior_correction": {
+          "n": 242,
+          "sources": 95,
+          "corrected": 25,
+          "regressed": 20,
+          "reference": {
+            "accuracy": 0.4462809917355372,
+            "macro_f1": 0.4128517118154424,
+            "correct": 108,
+            "abstain": 0,
+            "confusion": [
+              [
+                47,
+                8,
+                15,
+                0
+              ],
+              [
+                33,
+                11,
+                37,
+                0
+              ],
+              [
+                30,
+                11,
+                50,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 47,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 11,
+                "total": 81
+              },
+              "positive": {
+                "hits": 50,
+                "total": 91
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.4669421487603306,
+            "macro_f1": 0.437400504756358,
+            "correct": 113,
+            "abstain": 0,
+            "confusion": [
+              [
+                44,
+                9,
+                17,
+                0
+              ],
+              [
+                28,
+                14,
+                39,
+                0
+              ],
+              [
+                28,
+                8,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.04018307575272264,
+              0.07547169811320753
+            ],
+            "macro_f1": [
+              -0.04751668847259153,
+              0.08413865827565935
+            ]
+          }
+        },
+        "desktop_calibrated": {
+          "n": 242,
+          "sources": 95,
+          "corrected": 29,
+          "regressed": 35,
+          "reference": {
+            "accuracy": 0.49173553719008267,
+            "macro_f1": 0.45835863482922307,
+            "correct": 119,
+            "abstain": 2,
+            "confusion": [
+              [
+                45,
+                5,
+                18,
+                2
+              ],
+              [
+                38,
+                14,
+                29,
+                0
+              ],
+              [
+                29,
+                2,
+                60,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 45,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 60,
+                "total": 91
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.4669421487603306,
+            "macro_f1": 0.437400504756358,
+            "correct": 113,
+            "abstain": 0,
+            "confusion": [
+              [
+                44,
+                9,
+                17,
+                0
+              ],
+              [
+                28,
+                14,
+                39,
+                0
+              ],
+              [
+                28,
+                8,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.08335970464135024,
+              0.037977697408077174
+            ],
+            "macro_f1": [
+              -0.08345031535758393,
+              0.041645405330424955
+            ]
+          }
+        },
+        "omni_calibrated": {
+          "n": 242,
+          "sources": 95,
+          "corrected": 47,
+          "regressed": 22,
+          "reference": {
+            "accuracy": 0.36363636363636365,
+            "macro_f1": 0.34495576553595475,
+            "correct": 88,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                8,
+                25,
+                0
+              ],
+              [
+                27,
+                12,
+                42,
+                0
+              ],
+              [
+                38,
+                14,
+                39,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 12,
+                "total": 81
+              },
+              "positive": {
+                "hits": 39,
+                "total": 91
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.4669421487603306,
+            "macro_f1": 0.437400504756358,
+            "correct": 113,
+            "abstain": 0,
+            "confusion": [
+              [
+                44,
+                9,
+                17,
+                0
+              ],
+              [
+                28,
+                14,
+                39,
+                0
+              ],
+              [
+                28,
+                8,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.039797159576566495,
+              0.1626035710117867
+            ],
+            "macro_f1": [
+              0.021581272042092717,
+              0.15582017944178722
+            ]
+          }
+        },
+        "omni_selected": {
+          "n": 242,
+          "sources": 95,
+          "corrected": 30,
+          "regressed": 32,
+          "reference": {
+            "accuracy": 0.47520661157024796,
+            "macro_f1": 0.4765883626177743,
+            "correct": 115,
+            "abstain": 0,
+            "confusion": [
+              [
+                43,
+                16,
+                11,
+                0
+              ],
+              [
+                19,
+                33,
+                29,
+                0
+              ],
+              [
+                22,
+                30,
+                39,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 43,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 33,
+                "total": 81
+              },
+              "positive": {
+                "hits": 39,
+                "total": 91
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.4669421487603306,
+            "macro_f1": 0.437400504756358,
+            "correct": 113,
+            "abstain": 0,
+            "confusion": [
+              [
+                44,
+                9,
+                17,
+                0
+              ],
+              [
+                28,
+                14,
+                39,
+                0
+              ],
+              [
+                28,
+                8,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.0776255707762557,
+              0.051474903341618354
+            ],
+            "macro_f1": [
+              -0.11013825515423564,
+              0.024150671969283895
+            ]
+          }
+        },
+        "desktop_acoustic": {
+          "n": 242,
+          "sources": 95,
+          "corrected": 26,
+          "regressed": 22,
+          "reference": {
+            "accuracy": 0.45041322314049587,
+            "macro_f1": 0.4119424884219732,
+            "correct": 109,
+            "abstain": 2,
+            "confusion": [
+              [
+                44,
+                7,
+                17,
+                2
+              ],
+              [
+                35,
+                10,
+                36,
+                0
+              ],
+              [
+                31,
+                5,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 10,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate": {
+            "accuracy": 0.4669421487603306,
+            "macro_f1": 0.437400504756358,
+            "correct": 113,
+            "abstain": 0,
+            "confusion": [
+              [
+                44,
+                9,
+                17,
+                0
+              ],
+              [
+                28,
+                14,
+                39,
+                0
+              ],
+              [
+                28,
+                8,
+                55,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 44,
+                "total": 70
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 81
+              },
+              "positive": {
+                "hits": 55,
+                "total": 91
+              }
+            }
+          },
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.024898858921161796,
+              0.0655737704918033
+            ],
+            "macro_f1": [
+              -0.015335835124186273,
+              0.07412592541305107
+            ]
+          }
+        }
+      }
+    }
+  },
+  "validation": [
+    {
+      "choice": [
+        "omni",
+        "omni",
+        0.75
+      ],
+      "accuracy": 0.6553323029366306,
+      "macro_f1": 0.5813400187083997,
+      "correct": 424,
+      "abstain": 0,
+      "confusion": [
+        [
+          215,
+          37,
+          55,
+          0
+        ],
+        [
+          23,
+          31,
+          51,
+          0
+        ],
+        [
+          31,
+          26,
+          178,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 94,
+      "mean_collection_accuracy": 0.6542474265419608
+    },
+    {
+      "choice": [
+        "omni",
+        "omni",
+        1.0
+      ],
+      "accuracy": 0.6769706336939721,
+      "macro_f1": 0.5772660839438802,
+      "correct": 438,
+      "abstain": 0,
+      "confusion": [
+        [
+          228,
+          19,
+          60,
+          0
+        ],
+        [
+          29,
+          21,
+          55,
+          0
+        ],
+        [
+          35,
+          11,
+          189,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 51,
+      "mean_collection_accuracy": 0.6478251207775497
+    },
+    {
+      "choice": [
+        "omni",
+        "omni",
+        1.25
+      ],
+      "accuracy": 0.6769706336939721,
+      "macro_f1": 0.5363582889130335,
+      "correct": 438,
+      "abstain": 0,
+      "confusion": [
+        [
+          236,
+          10,
+          61,
+          0
+        ],
+        [
+          37,
+          9,
+          59,
+          0
+        ],
+        [
+          36,
+          6,
+          193,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 25,
+      "mean_collection_accuracy": 0.6466329854548193
+    },
+    {
+      "choice": [
+        "omni",
+        "speech_and_omni",
+        0.75
+      ],
+      "accuracy": 0.6506955177743431,
+      "macro_f1": 0.5987616410815751,
+      "correct": 421,
+      "abstain": 0,
+      "confusion": [
+        [
+          205,
+          49,
+          53,
+          0
+        ],
+        [
+          22,
+          44,
+          39,
+          0
+        ],
+        [
+          27,
+          36,
+          172,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 129,
+      "mean_collection_accuracy": 0.6881203103460641
+    },
+    {
+      "choice": [
+        "omni",
+        "speech_and_omni",
+        1.0
+      ],
+      "accuracy": 0.6738794435857806,
+      "macro_f1": 0.5950750899686875,
+      "correct": 436,
+      "abstain": 0,
+      "confusion": [
+        [
+          223,
+          27,
+          57,
+          0
+        ],
+        [
+          27,
+          30,
+          48,
+          0
+        ],
+        [
+          29,
+          23,
+          183,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 80,
+      "mean_collection_accuracy": 0.6836383688510045
+    },
+    {
+      "choice": [
+        "omni",
+        "speech_and_omni",
+        1.25
+      ],
+      "accuracy": 0.6769706336939721,
+      "macro_f1": 0.5851964185391809,
+      "correct": 438,
+      "abstain": 0,
+      "confusion": [
+        [
+          226,
+          19,
+          62,
+          0
+        ],
+        [
+          28,
+          24,
+          53,
+          0
+        ],
+        [
+          32,
+          15,
+          188,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 58,
+      "mean_collection_accuracy": 0.6386701265942724
+    },
+    {
+      "choice": [
+        "omni",
+        "speech",
+        0.75
+      ],
+      "accuracy": 0.6568778979907264,
+      "macro_f1": 0.574008574313658,
+      "correct": 425,
+      "abstain": 0,
+      "confusion": [
+        [
+          220,
+          31,
+          56,
+          0
+        ],
+        [
+          31,
+          27,
+          47,
+          0
+        ],
+        [
+          28,
+          29,
+          178,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 87,
+      "mean_collection_accuracy": 0.695085795829666
+    },
+    {
+      "choice": [
+        "omni",
+        "speech",
+        1.0
+      ],
+      "accuracy": 0.6707882534775889,
+      "macro_f1": 0.5633230036200527,
+      "correct": 434,
+      "abstain": 0,
+      "confusion": [
+        [
+          229,
+          15,
+          63,
+          0
+        ],
+        [
+          33,
+          18,
+          54,
+          0
+        ],
+        [
+          33,
+          15,
+          187,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 48,
+      "mean_collection_accuracy": 0.6550603037505586
+    },
+    {
+      "choice": [
+        "omni",
+        "speech",
+        1.25
+      ],
+      "accuracy": 0.678516228748068,
+      "macro_f1": 0.5455025943878019,
+      "correct": 439,
+      "abstain": 0,
+      "confusion": [
+        [
+          235,
+          8,
+          64,
+          0
+        ],
+        [
+          37,
+          11,
+          57,
+          0
+        ],
+        [
+          35,
+          7,
+          193,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 26,
+      "mean_collection_accuracy": 0.6799663187881526
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "omni",
+        0.75
+      ],
+      "accuracy": 0.6630602782071098,
+      "macro_f1": 0.5883863730213729,
+      "correct": 429,
+      "abstain": 0,
+      "confusion": [
+        [
+          214,
+          35,
+          58,
+          0
+        ],
+        [
+          23,
+          31,
+          51,
+          0
+        ],
+        [
+          29,
+          22,
+          184,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 88,
+      "mean_collection_accuracy": 0.6481871440971085
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "omni",
+        1.0
+      ],
+      "accuracy": 0.6692426584234931,
+      "macro_f1": 0.5562814846721907,
+      "correct": 433,
+      "abstain": 0,
+      "confusion": [
+        [
+          227,
+          16,
+          64,
+          0
+        ],
+        [
+          31,
+          16,
+          58,
+          0
+        ],
+        [
+          34,
+          11,
+          190,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 43,
+      "mean_collection_accuracy": 0.6381098675724636
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "omni",
+        1.25
+      ],
+      "accuracy": 0.6754250386398764,
+      "macro_f1": 0.5349892693996928,
+      "correct": 437,
+      "abstain": 0,
+      "confusion": [
+        [
+          235,
+          5,
+          67,
+          0
+        ],
+        [
+          36,
+          9,
+          60,
+          0
+        ],
+        [
+          36,
+          6,
+          193,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 20,
+      "mean_collection_accuracy": 0.6395718558765572
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech_and_omni",
+        0.75
+      ],
+      "accuracy": 0.6476043276661515,
+      "macro_f1": 0.5988229233417518,
+      "correct": 419,
+      "abstain": 0,
+      "confusion": [
+        [
+          203,
+          49,
+          55,
+          0
+        ],
+        [
+          19,
+          46,
+          40,
+          0
+        ],
+        [
+          26,
+          39,
+          170,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 134,
+      "mean_collection_accuracy": 0.7013879427037947
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech_and_omni",
+        1.0
+      ],
+      "accuracy": 0.6676970633693973,
+      "macro_f1": 0.5841543540408825,
+      "correct": 432,
+      "abstain": 0,
+      "confusion": [
+        [
+          218,
+          27,
+          62,
+          0
+        ],
+        [
+          25,
+          27,
+          53,
+          0
+        ],
+        [
+          28,
+          20,
+          187,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 74,
+      "mean_collection_accuracy": 0.6528600412933703
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech_and_omni",
+        1.25
+      ],
+      "accuracy": 0.6769706336939721,
+      "macro_f1": 0.5745612412279079,
+      "correct": 438,
+      "abstain": 0,
+      "confusion": [
+        [
+          227,
+          16,
+          64,
+          0
+        ],
+        [
+          29,
+          20,
+          56,
+          0
+        ],
+        [
+          31,
+          13,
+          191,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 49,
+      "mean_collection_accuracy": 0.6538608884267801
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech",
+        0.75
+      ],
+      "accuracy": 0.6646058732612056,
+      "macro_f1": 0.5853494234412225,
+      "correct": 430,
+      "abstain": 0,
+      "confusion": [
+        [
+          219,
+          29,
+          59,
+          0
+        ],
+        [
+          26,
+          29,
+          50,
+          0
+        ],
+        [
+          29,
+          24,
+          182,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 82,
+      "mean_collection_accuracy": 0.7029490488590132
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech",
+        1.0
+      ],
+      "accuracy": 0.6615146831530139,
+      "macro_f1": 0.5467831275628484,
+      "correct": 428,
+      "abstain": 0,
+      "confusion": [
+        [
+          227,
+          18,
+          62,
+          0
+        ],
+        [
+          31,
+          15,
+          59,
+          0
+        ],
+        [
+          33,
+          16,
+          186,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 49,
+      "mean_collection_accuracy": 0.6565188182981875
+    },
+    {
+      "choice": [
+        "speech_and_omni",
+        "speech",
+        1.25
+      ],
+      "accuracy": 0.6754250386398764,
+      "macro_f1": 0.5310484103306289,
+      "correct": 437,
+      "abstain": 0,
+      "confusion": [
+        [
+          234,
+          9,
+          64,
+          0
+        ],
+        [
+          36,
+          8,
+          61,
+          0
+        ],
+        [
+          36,
+          4,
+          195,
+          0
+        ]
+      ],
+      "n": 647,
+      "predicted_neutral": 21,
+      "mean_collection_accuracy": 0.6713475568111367
+    }
+  ]
+}

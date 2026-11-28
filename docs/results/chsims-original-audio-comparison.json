@@ -1,0 +1,2534 @@
+{
+  "test_ids_sha256": "6753509505dcf751f80946a160abb133d9326f8a40524822b906468a911122a8",
+  "meta_sha256": "be7e482640e7ee24d2070033e1e2aef61ce183199286a8a18b0d6247556bf150",
+  "teacher_head_sha256": "628afc297f1cf58a47a849e24726a8f69737a65e42e31f877b6ddc2d691fe89f",
+  "desktop_fixed_asset_sha256": "f7c5ae8fe83399abe95a53099a5087c16aed6f47048eae2d713a2e7c78a23393",
+  "extractor": "emotion2vec_plus_seed@7be9a30d52bd",
+  "audio_gap_fraction": 0.4,
+  "cases": {
+    "audio_only": {
+      "official": {
+        "full": {
+          "n": 1034,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.3568665377176016,
+              "macro_f1": 0.39931062735113093,
+              "correct": 369,
+              "abstain": 305,
+              "confusion": [
+                [
+                  195,
+                  104,
+                  22,
+                  167
+                ],
+                [
+                  22,
+                  61,
+                  13,
+                  27
+                ],
+                [
+                  110,
+                  89,
+                  113,
+                  111
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 195,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 61,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 113,
+                  "total": 423
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5715667311411993,
+              "macro_f1": 0.48558764325339676,
+              "correct": 591,
+              "abstain": 8,
+              "confusion": [
+                [
+                  401,
+                  36,
+                  45,
+                  6
+                ],
+                [
+                  72,
+                  33,
+                  18,
+                  0
+                ],
+                [
+                  234,
+                  30,
+                  157,
+                  2
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 401,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 33,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 157,
+                  "total": 423
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5773694390715667,
+              "macro_f1": 0.5370968853184453,
+              "correct": 597,
+              "abstain": 8,
+              "confusion": [
+                [
+                  291,
+                  77,
+                  114,
+                  6
+                ],
+                [
+                  32,
+                  62,
+                  29,
+                  0
+                ],
+                [
+                  110,
+                  67,
+                  244,
+                  2
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 291,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 62,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 244,
+                  "total": 423
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.7176015473887815,
+              "macro_f1": 0.6583297809452433,
+              "correct": 742,
+              "abstain": 0,
+              "confusion": [
+                [
+                  363,
+                  73,
+                  52,
+                  0
+                ],
+                [
+                  29,
+                  71,
+                  23,
+                  0
+                ],
+                [
+                  55,
+                  60,
+                  308,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 363,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 71,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 308,
+                  "total": 423
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 426,
+              "regressed": 53,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.3115614423236975,
+                  0.4107140328891353
+                ],
+                "macro_f1": [
+                  0.2164884819656072,
+                  0.3075502049211269
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 242,
+              "regressed": 91,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.10161548135793044,
+                  0.1943299303670483
+                ],
+                "macro_f1": [
+                  0.12740249377268226,
+                  0.22746827197657485
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 215,
+              "regressed": 70,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.10121573934165981,
+                  0.17808257061461988
+                ],
+                "macro_f1": [
+                  0.08527552342515013,
+                  0.15816670077337877
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 1034,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.35493230174081236,
+              "macro_f1": 0.40249453760609183,
+              "correct": 367,
+              "abstain": 305,
+              "confusion": [
+                [
+                  187,
+                  100,
+                  19,
+                  158
+                ],
+                [
+                  34,
+                  73,
+                  22,
+                  43
+                ],
+                [
+                  106,
+                  81,
+                  107,
+                  104
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 187,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 73,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 107,
+                  "total": 398
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5464216634429401,
+              "macro_f1": 0.46272416584860804,
+              "correct": 565,
+              "abstain": 8,
+              "confusion": [
+                [
+                  383,
+                  36,
+                  39,
+                  6
+                ],
+                [
+                  103,
+                  35,
+                  34,
+                  0
+                ],
+                [
+                  221,
+                  28,
+                  147,
+                  2
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 383,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 35,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 147,
+                  "total": 398
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5570599613152805,
+              "macro_f1": 0.5231718109406653,
+              "correct": 576,
+              "abstain": 8,
+              "confusion": [
+                [
+                  283,
+                  73,
+                  102,
+                  6
+                ],
+                [
+                  40,
+                  70,
+                  62,
+                  0
+                ],
+                [
+                  110,
+                  63,
+                  223,
+                  2
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 283,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 70,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 223,
+                  "total": 398
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.695357833655706,
+              "macro_f1": 0.6468143225268291,
+              "correct": 719,
+              "abstain": 0,
+              "confusion": [
+                [
+                  355,
+                  64,
+                  45,
+                  0
+                ],
+                [
+                  32,
+                  83,
+                  57,
+                  0
+                ],
+                [
+                  60,
+                  57,
+                  281,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 355,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 83,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 281,
+                  "total": 398
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 412,
+              "regressed": 60,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.29296463822348495,
+                  0.3881886149974091
+                ],
+                "macro_f1": [
+                  0.20096373399339335,
+                  0.28885929662471554
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 239,
+              "regressed": 85,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.11080148783800474,
+                  0.18952169282770756
+                ],
+                "macro_f1": [
+                  0.14844750426698722,
+                  0.22332245584034022
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 215,
+              "regressed": 72,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.09999759846301631,
+                  0.174180874586554
+                ],
+                "macro_f1": [
+                  0.08940191598529301,
+                  0.15842497885867526
+                ]
+              }
+            }
+          }
+        }
+      },
+      "unseen_sources": {
+        "full": {
+          "n": 190,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.4421052631578947,
+              "macro_f1": 0.45143260513833444,
+              "correct": 84,
+              "abstain": 19,
+              "confusion": [
+                [
+                  35,
+                  38,
+                  6,
+                  11
+                ],
+                [
+                  4,
+                  14,
+                  3,
+                  1
+                ],
+                [
+                  17,
+                  19,
+                  35,
+                  7
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 35,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 14,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 35,
+                  "total": 78
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5842105263157895,
+              "macro_f1": 0.5190909090909092,
+              "correct": 111,
+              "abstain": 0,
+              "confusion": [
+                [
+                  67,
+                  14,
+                  9,
+                  0
+                ],
+                [
+                  10,
+                  9,
+                  3,
+                  0
+                ],
+                [
+                  33,
+                  10,
+                  35,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 67,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 9,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 35,
+                  "total": 78
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5631578947368421,
+              "macro_f1": 0.5269349136067812,
+              "correct": 107,
+              "abstain": 0,
+              "confusion": [
+                [
+                  42,
+                  17,
+                  31,
+                  0
+                ],
+                [
+                  5,
+                  12,
+                  5,
+                  0
+                ],
+                [
+                  15,
+                  10,
+                  53,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 42,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 12,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 53,
+                  "total": 78
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.5789473684210527,
+              "macro_f1": 0.5511370968688042,
+              "correct": 110,
+              "abstain": 0,
+              "confusion": [
+                [
+                  47,
+                  27,
+                  16,
+                  0
+                ],
+                [
+                  3,
+                  16,
+                  3,
+                  0
+                ],
+                [
+                  14,
+                  17,
+                  47,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 47,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 16,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 47,
+                  "total": 78
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 49,
+              "regressed": 23,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.04143116550187688,
+                  0.2328786581569116
+                ],
+                "macro_f1": [
+                  0.011683434012013215,
+                  0.1997896414136021
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 34,
+              "regressed": 35,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.11443797757623358,
+                  0.09527649769585232
+                ],
+                "macro_f1": [
+                  -0.06983196482728857,
+                  0.13862176284340547
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 33,
+              "regressed": 30,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.11707844022884673,
+                  0.11828116052681809
+                ],
+                "macro_f1": [
+                  -0.09970222860652649,
+                  0.11777726919416605
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 190,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.4421052631578947,
+              "macro_f1": 0.45143260513833444,
+              "correct": 84,
+              "abstain": 19,
+              "confusion": [
+                [
+                  35,
+                  38,
+                  6,
+                  11
+                ],
+                [
+                  4,
+                  14,
+                  3,
+                  1
+                ],
+                [
+                  17,
+                  19,
+                  35,
+                  7
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 35,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 14,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 35,
+                  "total": 78
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5842105263157895,
+              "macro_f1": 0.5190909090909092,
+              "correct": 111,
+              "abstain": 0,
+              "confusion": [
+                [
+                  67,
+                  14,
+                  9,
+                  0
+                ],
+                [
+                  10,
+                  9,
+                  3,
+                  0
+                ],
+                [
+                  33,
+                  10,
+                  35,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 67,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 9,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 35,
+                  "total": 78
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5631578947368421,
+              "macro_f1": 0.5269349136067812,
+              "correct": 107,
+              "abstain": 0,
+              "confusion": [
+                [
+                  42,
+                  17,
+                  31,
+                  0
+                ],
+                [
+                  5,
+                  12,
+                  5,
+                  0
+                ],
+                [
+                  15,
+                  10,
+                  53,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 42,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 12,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 53,
+                  "total": 78
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.5789473684210527,
+              "macro_f1": 0.5511370968688042,
+              "correct": 110,
+              "abstain": 0,
+              "confusion": [
+                [
+                  47,
+                  27,
+                  16,
+                  0
+                ],
+                [
+                  3,
+                  16,
+                  3,
+                  0
+                ],
+                [
+                  14,
+                  17,
+                  47,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 47,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 16,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 47,
+                  "total": 78
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 49,
+              "regressed": 23,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.04143116550187688,
+                  0.2328786581569116
+                ],
+                "macro_f1": [
+                  0.011683434012013215,
+                  0.1997896414136021
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 34,
+              "regressed": 35,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.11443797757623358,
+                  0.09527649769585232
+                ],
+                "macro_f1": [
+                  -0.06983196482728857,
+                  0.13862176284340547
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 33,
+              "regressed": 30,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.11707844022884673,
+                  0.11828116052681809
+                ],
+                "macro_f1": [
+                  -0.09970222860652649,
+                  0.11777726919416605
+                ]
+              }
+            }
+          }
+        }
+      },
+      "shared_coverage": {
+        "full": {
+          "n": 729,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.5061728395061729,
+              "macro_f1": 0.48057587608312247,
+              "correct": 369,
+              "abstain": 0,
+              "confusion": [
+                [
+                  195,
+                  104,
+                  22,
+                  0
+                ],
+                [
+                  22,
+                  61,
+                  13,
+                  0
+                ],
+                [
+                  110,
+                  89,
+                  113,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 195,
+                  "total": 321
+                },
+                "neutral": {
+                  "hits": 61,
+                  "total": 96
+                },
+                "positive": {
+                  "hits": 113,
+                  "total": 312
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5582990397805213,
+              "macro_f1": 0.4955633060634434,
+              "correct": 407,
+              "abstain": 0,
+              "confusion": [
+                [
+                  256,
+                  34,
+                  31,
+                  0
+                ],
+                [
+                  48,
+                  33,
+                  15,
+                  0
+                ],
+                [
+                  164,
+                  30,
+                  118,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 256,
+                  "total": 321
+                },
+                "neutral": {
+                  "hits": 33,
+                  "total": 96
+                },
+                "positive": {
+                  "hits": 118,
+                  "total": 312
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5761316872427984,
+              "macro_f1": 0.541682822565224,
+              "correct": 420,
+              "abstain": 0,
+              "confusion": [
+                [
+                  184,
+                  63,
+                  74,
+                  0
+                ],
+                [
+                  21,
+                  52,
+                  23,
+                  0
+                ],
+                [
+                  71,
+                  57,
+                  184,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 184,
+                  "total": 321
+                },
+                "neutral": {
+                  "hits": 52,
+                  "total": 96
+                },
+                "positive": {
+                  "hits": 184,
+                  "total": 312
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.7146776406035665,
+              "macro_f1": 0.66430481913412,
+              "correct": 521,
+              "abstain": 0,
+              "confusion": [
+                [
+                  236,
+                  54,
+                  31,
+                  0
+                ],
+                [
+                  19,
+                  58,
+                  19,
+                  0
+                ],
+                [
+                  35,
+                  50,
+                  227,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 236,
+                  "total": 321
+                },
+                "neutral": {
+                  "hits": 58,
+                  "total": 96
+                },
+                "positive": {
+                  "hits": 227,
+                  "total": 312
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 205,
+              "regressed": 53,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.15939002069489078,
+                  0.2601436677532295
+                ],
+                "macro_f1": [
+                  0.13731985788961315,
+                  0.23526674321318394
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 171,
+              "regressed": 57,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.1096964003164557,
+                  0.21060590900403603
+                ],
+                "macro_f1": [
+                  0.12372768801115654,
+                  0.2278307897484831
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 153,
+              "regressed": 52,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.09516323331840566,
+                  0.1832421976751759
+                ],
+                "macro_f1": [
+                  0.08312809247730886,
+                  0.16614342797845225
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 729,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.5034293552812071,
+              "macro_f1": 0.48540040769814513,
+              "correct": 367,
+              "abstain": 0,
+              "confusion": [
+                [
+                  187,
+                  100,
+                  19,
+                  0
+                ],
+                [
+                  34,
+                  73,
+                  22,
+                  0
+                ],
+                [
+                  106,
+                  81,
+                  107,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 187,
+                  "total": 306
+                },
+                "neutral": {
+                  "hits": 73,
+                  "total": 129
+                },
+                "positive": {
+                  "hits": 107,
+                  "total": 294
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5349794238683128,
+              "macro_f1": 0.47438626455100635,
+              "correct": 390,
+              "abstain": 0,
+              "confusion": [
+                [
+                  245,
+                  34,
+                  27,
+                  0
+                ],
+                [
+                  67,
+                  35,
+                  27,
+                  0
+                ],
+                [
+                  156,
+                  28,
+                  110,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 245,
+                  "total": 306
+                },
+                "neutral": {
+                  "hits": 35,
+                  "total": 129
+                },
+                "positive": {
+                  "hits": 110,
+                  "total": 294
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5473251028806584,
+              "macro_f1": 0.5192578616789264,
+              "correct": 399,
+              "abstain": 0,
+              "confusion": [
+                [
+                  176,
+                  63,
+                  67,
+                  0
+                ],
+                [
+                  26,
+                  56,
+                  47,
+                  0
+                ],
+                [
+                  74,
+                  53,
+                  167,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 176,
+                  "total": 306
+                },
+                "neutral": {
+                  "hits": 56,
+                  "total": 129
+                },
+                "positive": {
+                  "hits": 167,
+                  "total": 294
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.6844993141289437,
+              "macro_f1": 0.6422122572233149,
+              "correct": 499,
+              "abstain": 0,
+              "confusion": [
+                [
+                  228,
+                  52,
+                  26,
+                  0
+                ],
+                [
+                  23,
+                  63,
+                  43,
+                  0
+                ],
+                [
+                  39,
+                  47,
+                  208,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 228,
+                  "total": 306
+                },
+                "neutral": {
+                  "hits": 63,
+                  "total": 129
+                },
+                "positive": {
+                  "hits": 208,
+                  "total": 294
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 192,
+              "regressed": 60,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.1345509840384318,
+                  0.22912272166362818
+                ],
+                "macro_f1": [
+                  0.11382153192268216,
+                  0.20298002004119992
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 168,
+              "regressed": 59,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.10641130895910869,
+                  0.19591174774235925
+                ],
+                "macro_f1": [
+                  0.1263790977569617,
+                  0.21392381731292182
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 153,
+              "regressed": 53,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.09742120343839544,
+                  0.18194285302860433
+                ],
+                "macro_f1": [
+                  0.08446206248408934,
+                  0.16387777539341106
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "audio_only_with_gap": {
+      "official": {
+        "full": {
+          "n": 1034,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.05705996131528046,
+              "macro_f1": 0.11378901789544217,
+              "correct": 59,
+              "abstain": 897,
+              "confusion": [
+                [
+                  25,
+                  26,
+                  3,
+                  434
+                ],
+                [
+                  4,
+                  15,
+                  2,
+                  102
+                ],
+                [
+                  24,
+                  19,
+                  19,
+                  361
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 25,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 15,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 19,
+                  "total": 423
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5174081237911026,
+              "macro_f1": 0.33231154390931783,
+              "correct": 535,
+              "abstain": 17,
+              "confusion": [
+                [
+                  439,
+                  1,
+                  35,
+                  13
+                ],
+                [
+                  106,
+                  1,
+                  16,
+                  0
+                ],
+                [
+                  324,
+                  0,
+                  95,
+                  4
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 439,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 1,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 95,
+                  "total": 423
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5541586073500967,
+              "macro_f1": 0.49503171876278235,
+              "correct": 573,
+              "abstain": 17,
+              "confusion": [
+                [
+                  318,
+                  63,
+                  94,
+                  13
+                ],
+                [
+                  53,
+                  41,
+                  29,
+                  0
+                ],
+                [
+                  152,
+                  53,
+                  214,
+                  4
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 318,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 41,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 214,
+                  "total": 423
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.6508704061895552,
+              "macro_f1": 0.5821747817684958,
+              "correct": 673,
+              "abstain": 0,
+              "confusion": [
+                [
+                  352,
+                  66,
+                  70,
+                  0
+                ],
+                [
+                  38,
+                  52,
+                  33,
+                  0
+                ],
+                [
+                  94,
+                  60,
+                  269,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 352,
+                  "total": 488
+                },
+                "neutral": {
+                  "hits": 52,
+                  "total": 123
+                },
+                "positive": {
+                  "hits": 269,
+                  "total": 423
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 631,
+              "regressed": 17,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.55052908190378,
+                  0.6379126997606237
+                ],
+                "macro_f1": [
+                  0.41784177029664377,
+                  0.520183896555761
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 261,
+              "regressed": 123,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.08429693742377732,
+                  0.18499677908856083
+                ],
+                "macro_f1": [
+                  0.2070117188350174,
+                  0.29265526547142745
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 190,
+              "regressed": 90,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.058303484652468,
+                  0.1361014024028226
+                ],
+                "macro_f1": [
+                  0.04728922582218982,
+                  0.1266889018759785
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 1034,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.05705996131528046,
+              "macro_f1": 0.10636000855164744,
+              "correct": 59,
+              "abstain": 897,
+              "confusion": [
+                [
+                  26,
+                  24,
+                  4,
+                  410
+                ],
+                [
+                  6,
+                  16,
+                  3,
+                  147
+                ],
+                [
+                  21,
+                  20,
+                  17,
+                  340
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 26,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 16,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 17,
+                  "total": 398
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.4990328820116054,
+              "macro_f1": 0.33291142680869673,
+              "correct": 516,
+              "abstain": 17,
+              "confusion": [
+                [
+                  420,
+                  0,
+                  31,
+                  13
+                ],
+                [
+                  149,
+                  2,
+                  21,
+                  0
+                ],
+                [
+                  300,
+                  0,
+                  94,
+                  4
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 420,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 2,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 94,
+                  "total": 398
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.534816247582205,
+              "macro_f1": 0.4887345008925556,
+              "correct": 553,
+              "abstain": 17,
+              "confusion": [
+                [
+                  302,
+                  62,
+                  87,
+                  13
+                ],
+                [
+                  71,
+                  51,
+                  50,
+                  0
+                ],
+                [
+                  150,
+                  44,
+                  200,
+                  4
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 302,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 51,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 200,
+                  "total": 398
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.6305609284332688,
+              "macro_f1": 0.5764370650446599,
+              "correct": 652,
+              "abstain": 0,
+              "confusion": [
+                [
+                  342,
+                  57,
+                  65,
+                  0
+                ],
+                [
+                  45,
+                  65,
+                  62,
+                  0
+                ],
+                [
+                  97,
+                  56,
+                  245,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 342,
+                  "total": 464
+                },
+                "neutral": {
+                  "hits": 65,
+                  "total": 172
+                },
+                "positive": {
+                  "hits": 245,
+                  "total": 398
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 611,
+              "regressed": 18,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.5352582588978602,
+                  0.6118800636267232
+                ],
+                "macro_f1": [
+                  0.42337816904683856,
+                  0.5132402328633682
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 251,
+              "regressed": 115,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.08490333444977856,
+                  0.17798043120050472
+                ],
+                "macro_f1": [
+                  0.19862917096239446,
+                  0.28828799630103386
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 189,
+              "regressed": 90,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.05392070255664106,
+                  0.13456660994275516
+                ],
+                "macro_f1": [
+                  0.042701232508175264,
+                  0.1283656797174065
+                ]
+              }
+            }
+          }
+        }
+      },
+      "unseen_sources": {
+        "full": {
+          "n": 190,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.1,
+              "macro_f1": 0.16043140262667008,
+              "correct": 19,
+              "abstain": 142,
+              "confusion": [
+                [
+                  9,
+                  15,
+                  0,
+                  66
+                ],
+                [
+                  1,
+                  4,
+                  0,
+                  17
+                ],
+                [
+                  7,
+                  6,
+                  6,
+                  59
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 9,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 4,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 6,
+                  "total": 78
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5473684210526316,
+              "macro_f1": 0.35185185185185186,
+              "correct": 104,
+              "abstain": 1,
+              "confusion": [
+                [
+                  83,
+                  0,
+                  6,
+                  1
+                ],
+                [
+                  19,
+                  0,
+                  3,
+                  0
+                ],
+                [
+                  57,
+                  0,
+                  21,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 83,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 0,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 21,
+                  "total": 78
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.531578947368421,
+              "macro_f1": 0.45606071807003284,
+              "correct": 101,
+              "abstain": 1,
+              "confusion": [
+                [
+                  46,
+                  15,
+                  28,
+                  1
+                ],
+                [
+                  11,
+                  5,
+                  6,
+                  0
+                ],
+                [
+                  20,
+                  8,
+                  50,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 46,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 5,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 50,
+                  "total": 78
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.5368421052631579,
+              "macro_f1": 0.4955819286779039,
+              "correct": 102,
+              "abstain": 0,
+              "confusion": [
+                [
+                  45,
+                  24,
+                  21,
+                  0
+                ],
+                [
+                  3,
+                  11,
+                  8,
+                  0
+                ],
+                [
+                  14,
+                  18,
+                  46,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 45,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 11,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 46,
+                  "total": 78
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 89,
+              "regressed": 6,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.3113705921490353,
+                  0.5469613259668508
+                ],
+                "macro_f1": [
+                  0.22400806457811587,
+                  0.4399538325194956
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 42,
+              "regressed": 44,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.16240942028985506,
+                  0.13178786447881005
+                ],
+                "macro_f1": [
+                  0.03489643727219668,
+                  0.24241830777755347
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 31,
+              "regressed": 30,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.1419364794902429,
+                  0.1221514541282255
+                ],
+                "macro_f1": [
+                  -0.09999947091198819,
+                  0.15802572068839832
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 190,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.1,
+              "macro_f1": 0.16043140262667008,
+              "correct": 19,
+              "abstain": 142,
+              "confusion": [
+                [
+                  9,
+                  15,
+                  0,
+                  66
+                ],
+                [
+                  1,
+                  4,
+                  0,
+                  17
+                ],
+                [
+                  7,
+                  6,
+                  6,
+                  59
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 9,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 4,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 6,
+                  "total": 78
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5473684210526316,
+              "macro_f1": 0.35185185185185186,
+              "correct": 104,
+              "abstain": 1,
+              "confusion": [
+                [
+                  83,
+                  0,
+                  6,
+                  1
+                ],
+                [
+                  19,
+                  0,
+                  3,
+                  0
+                ],
+                [
+                  57,
+                  0,
+                  21,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 83,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 0,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 21,
+                  "total": 78
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.531578947368421,
+              "macro_f1": 0.45606071807003284,
+              "correct": 101,
+              "abstain": 1,
+              "confusion": [
+                [
+                  46,
+                  15,
+                  28,
+                  1
+                ],
+                [
+                  11,
+                  5,
+                  6,
+                  0
+                ],
+                [
+                  20,
+                  8,
+                  50,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 46,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 5,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 50,
+                  "total": 78
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.5368421052631579,
+              "macro_f1": 0.4955819286779039,
+              "correct": 102,
+              "abstain": 0,
+              "confusion": [
+                [
+                  45,
+                  24,
+                  21,
+                  0
+                ],
+                [
+                  3,
+                  11,
+                  8,
+                  0
+                ],
+                [
+                  14,
+                  18,
+                  46,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 45,
+                  "total": 90
+                },
+                "neutral": {
+                  "hits": 11,
+                  "total": 22
+                },
+                "positive": {
+                  "hits": 46,
+                  "total": 78
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 89,
+              "regressed": 6,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.3113705921490353,
+                  0.5469613259668508
+                ],
+                "macro_f1": [
+                  0.22400806457811587,
+                  0.4399538325194956
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 42,
+              "regressed": 44,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.16240942028985506,
+                  0.13178786447881005
+                ],
+                "macro_f1": [
+                  0.03489643727219668,
+                  0.24241830777755347
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 31,
+              "regressed": 30,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.1419364794902429,
+                  0.1221514541282255
+                ],
+                "macro_f1": [
+                  -0.09999947091198819,
+                  0.15802572068839832
+                ]
+              }
+            }
+          }
+        }
+      },
+      "shared_coverage": {
+        "full": {
+          "n": 137,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.4306569343065693,
+              "macro_f1": 0.42650685170427255,
+              "correct": 59,
+              "abstain": 0,
+              "confusion": [
+                [
+                  25,
+                  26,
+                  3,
+                  0
+                ],
+                [
+                  4,
+                  15,
+                  2,
+                  0
+                ],
+                [
+                  24,
+                  19,
+                  19,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 25,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 15,
+                  "total": 21
+                },
+                "positive": {
+                  "hits": 19,
+                  "total": 62
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5255474452554745,
+              "macro_f1": 0.3682114986462812,
+              "correct": 72,
+              "abstain": 0,
+              "confusion": [
+                [
+                  50,
+                  1,
+                  3,
+                  0
+                ],
+                [
+                  17,
+                  0,
+                  4,
+                  0
+                ],
+                [
+                  40,
+                  0,
+                  22,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 50,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 0,
+                  "total": 21
+                },
+                "positive": {
+                  "hits": 22,
+                  "total": 62
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5985401459854015,
+              "macro_f1": 0.5340265987549518,
+              "correct": 82,
+              "abstain": 0,
+              "confusion": [
+                [
+                  35,
+                  7,
+                  12,
+                  0
+                ],
+                [
+                  6,
+                  6,
+                  9,
+                  0
+                ],
+                [
+                  17,
+                  4,
+                  41,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 35,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 6,
+                  "total": 21
+                },
+                "positive": {
+                  "hits": 41,
+                  "total": 62
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.6277372262773723,
+              "macro_f1": 0.5496561851307081,
+              "correct": 86,
+              "abstain": 0,
+              "confusion": [
+                [
+                  31,
+                  9,
+                  14,
+                  0
+                ],
+                [
+                  8,
+                  6,
+                  7,
+                  0
+                ],
+                [
+                  8,
+                  5,
+                  49,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 31,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 6,
+                  "total": 21
+                },
+                "positive": {
+                  "hits": 49,
+                  "total": 62
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 44,
+              "regressed": 17,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.10075581395348839,
+                  0.29770992366412213
+                ],
+                "macro_f1": [
+                  0.024871931974732628,
+                  0.21198934860624613
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 35,
+              "regressed": 21,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.01768056589724502,
+                  0.2317933774834437
+                ],
+                "macro_f1": [
+                  0.08447928989023817,
+                  0.27577444466172185
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 22,
+              "regressed": 18,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.06617647058823528,
+                  0.11258278145695366
+                ],
+                "macro_f1": [
+                  -0.10808968273706131,
+                  0.12974492683606584
+                ]
+              }
+            }
+          }
+        },
+        "audio": {
+          "n": 137,
+          "metrics": {
+            "emotion2vec_scores": {
+              "accuracy": 0.4306569343065693,
+              "macro_f1": 0.4256953476626575,
+              "correct": 59,
+              "abstain": 0,
+              "confusion": [
+                [
+                  26,
+                  24,
+                  4,
+                  0
+                ],
+                [
+                  6,
+                  16,
+                  3,
+                  0
+                ],
+                [
+                  21,
+                  20,
+                  17,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 26,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 16,
+                  "total": 25
+                },
+                "positive": {
+                  "hits": 17,
+                  "total": 58
+                }
+              }
+            },
+            "desktop_fixed_v1": {
+              "accuracy": 0.5401459854014599,
+              "macro_f1": 0.40540352534355534,
+              "correct": 74,
+              "abstain": 0,
+              "confusion": [
+                [
+                  51,
+                  0,
+                  3,
+                  0
+                ],
+                [
+                  20,
+                  1,
+                  4,
+                  0
+                ],
+                [
+                  36,
+                  0,
+                  22,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 51,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 1,
+                  "total": 25
+                },
+                "positive": {
+                  "hits": 22,
+                  "total": 58
+                }
+              }
+            },
+            "desktop": {
+              "accuracy": 0.5401459854014599,
+              "macro_f1": 0.4857142857142857,
+              "correct": 74,
+              "abstain": 0,
+              "confusion": [
+                [
+                  32,
+                  7,
+                  15,
+                  0
+                ],
+                [
+                  8,
+                  6,
+                  11,
+                  0
+                ],
+                [
+                  18,
+                  4,
+                  36,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 32,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 6,
+                  "total": 25
+                },
+                "positive": {
+                  "hits": 36,
+                  "total": 58
+                }
+              }
+            },
+            "teacher": {
+              "accuracy": 0.5985401459854015,
+              "macro_f1": 0.5292766776677668,
+              "correct": 82,
+              "abstain": 0,
+              "confusion": [
+                [
+                  32,
+                  8,
+                  14,
+                  0
+                ],
+                [
+                  7,
+                  6,
+                  12,
+                  0
+                ],
+                [
+                  8,
+                  6,
+                  44,
+                  0
+                ]
+              ],
+              "recall": {
+                "negative": {
+                  "hits": 32,
+                  "total": 54
+                },
+                "neutral": {
+                  "hits": 6,
+                  "total": 25
+                },
+                "positive": {
+                  "hits": 44,
+                  "total": 58
+                }
+              }
+            }
+          },
+          "teacher_vs_baselines": {
+            "emotion2vec_scores": {
+              "corrected": 41,
+              "regressed": 18,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  0.07642705489839247,
+                  0.26359439124486983
+                ],
+                "macro_f1": [
+                  0.01579173880019459,
+                  0.18177663724574164
+                ]
+              }
+            },
+            "desktop_fixed_v1": {
+              "corrected": 30,
+              "regressed": 22,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.044307313642756696,
+                  0.17000925925925925
+                ],
+                "macro_f1": [
+                  0.01669120892100002,
+                  0.2232644988896831
+                ]
+              }
+            },
+            "desktop": {
+              "corrected": 24,
+              "regressed": 16,
+              "candidate_minus_reference_95_source_bootstrap": {
+                "accuracy": [
+                  -0.03252698920431823,
+                  0.13846715328467157
+                ],
+                "macro_f1": [
+                  -0.07422744666954265,
+                  0.14028503256227665
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

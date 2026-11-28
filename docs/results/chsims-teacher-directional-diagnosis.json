@@ -1,0 +1,65 @@
+{
+  "n": 190,
+  "sources": 15,
+  "test_ids_sha256": "6753509505dcf751f80946a160abb133d9326f8a40524822b906468a911122a8",
+  "timeline_model_sha256": "4a48f6de62f605ff592dedf43358d9a10e72b966f4ef3fbeb439821e3c814cd2",
+  "negative_as_neutral_before": 3,
+  "negative_as_neutral_after": 11,
+  "new_errors_by_before_prediction": {
+    "negative": 7,
+    "neutral": 0,
+    "positive": 1
+  },
+  "corrected_negative_as_neutral": 0,
+  "newly_neutral_previous_negative_desktop_negative": 7,
+  "newly_neutral_previous_negative_cue_winners": {
+    "global_text": {
+      "negative": 4,
+      "neutral": 3,
+      "positive": 0,
+      "abstain": 0
+    },
+    "global_audio": {
+      "negative": 0,
+      "neutral": 6,
+      "positive": 1,
+      "abstain": 0
+    },
+    "time_fusion": {
+      "negative": 6,
+      "neutral": 0,
+      "positive": 1,
+      "abstain": 0
+    },
+    "local_text": {
+      "negative": 3,
+      "neutral": 3,
+      "positive": 1,
+      "abstain": 0
+    },
+    "local_audio": {
+      "negative": 3,
+      "neutral": 1,
+      "positive": 3,
+      "abstain": 0
+    },
+    "local_video": {
+      "negative": 6,
+      "neutral": 0,
+      "positive": 1,
+      "abstain": 0
+    }
+  },
+  "log_negative_to_neutral_median_before": 0.27734807833472586,
+  "log_negative_to_neutral_median_after_residual_without_offset": -0.22307788875557732,
+  "negative_recovered_by_zeroing_neutral_offset": 1,
+  "pair_recheck": {
+    "model_sha256": "2561e29537d5ae2922c011a3c6918382181b9e2f4c269d68fbba83babec951d4",
+    "paired_negative_gained": 0,
+    "paired_negative_lost": 1,
+    "earlier_seven_passing_support": 7,
+    "earlier_seven_passing_posterior": 0,
+    "earlier_seven_posterior_median": 0.32131383562281035,
+    "negative_posterior_threshold": 0.5
+  }
+}

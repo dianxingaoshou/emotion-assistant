@@ -1,0 +1,3218 @@
+{
+  "dataset": "CH-SIMS v2.0(s), author metadata on the local drive",
+  "meta_sha256": "be7e482640e7ee24d2070033e1e2aef61ce183199286a8a18b0d6247556bf150",
+  "official_available_rows": {
+    "train": 2722,
+    "valid": 647,
+    "test": 1034
+  },
+  "cohort_sha256": "870611c6db7d7cb1e7a921f66074ca2a931fb578cf8f0f34cd4be7f45f486cd7",
+  "split_counts": {
+    "train": 256,
+    "valid": 128,
+    "test": 256
+  },
+  "ids_sha256": {
+    "train": "d06bce2759bb95ee3cc222bb14bc53e9b006cec18d5e47e0186338af38d56f8d",
+    "valid": "ddbbabb3f32e4f9fcea63e3132a4cb71151aece2de70d0efd42337a251b51b15",
+    "test": "592bad765564d3338669bee76606b66b40c886eba4facaed5960cda29e8c6c88"
+  },
+  "models": {
+    "baseline": {
+      "name": "desktop fixed weight v1",
+      "classifier_sha256": "f7c5ae8fe83399abe95a53099a5087c16aed6f47048eae2d713a2e7c78a23393",
+      "embedding_digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+      "implementation_sha256": "8e1d449b85c0b41fbc3c4ad19b2bca90f8b00c78fd0ec6ca922e5bcb261668cf"
+    },
+    "teacher": {
+      "model": "Qwen/Qwen2.5-Omni-3B",
+      "revision": "f61daeb0493a6e98cec1a58ddeec8f13c1121cc0",
+      "sha256": {
+        "config.json": "20790f362c37a1718a3e764f597ae33dfc20177399762018dffaabf8321d4dd1",
+        "preprocessor_config.json": "b47055ce61463ce143e9aab741d55c0aa520801a0a5d63be73c5b17cecb6bc69",
+        "chat_template.json": "1933f7ca08e6503460e981d9037ddc0b851196abfa3aceea52d6ee0c0fdfd9f0",
+        "tokenizer.json": "8441917e39ae0244e06d704b95b3124795cec478e297f9afac39ba670d7e9d99",
+        "tokenizer_config.json": "569aa7a9171e36dfff80f0a7550ab0c9c09e46ac840fea5030641417394fb0d2",
+        "special_tokens_map.json": "dc241604d085780a33f760f69c47e6622451104c20eee3cd3a12b6e884b43f44",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "added_tokens.json": "e81a2cc3bd867a1217019eed202d1d8a07e1063ece716f22060dda14f6cc07d8",
+        "generation_config.json": "b9acf52072249e0e1850541d51ca4c85a30b9d7e23c2f2093ec0fb4139059ac7",
+        "model.safetensors.index.json": "5b7629198e2ef80e37612a491d9bfd71639d2f212632d36d8ab086922e74e129",
+        "model-00001-of-00003.safetensors": "349972cebff443030e9e96e1e930d7230979c6961cf046fa29fc580e4bcf49a6",
+        "model-00002-of-00003.safetensors": "b29a76dfefb3aa33a5bd0faa19c681d039a44de57223653ea0e933df728c6d8c"
+      },
+      "implementation_sha256": "1cd9b45c5f64ae029cf9430d2a0bb0c57853f62f64241e419b3a078f6be205df",
+      "dtype": "bfloat16",
+      "torch": "2.8.0+cu128",
+      "transformers": "4.57.6",
+      "gpu": "NVIDIA GeForce RTX 5070 Ti",
+      "native_audio_and_video": true
+    }
+  },
+  "raw_train_valid": {
+    "train": {
+      "text": {
+        "n": 256,
+        "sources": 102,
+        "corrected": 37,
+        "regressed": 63,
+        "baseline": {
+          "accuracy": 0.734375,
+          "macro_f1": 0.6401183833840968,
+          "correct": 188,
+          "abstain": 4,
+          "confusion": [
+            [
+              100,
+              2,
+              9,
+              2
+            ],
+            [
+              25,
+              10,
+              14,
+              1
+            ],
+            [
+              14,
+              0,
+              78,
+              1
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 100,
+              "total": 113
+            },
+            "neutral": {
+              "hits": 10,
+              "total": 50
+            },
+            "positive": {
+              "hits": 78,
+              "total": 93
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.6328125,
+          "macro_f1": 0.6330799235116932,
+          "correct": 162,
+          "abstain": 4,
+          "confusion": [
+            [
+              71,
+              38,
+              2,
+              2
+            ],
+            [
+              6,
+              41,
+              2,
+              1
+            ],
+            [
+              11,
+              31,
+              50,
+              1
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 71,
+              "total": 113
+            },
+            "neutral": {
+              "hits": 41,
+              "total": 50
+            },
+            "positive": {
+              "hits": 50,
+              "total": 93
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.17255184088023703,
+            -0.02585381511371978
+          ],
+          "macro_f1": [
+            -0.08578426227231604,
+            0.07764790853266793
+          ]
+        }
+      },
+      "audio": {
+        "n": 256,
+        "sources": 102,
+        "corrected": 40,
+        "regressed": 145,
+        "baseline": {
+          "accuracy": 0.6015625,
+          "macro_f1": 0.5096814296814297,
+          "correct": 154,
+          "abstain": 4,
+          "confusion": [
+            [
+              106,
+              3,
+              5,
+              3
+            ],
+            [
+              31,
+              9,
+              9,
+              0
+            ],
+            [
+              46,
+              4,
+              39,
+              1
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 106,
+              "total": 117
+            },
+            "neutral": {
+              "hits": 9,
+              "total": 49
+            },
+            "positive": {
+              "hits": 39,
+              "total": 90
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.19140625,
+          "macro_f1": 0.10710382513661203,
+          "correct": 49,
+          "abstain": 0,
+          "confusion": [
+            [
+              0,
+              117,
+              0,
+              0
+            ],
+            [
+              0,
+              49,
+              0,
+              0
+            ],
+            [
+              0,
+              90,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 0,
+              "total": 117
+            },
+            "neutral": {
+              "hits": 49,
+              "total": 49
+            },
+            "positive": {
+              "hits": 0,
+              "total": 90
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.5020929404433365,
+            -0.31715174129353235
+          ],
+          "macro_f1": [
+            -0.4713085549810848,
+            -0.3267410646632941
+          ]
+        }
+      },
+      "visual": {
+        "n": 256,
+        "sources": 102,
+        "corrected": 52,
+        "regressed": 81,
+        "baseline": {
+          "accuracy": 0.32421875,
+          "macro_f1": 0.3256212775604055,
+          "correct": 83,
+          "abstain": 124,
+          "confusion": [
+            [
+              63,
+              2,
+              2,
+              54
+            ],
+            [
+              22,
+              2,
+              0,
+              30
+            ],
+            [
+              22,
+              1,
+              18,
+              40
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 63,
+              "total": 121
+            },
+            "neutral": {
+              "hits": 2,
+              "total": 54
+            },
+            "positive": {
+              "hits": 18,
+              "total": 81
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.2109375,
+          "macro_f1": 0.11612903225806452,
+          "correct": 54,
+          "abstain": 0,
+          "confusion": [
+            [
+              0,
+              121,
+              0,
+              0
+            ],
+            [
+              0,
+              54,
+              0,
+              0
+            ],
+            [
+              0,
+              81,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 0,
+              "total": 121
+            },
+            "neutral": {
+              "hits": 54,
+              "total": 54
+            },
+            "positive": {
+              "hits": 0,
+              "total": 81
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.20139013788968826,
+            -0.020656923181140804
+          ],
+          "macro_f1": [
+            -0.264148288579494,
+            -0.14918662184764125
+          ]
+        }
+      },
+      "full": {
+        "n": 256,
+        "sources": 102,
+        "corrected": 18,
+        "regressed": 180,
+        "baseline": {
+          "accuracy": 0.7265625,
+          "macro_f1": 0.5603154749496212,
+          "correct": 186,
+          "abstain": 1,
+          "confusion": [
+            [
+              132,
+              2,
+              4,
+              0
+            ],
+            [
+              14,
+              3,
+              4,
+              0
+            ],
+            [
+              44,
+              1,
+              51,
+              1
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 132,
+              "total": 138
+            },
+            "neutral": {
+              "hits": 3,
+              "total": 21
+            },
+            "positive": {
+              "hits": 51,
+              "total": 97
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.09375,
+          "macro_f1": 0.06527928767406947,
+          "correct": 24,
+          "abstain": 0,
+          "confusion": [
+            [
+              3,
+              135,
+              0,
+              0
+            ],
+            [
+              0,
+              21,
+              0,
+              0
+            ],
+            [
+              0,
+              97,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 3,
+              "total": 138
+            },
+            "neutral": {
+              "hits": 21,
+              "total": 21
+            },
+            "positive": {
+              "hits": 0,
+              "total": 97
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.7030136316400757,
+            -0.5601374570446735
+          ],
+          "macro_f1": [
+            -0.5642478713195712,
+            -0.4173653524230372
+          ]
+        }
+      }
+    },
+    "valid": {
+      "text": {
+        "n": 128,
+        "sources": 64,
+        "corrected": 18,
+        "regressed": 40,
+        "baseline": {
+          "accuracy": 0.75,
+          "macro_f1": 0.6447588171726103,
+          "correct": 96,
+          "abstain": 0,
+          "confusion": [
+            [
+              47,
+              0,
+              2,
+              0
+            ],
+            [
+              16,
+              5,
+              10,
+              0
+            ],
+            [
+              4,
+              0,
+              44,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 47,
+              "total": 49
+            },
+            "neutral": {
+              "hits": 5,
+              "total": 31
+            },
+            "positive": {
+              "hits": 44,
+              "total": 48
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.578125,
+          "macro_f1": 0.5849286484670125,
+          "correct": 74,
+          "abstain": 0,
+          "confusion": [
+            [
+              27,
+              22,
+              0,
+              0
+            ],
+            [
+              4,
+              22,
+              5,
+              0
+            ],
+            [
+              3,
+              20,
+              25,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 27,
+              "total": 49
+            },
+            "neutral": {
+              "hits": 22,
+              "total": 31
+            },
+            "positive": {
+              "hits": 25,
+              "total": 48
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.2834900217214228,
+            -0.053835877862595395
+          ],
+          "macro_f1": [
+            -0.1653671107899229,
+            0.04190076295425229
+          ]
+        }
+      },
+      "audio": {
+        "n": 128,
+        "sources": 64,
+        "corrected": 15,
+        "regressed": 74,
+        "baseline": {
+          "accuracy": 0.609375,
+          "macro_f1": 0.5179121768269055,
+          "correct": 78,
+          "abstain": 0,
+          "confusion": [
+            [
+              50,
+              2,
+              3,
+              0
+            ],
+            [
+              10,
+              4,
+              5,
+              0
+            ],
+            [
+              28,
+              2,
+              24,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 50,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 4,
+              "total": 19
+            },
+            "positive": {
+              "hits": 24,
+              "total": 54
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.1484375,
+          "macro_f1": 0.08616780045351474,
+          "correct": 19,
+          "abstain": 0,
+          "confusion": [
+            [
+              0,
+              55,
+              0,
+              0
+            ],
+            [
+              0,
+              19,
+              0,
+              0
+            ],
+            [
+              0,
+              54,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 0,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 19,
+              "total": 19
+            },
+            "positive": {
+              "hits": 0,
+              "total": 54
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.5776202359346643,
+            -0.34998287671232886
+          ],
+          "macro_f1": [
+            -0.5550275127206713,
+            -0.3069242550338502
+          ]
+        }
+      },
+      "visual": {
+        "n": 128,
+        "sources": 64,
+        "corrected": 13,
+        "regressed": 53,
+        "baseline": {
+          "accuracy": 0.4375,
+          "macro_f1": 0.4544466188301805,
+          "correct": 56,
+          "abstain": 48,
+          "confusion": [
+            [
+              38,
+              1,
+              1,
+              15
+            ],
+            [
+              6,
+              3,
+              0,
+              7
+            ],
+            [
+              15,
+              1,
+              15,
+              26
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 38,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 3,
+              "total": 16
+            },
+            "positive": {
+              "hits": 15,
+              "total": 57
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.125,
+          "macro_f1": 0.07407407407407407,
+          "correct": 16,
+          "abstain": 0,
+          "confusion": [
+            [
+              0,
+              55,
+              0,
+              0
+            ],
+            [
+              0,
+              16,
+              0,
+              0
+            ],
+            [
+              0,
+              57,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 0,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 16,
+              "total": 16
+            },
+            "positive": {
+              "hits": 0,
+              "total": 57
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.4396874151506924,
+            -0.183171408743928
+          ],
+          "macro_f1": [
+            -0.4875732974259281,
+            -0.25186993450733847
+          ]
+        }
+      },
+      "full": {
+        "n": 128,
+        "sources": 64,
+        "corrected": 16,
+        "regressed": 82,
+        "baseline": {
+          "accuracy": 0.6796875,
+          "macro_f1": 0.5625051110808231,
+          "correct": 87,
+          "abstain": 0,
+          "confusion": [
+            [
+              54,
+              1,
+              0,
+              0
+            ],
+            [
+              12,
+              3,
+              4,
+              0
+            ],
+            [
+              24,
+              0,
+              30,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 54,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 3,
+              "total": 19
+            },
+            "positive": {
+              "hits": 30,
+              "total": 54
+            }
+          }
+        },
+        "teacher": {
+          "accuracy": 0.1640625,
+          "macro_f1": 0.11074813470457755,
+          "correct": 21,
+          "abstain": 0,
+          "confusion": [
+            [
+              2,
+              53,
+              0,
+              0
+            ],
+            [
+              0,
+              19,
+              0,
+              0
+            ],
+            [
+              0,
+              54,
+              0,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 2,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 19,
+              "total": 19
+            },
+            "positive": {
+              "hits": 0,
+              "total": 54
+            }
+          }
+        },
+        "teacher_minus_baseline_95_source_bootstrap": {
+          "accuracy": [
+            -0.6357157177225341,
+            -0.39734088266518386
+          ],
+          "macro_f1": [
+            -0.5721652467229933,
+            -0.3258414598163698
+          ]
+        }
+      }
+    }
+  },
+  "raw_test": {
+    "text": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 36,
+      "regressed": 74,
+      "baseline": {
+        "accuracy": 0.671875,
+        "macro_f1": 0.5886979763268423,
+        "correct": 172,
+        "abstain": 6,
+        "confusion": [
+          [
+            92,
+            4,
+            11,
+            2
+          ],
+          [
+            21,
+            10,
+            17,
+            3
+          ],
+          [
+            18,
+            7,
+            70,
+            1
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 92,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 10,
+            "total": 51
+          },
+          "positive": {
+            "hits": 70,
+            "total": 96
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.5234375,
+        "macro_f1": 0.5330783487386527,
+        "correct": 134,
+        "abstain": 4,
+        "confusion": [
+          [
+            48,
+            54,
+            5,
+            2
+          ],
+          [
+            3,
+            41,
+            5,
+            2
+          ],
+          [
+            10,
+            41,
+            45,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 48,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 41,
+            "total": 51
+          },
+          "positive": {
+            "hits": 45,
+            "total": 96
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.2226890756302521,
+          -0.07116026514973434
+        ],
+        "macro_f1": [
+          -0.12441777436018388,
+          0.01522009828294361
+        ]
+      }
+    },
+    "audio": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 43,
+      "regressed": 117,
+      "baseline": {
+        "accuracy": 0.484375,
+        "macro_f1": 0.4049795722182168,
+        "correct": 124,
+        "abstain": 4,
+        "confusion": [
+          [
+            85,
+            8,
+            10,
+            4
+          ],
+          [
+            34,
+            7,
+            9,
+            0
+          ],
+          [
+            59,
+            8,
+            32,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 85,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 7,
+            "total": 50
+          },
+          "positive": {
+            "hits": 32,
+            "total": 99
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.1953125,
+        "macro_f1": 0.10893246187363835,
+        "correct": 50,
+        "abstain": 0,
+        "confusion": [
+          [
+            0,
+            107,
+            0,
+            0
+          ],
+          [
+            0,
+            50,
+            0,
+            0
+          ],
+          [
+            0,
+            99,
+            0,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 0,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 50,
+            "total": 50
+          },
+          "positive": {
+            "hits": 0,
+            "total": 99
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.37499999999999994,
+          -0.19572119369991725
+        ],
+        "macro_f1": [
+          -0.3589817173868843,
+          -0.2171275023652423
+        ]
+      }
+    },
+    "visual": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 47,
+      "regressed": 84,
+      "baseline": {
+        "accuracy": 0.3359375,
+        "macro_f1": 0.3319691722625415,
+        "correct": 86,
+        "abstain": 106,
+        "confusion": [
+          [
+            58,
+            3,
+            0,
+            43
+          ],
+          [
+            20,
+            2,
+            2,
+            25
+          ],
+          [
+            39,
+            0,
+            26,
+            38
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 58,
+            "total": 104
+          },
+          "neutral": {
+            "hits": 2,
+            "total": 49
+          },
+          "positive": {
+            "hits": 26,
+            "total": 103
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.19140625,
+        "macro_f1": 0.10710382513661203,
+        "correct": 49,
+        "abstain": 0,
+        "confusion": [
+          [
+            0,
+            104,
+            0,
+            0
+          ],
+          [
+            0,
+            49,
+            0,
+            0
+          ],
+          [
+            0,
+            103,
+            0,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 0,
+            "total": 104
+          },
+          "neutral": {
+            "hits": 49,
+            "total": 49
+          },
+          "positive": {
+            "hits": 0,
+            "total": 103
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.2384623430962343,
+          -0.05139887371195782
+        ],
+        "macro_f1": [
+          -0.3064096480637182,
+          -0.15287423761462363
+        ]
+      }
+    },
+    "full": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 33,
+      "regressed": 162,
+      "baseline": {
+        "accuracy": 0.66796875,
+        "macro_f1": 0.5564617809298661,
+        "correct": 171,
+        "abstain": 2,
+        "confusion": [
+          [
+            103,
+            1,
+            5,
+            2
+          ],
+          [
+            26,
+            6,
+            7,
+            0
+          ],
+          [
+            42,
+            2,
+            62,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 103,
+            "total": 111
+          },
+          "neutral": {
+            "hits": 6,
+            "total": 39
+          },
+          "positive": {
+            "hits": 62,
+            "total": 106
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.1640625,
+        "macro_f1": 0.10658495553953377,
+        "correct": 42,
+        "abstain": 0,
+        "confusion": [
+          [
+            3,
+            108,
+            0,
+            0
+          ],
+          [
+            0,
+            39,
+            0,
+            0
+          ],
+          [
+            0,
+            106,
+            0,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 3,
+            "total": 111
+          },
+          "neutral": {
+            "hits": 39,
+            "total": 39
+          },
+          "positive": {
+            "hits": 0,
+            "total": 106
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.6068413391557496,
+          -0.4067695320413263
+        ],
+        "macro_f1": [
+          -0.5400374478715465,
+          -0.3634930958217274
+        ]
+      }
+    }
+  },
+  "teacher_inputs": {
+    "train": {
+      "text": 252,
+      "audio": 256,
+      "visual": 256,
+      "full": 256,
+      "full_three": 252
+    },
+    "valid": {
+      "text": 128,
+      "audio": 128,
+      "visual": 128,
+      "full": 128,
+      "full_three": 128
+    },
+    "test": {
+      "text": 252,
+      "audio": 256,
+      "visual": 256,
+      "full": 256,
+      "full_three": 252
+    }
+  },
+  "calibration_sha256": {
+    "baseline": "9130054bf6b1bf7583f606abe39cf73f9b91e3902f17788d089ffd0c05129297",
+    "teacher": "c6d8894b40ce363729d8dc584a95a434a24f2f48056296a66f4cda3c97bd6c03"
+  },
+  "teacher_calibration_frozen_before_test_metrics": true,
+  "sensitivity_control_applied_after_first_test_metrics": "Desktop scores calibrated by the same train-only fit and validation rule.",
+  "calibration_models": {
+    "baseline": {
+      "text": {
+        "C": 1.0,
+        "class_weight": null,
+        "fitted": 252,
+        "validation": {
+          "accuracy": 0.7578125,
+          "macro_f1": 0.721958902387625,
+          "correct": 97,
+          "abstain": 0,
+          "confusion": [
+            [
+              41,
+              3,
+              5,
+              0
+            ],
+            [
+              9,
+              14,
+              8,
+              0
+            ],
+            [
+              2,
+              4,
+              42,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 41,
+              "total": 49
+            },
+            "neutral": {
+              "hits": 14,
+              "total": 31
+            },
+            "positive": {
+              "hits": 42,
+              "total": 48
+            }
+          }
+        },
+        "center": [
+          0.7922459084538129,
+          0.5282791335818596
+        ],
+        "scale": [
+          0.9551501381550473,
+          0.8043848825729248
+        ],
+        "coef": [
+          [
+            1.122096318817044,
+            -0.7963946542919225
+          ],
+          [
+            -0.4489978953862361,
+            -0.4676566873702783
+          ],
+          [
+            -0.6730984234308076,
+            1.2640513416622012
+          ]
+        ],
+        "bias": [
+          0.21372716433044045,
+          -0.20232907100288125,
+          -0.011398093327559661
+        ]
+      },
+      "audio": {
+        "C": 0.3,
+        "class_weight": null,
+        "fitted": 252,
+        "validation": {
+          "accuracy": 0.625,
+          "macro_f1": 0.5365504435271877,
+          "correct": 80,
+          "abstain": 0,
+          "confusion": [
+            [
+              45,
+              3,
+              7,
+              0
+            ],
+            [
+              8,
+              4,
+              7,
+              0
+            ],
+            [
+              21,
+              2,
+              31,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 45,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 4,
+              "total": 19
+            },
+            "positive": {
+              "hits": 31,
+              "total": 54
+            }
+          }
+        },
+        "center": [
+          1.8739826090972223,
+          1.2071650176694408
+        ],
+        "scale": [
+          1.2669005373306483,
+          0.9556237788430986
+        ],
+        "coef": [
+          [
+            0.8813320861921491,
+            -0.30621807860770345
+          ],
+          [
+            -0.32836034050924967,
+            -0.20885925864340743
+          ],
+          [
+            -0.552971745682898,
+            0.5150773372511106
+          ]
+        ],
+        "bias": [
+          0.35446606521862345,
+          -0.5245914145368614,
+          0.17012534931823842
+        ]
+      },
+      "visual": {
+        "C": 1.0,
+        "class_weight": null,
+        "fitted": 132,
+        "validation": {
+          "accuracy": 0.4921875,
+          "macro_f1": 0.49704043746960364,
+          "correct": 63,
+          "abstain": 48,
+          "confusion": [
+            [
+              36,
+              0,
+              4,
+              15
+            ],
+            [
+              6,
+              2,
+              1,
+              7
+            ],
+            [
+              5,
+              1,
+              25,
+              26
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 36,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 2,
+              "total": 16
+            },
+            "positive": {
+              "hits": 25,
+              "total": 57
+            }
+          }
+        },
+        "center": [
+          2.1210077041231274,
+          -0.045225902148557214
+        ],
+        "scale": [
+          1.7858419794823657,
+          2.900110979688125
+        ],
+        "coef": [
+          [
+            0.9010135684948409,
+            -1.1627355270259143
+          ],
+          [
+            -0.1383233440521094,
+            -0.6784607589030978
+          ],
+          [
+            -0.7626902244427312,
+            1.8411962859290125
+          ]
+        ],
+        "bias": [
+          0.6087105444646047,
+          -0.42811900454015167,
+          -0.18059153992445207
+        ]
+      },
+      "full": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "fitted": 255,
+        "validation": {
+          "accuracy": 0.7421875,
+          "macro_f1": 0.7066017316017316,
+          "correct": 95,
+          "abstain": 0,
+          "confusion": [
+            [
+              38,
+              13,
+              4,
+              0
+            ],
+            [
+              1,
+              14,
+              4,
+              0
+            ],
+            [
+              2,
+              9,
+              43,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 38,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 14,
+              "total": 19
+            },
+            "positive": {
+              "hits": 43,
+              "total": 54
+            }
+          }
+        },
+        "center": [
+          1.3428635011998122,
+          0.7466213588669196
+        ],
+        "scale": [
+          0.8367537837137793,
+          0.6966486950110929
+        ],
+        "coef": [
+          [
+            0.6129541995681815,
+            -0.3243441774923203
+          ],
+          [
+            -0.2900280943198228,
+            -0.34021204346473666
+          ],
+          [
+            -0.3229261052483588,
+            0.6645562209570567
+          ]
+        ],
+        "bias": [
+          0.1288517704131373,
+          -0.12903232574297824,
+          0.00018055532984127945
+        ]
+      }
+    },
+    "teacher": {
+      "text": {
+        "C": 0.03,
+        "class_weight": null,
+        "fitted": 252,
+        "validation": {
+          "accuracy": 0.6875,
+          "macro_f1": 0.6305505142165759,
+          "correct": 88,
+          "abstain": 0,
+          "confusion": [
+            [
+              45,
+              1,
+              3,
+              0
+            ],
+            [
+              12,
+              9,
+              10,
+              0
+            ],
+            [
+              10,
+              4,
+              34,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 45,
+              "total": 49
+            },
+            "neutral": {
+              "hits": 9,
+              "total": 31
+            },
+            "positive": {
+              "hits": 34,
+              "total": 48
+            }
+          }
+        },
+        "center": [
+          -0.42361111546851504,
+          -0.4662698430610711
+        ],
+        "scale": [
+          0.9643923593374824,
+          0.7787022176372227
+        ],
+        "coef": [
+          [
+            0.5809290276315149,
+            -0.37826199880824934
+          ],
+          [
+            -0.35386016983072915,
+            -0.2732463266626079
+          ],
+          [
+            -0.22706885780078576,
+            0.6515083254708571
+          ]
+        ],
+        "bias": [
+          0.32236419313904563,
+          -0.4530314299925696,
+          0.13066723685352355
+        ]
+      },
+      "audio": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "fitted": 256,
+        "validation": {
+          "accuracy": 0.5546875,
+          "macro_f1": 0.5132028789923527,
+          "correct": 71,
+          "abstain": 0,
+          "confusion": [
+            [
+              37,
+              9,
+              9,
+              0
+            ],
+            [
+              5,
+              8,
+              6,
+              0
+            ],
+            [
+              7,
+              21,
+              26,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 37,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 8,
+              "total": 19
+            },
+            "positive": {
+              "hits": 26,
+              "total": 54
+            }
+          }
+        },
+        "center": [
+          -4.0297851530586,
+          -5.802246062969215
+        ],
+        "scale": [
+          0.49413458564841917,
+          0.40747091436915067
+        ],
+        "coef": [
+          [
+            0.5616442180155409,
+            -0.31319946315723035
+          ],
+          [
+            -0.26799604874508687,
+            -0.16797022178240417
+          ],
+          [
+            -0.2936481692704542,
+            0.4811696849396342
+          ]
+        ],
+        "bias": [
+          0.02533347323045004,
+          0.021946561634521695,
+          -0.04728003486497157
+        ]
+      },
+      "visual": {
+        "C": 3.0,
+        "class_weight": null,
+        "fitted": 256,
+        "validation": {
+          "accuracy": 0.59375,
+          "macro_f1": 0.4157706093189964,
+          "correct": 76,
+          "abstain": 0,
+          "confusion": [
+            [
+              49,
+              0,
+              6,
+              0
+            ],
+            [
+              13,
+              0,
+              3,
+              0
+            ],
+            [
+              30,
+              0,
+              27,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 49,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 0,
+              "total": 16
+            },
+            "positive": {
+              "hits": 27,
+              "total": 57
+            }
+          }
+        },
+        "center": [
+          -3.5815429777238483,
+          -4.460937496251884
+        ],
+        "scale": [
+          0.28103926241383526,
+          0.4703747868945872
+        ],
+        "coef": [
+          [
+            0.4502982588489211,
+            -0.5080933209417514
+          ],
+          [
+            0.16716142823937724,
+            -0.3662830428346512
+          ],
+          [
+            -0.6174596870882986,
+            0.874376363776403
+          ]
+        ],
+        "bias": [
+          0.4472547816118417,
+          -0.31093783522882523,
+          -0.1363169463830156
+        ]
+      },
+      "full": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "fitted": 256,
+        "validation": {
+          "accuracy": 0.6328125,
+          "macro_f1": 0.6011052095069478,
+          "correct": 81,
+          "abstain": 0,
+          "confusion": [
+            [
+              39,
+              12,
+              4,
+              0
+            ],
+            [
+              5,
+              12,
+              2,
+              0
+            ],
+            [
+              10,
+              14,
+              30,
+              0
+            ]
+          ],
+          "recall": {
+            "negative": {
+              "hits": 39,
+              "total": 55
+            },
+            "neutral": {
+              "hits": 12,
+              "total": 19
+            },
+            "positive": {
+              "hits": 30,
+              "total": 54
+            }
+          }
+        },
+        "center": [
+          -2.473632810542701,
+          -4.083496089650774
+        ],
+        "scale": [
+          0.9640957167170826,
+          0.8581944055183509
+        ],
+        "coef": [
+          [
+            0.5593678335866444,
+            -0.4559126755997989
+          ],
+          [
+            -0.12169275142104666,
+            -0.16052891035385797
+          ],
+          [
+            -0.43767508216559764,
+            0.6164415859536567
+          ]
+        ],
+        "bias": [
+          0.039581535869254655,
+          0.09822451519184842,
+          -0.13780605106110286
+        ]
+      }
+    }
+  },
+  "historical_test_overlap": 54,
+  "encoder_audit": {
+    "text": {
+      "encoder_calls": {},
+      "score_difference_after_swapping_recordings_or_frames": [
+        0.0,
+        0.0
+      ]
+    },
+    "audio": {
+      "encoder_calls": {
+        "audio_encoder": 1
+      },
+      "score_difference_after_swapping_recordings_or_frames": [
+        0.020653200335800648,
+        0.02546846866607666
+      ]
+    },
+    "visual": {
+      "encoder_calls": {
+        "video_encoder": 1
+      },
+      "score_difference_after_swapping_recordings_or_frames": [
+        0.06558448076248169,
+        0.01662808656692505
+      ]
+    },
+    "full": {
+      "encoder_calls": {
+        "audio_encoder": 1,
+        "video_encoder": 1
+      },
+      "score_difference_after_swapping_recordings_or_frames": [
+        0.0758747085928917,
+        0.1561417579650879
+      ]
+    }
+  },
+  "paired_calibrated_test": {
+    "text": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 27,
+      "regressed": 27,
+      "baseline": {
+        "accuracy": 0.671875,
+        "macro_f1": 0.6238057349019989,
+        "correct": 172,
+        "abstain": 6,
+        "confusion": [
+          [
+            88,
+            8,
+            11,
+            2
+          ],
+          [
+            17,
+            18,
+            13,
+            3
+          ],
+          [
+            12,
+            17,
+            66,
+            1
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 88,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 18,
+            "total": 51
+          },
+          "positive": {
+            "hits": 66,
+            "total": 96
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.671875,
+        "macro_f1": 0.6146906787264196,
+        "correct": 172,
+        "abstain": 4,
+        "confusion": [
+          [
+            91,
+            6,
+            10,
+            2
+          ],
+          [
+            17,
+            16,
+            16,
+            2
+          ],
+          [
+            20,
+            11,
+            65,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 91,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 16,
+            "total": 51
+          },
+          "positive": {
+            "hits": 65,
+            "total": 96
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.05306549235663855,
+          0.05490196078431375
+        ],
+        "macro_f1": [
+          -0.07624018820934533,
+          0.060223180940353206
+        ]
+      }
+    },
+    "audio": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 65,
+      "regressed": 43,
+      "baseline": {
+        "accuracy": 0.515625,
+        "macro_f1": 0.4538073884479113,
+        "correct": 132,
+        "abstain": 4,
+        "confusion": [
+          [
+            75,
+            11,
+            17,
+            4
+          ],
+          [
+            18,
+            9,
+            23,
+            0
+          ],
+          [
+            43,
+            8,
+            48,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 75,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 9,
+            "total": 50
+          },
+          "positive": {
+            "hits": 48,
+            "total": 99
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6015625,
+        "macro_f1": 0.5780643467311944,
+        "correct": 154,
+        "abstain": 0,
+        "confusion": [
+          [
+            72,
+            20,
+            15,
+            0
+          ],
+          [
+            12,
+            26,
+            12,
+            0
+          ],
+          [
+            12,
+            31,
+            56,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 72,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 26,
+            "total": 50
+          },
+          "positive": {
+            "hits": 56,
+            "total": 99
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          0.004310344827586188,
+          0.17290168943206327
+        ],
+        "macro_f1": [
+          0.03863725849694169,
+          0.21743130577044328
+        ]
+      }
+    },
+    "visual": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 59,
+      "regressed": 31,
+      "baseline": {
+        "accuracy": 0.41796875,
+        "macro_f1": 0.40050505050505053,
+        "correct": 107,
+        "abstain": 106,
+        "confusion": [
+          [
+            56,
+            0,
+            5,
+            43
+          ],
+          [
+            18,
+            0,
+            6,
+            25
+          ],
+          [
+            14,
+            0,
+            51,
+            38
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 56,
+            "total": 104
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 49
+          },
+          "positive": {
+            "hits": 51,
+            "total": 103
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.52734375,
+        "macro_f1": 0.37691918570471544,
+        "correct": 135,
+        "abstain": 0,
+        "confusion": [
+          [
+            94,
+            0,
+            10,
+            0
+          ],
+          [
+            41,
+            0,
+            8,
+            0
+          ],
+          [
+            62,
+            0,
+            41,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 94,
+            "total": 104
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 49
+          },
+          "positive": {
+            "hits": 41,
+            "total": 103
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          0.01793362909531935,
+          0.19679024980229792
+        ],
+        "macro_f1": [
+          -0.07512306229215332,
+          0.03519835499247537
+        ]
+      }
+    },
+    "full": {
+      "n": 256,
+      "sources": 104,
+      "corrected": 44,
+      "regressed": 44,
+      "baseline": {
+        "accuracy": 0.6328125,
+        "macro_f1": 0.5978764895021053,
+        "correct": 162,
+        "abstain": 2,
+        "confusion": [
+          [
+            70,
+            27,
+            12,
+            2
+          ],
+          [
+            11,
+            21,
+            7,
+            0
+          ],
+          [
+            6,
+            29,
+            71,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 70,
+            "total": 111
+          },
+          "neutral": {
+            "hits": 21,
+            "total": 39
+          },
+          "positive": {
+            "hits": 71,
+            "total": 106
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6328125,
+        "macro_f1": 0.5666175476936668,
+        "correct": 162,
+        "abstain": 0,
+        "confusion": [
+          [
+            84,
+            19,
+            8,
+            0
+          ],
+          [
+            11,
+            13,
+            15,
+            0
+          ],
+          [
+            13,
+            28,
+            65,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 84,
+            "total": 111
+          },
+          "neutral": {
+            "hits": 13,
+            "total": 39
+          },
+          "positive": {
+            "hits": 65,
+            "total": 106
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.07661011151399055,
+          0.08438818565400841
+        ],
+        "macro_f1": [
+          -0.10372572445842303,
+          0.05108548153272286
+        ]
+      }
+    }
+  },
+  "paired_calibrated_without_historical_ids": {
+    "text": {
+      "n": 202,
+      "sources": 96,
+      "corrected": 22,
+      "regressed": 22,
+      "baseline": {
+        "accuracy": 0.6485148514851485,
+        "macro_f1": 0.596097802735675,
+        "correct": 131,
+        "abstain": 5,
+        "confusion": [
+          [
+            62,
+            6,
+            8,
+            2
+          ],
+          [
+            15,
+            12,
+            12,
+            3
+          ],
+          [
+            11,
+            14,
+            57,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 62,
+            "total": 78
+          },
+          "neutral": {
+            "hits": 12,
+            "total": 42
+          },
+          "positive": {
+            "hits": 57,
+            "total": 82
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6485148514851485,
+        "macro_f1": 0.5892561847078045,
+        "correct": 131,
+        "abstain": 4,
+        "confusion": [
+          [
+            66,
+            3,
+            7,
+            2
+          ],
+          [
+            14,
+            11,
+            15,
+            2
+          ],
+          [
+            19,
+            9,
+            54,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 66,
+            "total": 78
+          },
+          "neutral": {
+            "hits": 11,
+            "total": 42
+          },
+          "positive": {
+            "hits": 54,
+            "total": 82
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.06422358979017173,
+          0.06350050658561292
+        ],
+        "macro_f1": [
+          -0.08758719636880008,
+          0.07588653914908464
+        ]
+      }
+    },
+    "audio": {
+      "n": 202,
+      "sources": 96,
+      "corrected": 49,
+      "regressed": 32,
+      "baseline": {
+        "accuracy": 0.5,
+        "macro_f1": 0.43480869997950883,
+        "correct": 101,
+        "abstain": 4,
+        "confusion": [
+          [
+            58,
+            6,
+            11,
+            4
+          ],
+          [
+            17,
+            6,
+            18,
+            0
+          ],
+          [
+            39,
+            6,
+            37,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 58,
+            "total": 79
+          },
+          "neutral": {
+            "hits": 6,
+            "total": 41
+          },
+          "positive": {
+            "hits": 37,
+            "total": 82
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.5841584158415841,
+        "macro_f1": 0.5648712244374091,
+        "correct": 118,
+        "abstain": 0,
+        "confusion": [
+          [
+            53,
+            15,
+            11,
+            0
+          ],
+          [
+            12,
+            21,
+            8,
+            0
+          ],
+          [
+            11,
+            27,
+            44,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 53,
+            "total": 79
+          },
+          "neutral": {
+            "hits": 21,
+            "total": 41
+          },
+          "positive": {
+            "hits": 44,
+            "total": 82
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.004762474367737618,
+          0.17414770410243852
+        ],
+        "macro_f1": [
+          0.03830776607233375,
+          0.22704031497048657
+        ]
+      }
+    },
+    "visual": {
+      "n": 202,
+      "sources": 96,
+      "corrected": 48,
+      "regressed": 23,
+      "baseline": {
+        "accuracy": 0.400990099009901,
+        "macro_f1": 0.3959899749373433,
+        "correct": 81,
+        "abstain": 88,
+        "confusion": [
+          [
+            40,
+            0,
+            5,
+            33
+          ],
+          [
+            14,
+            0,
+            6,
+            23
+          ],
+          [
+            8,
+            0,
+            41,
+            32
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 40,
+            "total": 78
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 43
+          },
+          "positive": {
+            "hits": 41,
+            "total": 81
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.5247524752475248,
+        "macro_f1": 0.38391414979533134,
+        "correct": 106,
+        "abstain": 0,
+        "confusion": [
+          [
+            71,
+            0,
+            7,
+            0
+          ],
+          [
+            35,
+            0,
+            8,
+            0
+          ],
+          [
+            46,
+            0,
+            35,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 71,
+            "total": 78
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 43
+          },
+          "positive": {
+            "hits": 35,
+            "total": 81
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          0.029044139755848224,
+          0.21651176715609696
+        ],
+        "macro_f1": [
+          -0.07251423811204141,
+          0.05258162053176178
+        ]
+      }
+    },
+    "full": {
+      "n": 202,
+      "sources": 96,
+      "corrected": 30,
+      "regressed": 33,
+      "baseline": {
+        "accuracy": 0.6386138613861386,
+        "macro_f1": 0.5801226551226552,
+        "correct": 129,
+        "abstain": 2,
+        "confusion": [
+          [
+            56,
+            18,
+            8,
+            2
+          ],
+          [
+            9,
+            11,
+            6,
+            0
+          ],
+          [
+            5,
+            25,
+            62,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 56,
+            "total": 84
+          },
+          "neutral": {
+            "hits": 11,
+            "total": 26
+          },
+          "positive": {
+            "hits": 62,
+            "total": 92
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6237623762376238,
+        "macro_f1": 0.5432016150946667,
+        "correct": 126,
+        "abstain": 0,
+        "confusion": [
+          [
+            63,
+            15,
+            6,
+            0
+          ],
+          [
+            8,
+            7,
+            11,
+            0
+          ],
+          [
+            11,
+            25,
+            56,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 63,
+            "total": 84
+          },
+          "neutral": {
+            "hits": 7,
+            "total": 26
+          },
+          "positive": {
+            "hits": 56,
+            "total": 92
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.0881418896705897,
+          0.05325802837938763
+        ],
+        "macro_f1": [
+          -0.10801145268310965,
+          0.029970572129539054
+        ]
+      }
+    }
+  },
+  "paired_calibrated_shared_coverage": {
+    "text": {
+      "n": 250,
+      "sources": 100,
+      "corrected": 26,
+      "regressed": 27,
+      "baseline": {
+        "accuracy": 0.688,
+        "macro_f1": 0.6316107316107317,
+        "correct": 172,
+        "abstain": 0,
+        "confusion": [
+          [
+            88,
+            8,
+            11,
+            0
+          ],
+          [
+            17,
+            18,
+            13,
+            0
+          ],
+          [
+            12,
+            17,
+            66,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 88,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 18,
+            "total": 48
+          },
+          "positive": {
+            "hits": 66,
+            "total": 95
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.684,
+        "macro_f1": 0.6177132172440722,
+        "correct": 171,
+        "abstain": 0,
+        "confusion": [
+          [
+            91,
+            6,
+            10,
+            0
+          ],
+          [
+            17,
+            15,
+            16,
+            0
+          ],
+          [
+            20,
+            10,
+            65,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 91,
+            "total": 107
+          },
+          "neutral": {
+            "hits": 15,
+            "total": 48
+          },
+          "positive": {
+            "hits": 65,
+            "total": 95
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.0547295169721016,
+          0.05283057217364625
+        ],
+        "macro_f1": [
+          -0.07755397194276356,
+          0.05429070830841213
+        ]
+      }
+    },
+    "audio": {
+      "n": 252,
+      "sources": 101,
+      "corrected": 63,
+      "regressed": 43,
+      "baseline": {
+        "accuracy": 0.5238095238095238,
+        "macro_f1": 0.45725109249598545,
+        "correct": 132,
+        "abstain": 0,
+        "confusion": [
+          [
+            75,
+            11,
+            17,
+            0
+          ],
+          [
+            18,
+            9,
+            23,
+            0
+          ],
+          [
+            43,
+            8,
+            48,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 75,
+            "total": 103
+          },
+          "neutral": {
+            "hits": 9,
+            "total": 50
+          },
+          "positive": {
+            "hits": 48,
+            "total": 99
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6031746031746031,
+        "macro_f1": 0.5807769798656724,
+        "correct": 152,
+        "abstain": 0,
+        "confusion": [
+          [
+            70,
+            20,
+            13,
+            0
+          ],
+          [
+            12,
+            26,
+            12,
+            0
+          ],
+          [
+            12,
+            31,
+            56,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 70,
+            "total": 103
+          },
+          "neutral": {
+            "hits": 26,
+            "total": 50
+          },
+          "positive": {
+            "hits": 56,
+            "total": 99
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.003986502967720948,
+          0.15919567827130843
+        ],
+        "macro_f1": [
+          0.03716313588359099,
+          0.2104124461150036
+        ]
+      }
+    },
+    "visual": {
+      "n": 150,
+      "sources": 64,
+      "corrected": 6,
+      "regressed": 31,
+      "baseline": {
+        "accuracy": 0.7133333333333334,
+        "macro_f1": 0.518275819549402,
+        "correct": 107,
+        "abstain": 0,
+        "confusion": [
+          [
+            56,
+            0,
+            5,
+            0
+          ],
+          [
+            18,
+            0,
+            6,
+            0
+          ],
+          [
+            14,
+            0,
+            51,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 56,
+            "total": 61
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 24
+          },
+          "positive": {
+            "hits": 51,
+            "total": 65
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.5466666666666666,
+        "macro_f1": 0.39023307436182025,
+        "correct": 82,
+        "abstain": 0,
+        "confusion": [
+          [
+            53,
+            0,
+            8,
+            0
+          ],
+          [
+            20,
+            0,
+            4,
+            0
+          ],
+          [
+            36,
+            0,
+            29,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 53,
+            "total": 61
+          },
+          "neutral": {
+            "hits": 0,
+            "total": 24
+          },
+          "positive": {
+            "hits": 29,
+            "total": 65
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.24342526990553304,
+          -0.08888440860215058
+        ],
+        "macro_f1": [
+          -0.18154583690112083,
+          -0.07385208362344654
+        ]
+      }
+    },
+    "full": {
+      "n": 254,
+      "sources": 102,
+      "corrected": 44,
+      "regressed": 44,
+      "baseline": {
+        "accuracy": 0.6377952755905512,
+        "macro_f1": 0.6002814919071077,
+        "correct": 162,
+        "abstain": 0,
+        "confusion": [
+          [
+            70,
+            27,
+            12,
+            0
+          ],
+          [
+            11,
+            21,
+            7,
+            0
+          ],
+          [
+            6,
+            29,
+            71,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 70,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 21,
+            "total": 39
+          },
+          "positive": {
+            "hits": 71,
+            "total": 106
+          }
+        }
+      },
+      "teacher": {
+        "accuracy": 0.6377952755905512,
+        "macro_f1": 0.5707792927613347,
+        "correct": 162,
+        "abstain": 0,
+        "confusion": [
+          [
+            84,
+            17,
+            8,
+            0
+          ],
+          [
+            11,
+            13,
+            15,
+            0
+          ],
+          [
+            13,
+            28,
+            65,
+            0
+          ]
+        ],
+        "recall": {
+          "negative": {
+            "hits": 84,
+            "total": 109
+          },
+          "neutral": {
+            "hits": 13,
+            "total": 39
+          },
+          "positive": {
+            "hits": 65,
+            "total": 106
+          }
+        }
+      },
+      "teacher_minus_baseline_95_source_bootstrap": {
+        "accuracy": [
+          -0.07665642443108638,
+          0.08190675109975867
+        ],
+        "macro_f1": [
+          -0.10738456854520008,
+          0.05225292430819274
+        ]
+      }
+    }
+  },
+  "regression_tests": 639,
+  "audio_text_label_disagreement": {
+    "n": 62,
+    "sources": 40,
+    "corrected": 16,
+    "regressed": 11,
+    "baseline": {
+      "accuracy": 0.45161290322580644,
+      "macro_f1": 0.41197100771568856,
+      "correct": 28,
+      "abstain": 2,
+      "confusion": [
+        [
+          12,
+          1,
+          2,
+          2
+        ],
+        [
+          10,
+          2,
+          10,
+          0
+        ],
+        [
+          8,
+          1,
+          14,
+          0
+        ]
+      ],
+      "recall": {
+        "negative": {
+          "hits": 12,
+          "total": 17
+        },
+        "neutral": {
+          "hits": 2,
+          "total": 22
+        },
+        "positive": {
+          "hits": 14,
+          "total": 23
+        }
+      }
+    },
+    "teacher": {
+      "accuracy": 0.532258064516129,
+      "macro_f1": 0.5313882532418002,
+      "correct": 33,
+      "abstain": 0,
+      "confusion": [
+        [
+          11,
+          1,
+          5,
+          0
+        ],
+        [
+          8,
+          9,
+          5,
+          0
+        ],
+        [
+          2,
+          8,
+          13,
+          0
+        ]
+      ],
+      "recall": {
+        "negative": {
+          "hits": 11,
+          "total": 17
+        },
+        "neutral": {
+          "hits": 9,
+          "total": 22
+        },
+        "positive": {
+          "hits": 13,
+          "total": 23
+        }
+      }
+    },
+    "teacher_minus_baseline_95_source_bootstrap": {
+      "accuracy": [
+        -0.0617315769377625,
+        0.2623166522864538
+      ],
+      "macro_f1": [
+        -0.020475795913321916,
+        0.2943405366234313
+      ]
+    }
+  },
+  "audio_matches_text_label_when_disagreeing": {
+    "baseline": 18,
+    "teacher": 18
+  },
+  "paired_calibrated_full_three_present": {
+    "n": 252,
+    "sources": 101,
+    "corrected": 44,
+    "regressed": 42,
+    "baseline": {
+      "accuracy": 0.6349206349206349,
+      "macro_f1": 0.5982973649229807,
+      "correct": 160,
+      "abstain": 0,
+      "confusion": [
+        [
+          68,
+          27,
+          12,
+          0
+        ],
+        [
+          11,
+          21,
+          7,
+          0
+        ],
+        [
+          6,
+          29,
+          71,
+          0
+        ]
+      ],
+      "recall": {
+        "negative": {
+          "hits": 68,
+          "total": 107
+        },
+        "neutral": {
+          "hits": 21,
+          "total": 39
+        },
+        "positive": {
+          "hits": 71,
+          "total": 106
+        }
+      }
+    },
+    "teacher": {
+      "accuracy": 0.6428571428571429,
+      "macro_f1": 0.5750608840490101,
+      "correct": 162,
+      "abstain": 0,
+      "confusion": [
+        [
+          84,
+          15,
+          8,
+          0
+        ],
+        [
+          11,
+          13,
+          15,
+          0
+        ],
+        [
+          13,
+          28,
+          65,
+          0
+        ]
+      ],
+      "recall": {
+        "negative": {
+          "hits": 84,
+          "total": 107
+        },
+        "neutral": {
+          "hits": 13,
+          "total": 39
+        },
+        "positive": {
+          "hits": 65,
+          "total": 106
+        }
+      }
+    },
+    "teacher_minus_baseline_95_source_bootstrap": {
+      "accuracy": [
+        -0.06538461538461537,
+        0.09362353452019104
+      ],
+      "macro_f1": [
+        -0.09589481939845947,
+        0.06025640386247073
+      ]
+    }
+  },
+  "independent_metric_checks": 16
+}
