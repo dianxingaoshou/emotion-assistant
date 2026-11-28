@@ -94,7 +94,7 @@ def seconds(value):
     return 3600 * int(hour) + 60 * int(minute) + float(second)
 
 
-def choose(clips, annotations, *, excluded=(), per_class=PER_CLASS, seed=SEED):
+def choose(clips, annotations, *, excluded=(), per_class=PER_CLASS, seed=SEED, all_conversations=False):
     used = set(excluded)
     pools = {label: [] for label in LABELS}
     for item in csv.DictReader(io.StringIO(annotations.decode("gb18030"))):
@@ -108,6 +108,12 @@ def choose(clips, annotations, *, excluded=(), per_class=PER_CLASS, seed=SEED):
             row = {"id": f"{conversation}/{utterance}", "member": path, "truth": {"full": label}}
             pools[label].append((order, conversation, row))
     selected = []
+    if all_conversations:
+        for _, conversation, row in sorted(candidate for group in pools.values() for candidate in group):
+            if conversation not in used:
+                selected.append(row)
+                used.add(conversation)
+        return sorted(selected, key=lambda row: row["id"])
     for label, candidates in pools.items():
         count = 0
         for _, conversation, row in sorted(candidates):
@@ -123,17 +129,20 @@ def choose(clips, annotations, *, excluded=(), per_class=PER_CLASS, seed=SEED):
     return sorted(selected, key=lambda row: row["id"])
 
 
-def download(cache, *, exclude_cohort=None, per_class=PER_CLASS, seed=SEED):
+def download(cache, *, exclude_cohorts=(), per_class=PER_CLASS, seed=SEED, all_conversations=False):
     previous_rows = []
-    if exclude_cohort is not None:
-        if exclude_cohort.resolve() == (cache / "cohort.json").resolve():
+    for previous in exclude_cohorts:
+        if previous.resolve() == (cache / "cohort.json").resolve():
             raise ValueError("Write the new cohort to a different cache")
-        previous_rows = json.loads(exclude_cohort.read_text("utf8"))["rows"]
+        previous_rows.extend(json.loads(previous.read_text("utf8"))["rows"])
     excluded = {row["id"].split("/")[0] for row in previous_rows}
     with ZipFile(ArchiveIndex()) as archive:
         index = {entry.filename: entry for entry in archive.infolist()}
     annotations = read_member(index["CMMA/test/text/test.csv"])
-    rows = choose(index, annotations, excluded=excluded, per_class=per_class, seed=seed)
+    rows = choose(index, annotations, excluded=excluded, per_class=per_class, seed=seed,
+                  all_conversations=all_conversations)
+    if not rows:
+        raise ValueError("No CMMA videos are eligible for the selected cohort")
 
     def fetch(row):
         member = index[row["member"]]
@@ -153,9 +162,15 @@ def download(cache, *, exclude_cohort=None, per_class=PER_CLASS, seed=SEED):
         raise ValueError("The frozen CMMA selection contains duplicate media")
     cohort = {"source": "CMMA official test", "selection": seed,
               "labels_sha256": hashlib.sha256(annotations).hexdigest(), "rows": downloaded}
-    if exclude_cohort is not None:
-        cohort["excluded_cohort_sha256"] = sha_file(exclude_cohort)
+    if exclude_cohorts:
+        fingerprints = sorted({sha_file(file) for file in exclude_cohorts})
+        if len(fingerprints) == 1:
+            cohort["excluded_cohort_sha256"] = fingerprints[0]
+        else:
+            cohort["excluded_cohorts_sha256"] = fingerprints
         cohort["excluded_conversations"] = len(excluded)
+    if all_conversations:
+        cohort["one_per_available_conversation"] = True
     save_json(cache / "cohort.json", cohort)
 
 
@@ -225,14 +240,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("step", choices=("download", "gpu", "desktop"), nargs="?", default="download")
     parser.add_argument("--cache", type=Path, default=CACHE / "cmma-timeline")
-    parser.add_argument("--exclude-cohort", type=Path, help="exclude all conversations from this earlier manifest")
+    parser.add_argument("--exclude-cohort", type=Path, action="append", default=[],
+                        help="exclude all conversations from this earlier manifest (repeatable)")
     parser.add_argument("--per-class", type=int, default=PER_CLASS)
+    parser.add_argument("--all-conversations", action="store_true", help="choose one qualifying video per conversation")
     parser.add_argument("--seed", default=SEED)
     args = parser.parse_args()
     if args.step == "download":
         if args.per_class < 1:
             parser.error("--per-class must be positive")
-        download(args.cache, exclude_cohort=args.exclude_cohort, per_class=args.per_class, seed=args.seed)
+        download(args.cache, exclude_cohorts=args.exclude_cohort, per_class=args.per_class, seed=args.seed,
+                 all_conversations=args.all_conversations)
     else:
         cohort = json.loads((args.cache / "cohort.json").read_text("utf8"))
         if args.step == "gpu":

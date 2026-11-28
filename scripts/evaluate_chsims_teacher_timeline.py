@@ -11,12 +11,21 @@ from threadpoolctl import threadpool_limits
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts import chsims_teacher_directional as directional
 from scripts import chsims_teacher_directional_pair as pair
+from scripts import chsims_teacher_dynamic_conflict as dynamic_conflict
+from scripts import chsims_teacher_context_evidence as context_evidence
+from scripts import chsims_teacher_context_review as context_review
+from scripts import chsims_teacher_minicpm_protected as minicpm_protected
+from scripts import chsims_teacher_minicpm_review as minicpm_review
+from scripts import chsims_teacher_neutral_guard as neutral_guard
 from scripts import chsims_teacher_refinement as refinement
 from scripts import chsims_teacher_robustness as prior
+from scripts import chsims_teacher_source_calibration as source_calibration
 from scripts import chsims_teacher_source_guard as source_guard
 from scripts import chsims_teacher_source_review as source_review
 from scripts import chsims_teacher_timeline as timeline
+from scripts import chsims_teacher_window_agreement as window_agreement
 from scripts.benchmark_chsims_teacher import save_json
+from scripts.chsims_omni_model_comparison import AUDIO_MINI, predict as linear_predict
 from scripts.chsims_teacher_cross_source import group_ids, labels, metrics
 from scripts.chsims_teacher_data import CACHE, sha_file
 from scripts.chsims_teacher_supervision import numbers, read_full_report
@@ -24,6 +33,14 @@ from scripts.evaluate_chsims_teacher_refinement import CASES, SUMMARY, condition
 
 
 SOURCE_EXPERIMENTS = ("source-review", "source-guard")
+AUDIO_REVIEWERS = {"minicpm_review": minicpm_review, "minicpm_protected": minicpm_protected,
+                   "context_review": context_review, "window_agreement": window_agreement,
+                   "source_calibration": source_calibration, "dynamic_conflict": dynamic_conflict,
+                   "neutral_guard": neutral_guard}
+AUDIO_EXPERIMENTS = tuple(kind.replace("_", "-") for kind in AUDIO_REVIEWERS)
+WEIGHT_REVIEWERS = ("dynamic_conflict", "neutral_guard")
+ACOUSTIC_REVIEWERS = ("source_calibration", *WEIGHT_REVIEWERS)
+CONTEXT_REVIEWERS = ("context_review", "window_agreement", *ACOUSTIC_REVIEWERS)
 
 
 def guarded_reference(qwen, mini, scores, available, model):
@@ -52,7 +69,9 @@ def inference(cache, report, data_cache, checkpoint, old_model, original, data, 
         desktop = {"no_visual": time["desktop"],
                    "synchronous_gap": directional.desktop_gap_scores(data_cache, rows, time)}
     predictions, diagnostics = {}, {}
-    compare_pair = correction is not None and correction.get("kind") in ("source_review", "source_guard")
+    kind = correction.get("kind") if correction is not None else None
+    compare_audio = kind in AUDIO_REVIEWERS
+    compare_pair = compare_audio or kind in ("source_review", "source_guard")
     initial_weights = np.asarray(checkpoint["text_weight"])
     for name, (state, mask) in CASES.items():
         blocks = inputs[state]
@@ -111,6 +130,21 @@ def inference(cache, report, data_cache, checkpoint, old_model, original, data, 
                             reviews = source_guard.predict(batch, preceding, reviews, correction["guard"])
                         teacher[active] = reviews[active]
                         diagnostics[name]["conflict"] = disputed
+                    if compare_audio:
+                        audio_review = correction["audio_review"]
+                        voice = linear_predict(audio_review["voice"], {key: mini[state][key] for key in AUDIO_MINI}, None)
+                        methods["teacher_previous"] = labels(teacher)
+                        checked = minicpm_review.design(batch, voice, mini_scores, teacher,
+                                                        minicpm_review.voice_quality(time, name))
+                        if kind in CONTEXT_REVIEWERS:
+                            checked.update(context_evidence.cues(scoped, time, name))
+                        if kind in ACOUSTIC_REVIEWERS and name == source_calibration.NO_VISUAL:
+                            checked.update(source_calibration.acoustic_inputs(rows, scoped["audio"]))
+                            if kind in WEIGHT_REVIEWERS:
+                                checked["quality"] = dynamic_conflict.quality_input(checked)
+                        teacher = AUDIO_REVIEWERS[kind].infer(checked, audio_review["policies"][name]).copy()
+                        diagnostics[name]["voice"] = voice
+                        diagnostics[name]["voice_active"] = checked["active"]
                 else:
                     corrector = pair if correction.get("kind") == "pair" else directional
                     teacher[active] = corrector.predict(batch, correction["policies"][name])[active]
@@ -170,6 +204,46 @@ def has_external_source_gain(result):
                    gap["teacher_previous"]["recall"][label]["hits"] for label in ("neutral", "positive"))}
 
 
+def audio_release_metrics(result, external):
+    groups = ("external",) if external else ("official", "unseen_sources")
+    scenarios = [result["cases"][case][group]["metrics"] for case in timeline.CASES for group in groups]
+    intact = [result["cases"]["complete"][group]["metrics"] for group in groups]
+    missing = result["averages"]["missing"][groups[0]]["metrics"]
+    measures = ("accuracy", "macro_f1")
+    differences = [missing["teacher"][key] - missing["teacher_previous"][key] for key in measures]
+    # Different orderings of per-condition scores can round an equal average differently.
+    rounding = 1e-12
+    return {"complete_maintains_accuracy_and_macro_f1": all(x["teacher"][k] >= x["teacher_previous"][k]
+                                                             for x in intact for k in measures),
+            "missing_no_regression": all(delta >= -rounding for delta in differences),
+            "missing_improves_accuracy_and_macro_f1": all(delta > rounding for delta in differences),
+            "preserves_polar_recall": all(x["teacher"]["recall"][label]["hits"] >=
+                                          x["teacher_previous"]["recall"][label]["hits"] for x in scenarios
+                                          for label in ("negative", "positive")),
+            "neutral_recall_improves": any(x["teacher"]["recall"]["neutral"]["hits"] >
+                                           x["teacher_previous"]["recall"]["neutral"]["hits"] for x in scenarios)}
+
+
+def validate_external_exclusions(cache, manifest, rows):
+    fingerprints = manifest.get("excluded_cohorts_sha256", [])
+    if "excluded_cohort_sha256" in manifest:
+        fingerprints = [manifest["excluded_cohort_sha256"]]
+    if not fingerprints:
+        return
+    originals = []
+    found = set()
+    for folder in ("cmma-timeline", "cmma-source-review"):
+        path = cache.parent / folder / "cohort.json"
+        if path.is_file() and (digest := sha_file(path)) in fingerprints:
+            originals.extend(json.loads(path.read_text("utf8"))["rows"])
+            found.add(digest)
+    old_conversations = {row["id"].split("/")[0] for row in originals}
+    old_media = {row["raw_sha256"] for row in originals}
+    if (found != set(fingerprints) or len(old_conversations) != manifest["excluded_conversations"]
+            or old_conversations & set(group_ids(rows)) or old_media & {row["raw_sha256"] for row in manifest["rows"]}):
+        raise ValueError("The new CMMA cohort must exclude the earlier conversations and videos")
+
+
 def evaluate(cache, output, external=None, experiment=None):
     current_path = cache / timeline.DIRECTORY / "timeline-fusion.json"
     checkpoint = json.loads(current_path.read_text("utf8"))
@@ -179,7 +253,21 @@ def evaluate(cache, output, external=None, experiment=None):
     if (checkpoint["code"] != sha_file(Path(timeline.__file__)) or checkpoint["reference"] != sha_file(original_path)
             or checkpoint["metadata"] != test["meta_sha256"]):
         raise ValueError("The timeline model and previous teacher must be frozen against the same release")
-    if experiment == "source-guard":
+    if experiment == "neutral-guard":
+        correction, correction_path = neutral_guard.load(cache, current_path), neutral_guard.MODEL
+    elif experiment == "dynamic-conflict":
+        correction, correction_path = dynamic_conflict.load(cache, current_path), dynamic_conflict.MODEL
+    elif experiment == "source-calibration":
+        correction, correction_path = source_calibration.load(cache, current_path), source_calibration.MODEL
+    elif experiment == "window-agreement":
+        correction, correction_path = window_agreement.load(cache, current_path), window_agreement.MODEL
+    elif experiment == "context-review":
+        correction, correction_path = context_review.load(cache, current_path), context_review.MODEL
+    elif experiment == "minicpm-protected":
+        correction, correction_path = minicpm_protected.load(cache, current_path), minicpm_protected.MODEL
+    elif experiment == "minicpm-review":
+        correction, correction_path = minicpm_review.load(cache, current_path), minicpm_review.MODEL
+    elif experiment == "source-guard":
         correction, correction_path = source_guard.load(cache, current_path), source_guard.MODEL
     elif experiment == "source-review":
         correction, correction_path = source_review.load(cache, current_path), source_review.MODEL
@@ -201,16 +289,7 @@ def evaluate(cache, output, external=None, experiment=None):
         if (expected_rows != [(row["id"], row["truth"]) for row in rows]
                 or manifest["labels_sha256"] != report["meta_sha256"]):
             raise ValueError("The external predictions do not match the frozen CMMA cohort")
-        if "excluded_cohort_sha256" in manifest:
-            earlier_manifest = cache.parent / "cmma-timeline/cohort.json"
-            earlier = json.loads(earlier_manifest.read_text("utf8"))["rows"]
-            old_conversations = {row["id"].split("/")[0] for row in earlier}
-            old_media = {row["raw_sha256"] for row in earlier}
-            if (manifest["excluded_cohort_sha256"] != sha_file(earlier_manifest)
-                    or len(old_conversations) != manifest["excluded_conversations"]
-                    or old_conversations & set(group_ids(rows))
-                    or old_media & {row["raw_sha256"] for row in manifest["rows"]}):
-                raise ValueError("The new CMMA cohort must exclude the earlier conversations and videos")
+        validate_external_exclusions(cache, manifest, rows)
     test_ids = {row["id"] for row in rows}
     training_sources = set()
     for phase, digest in checkpoint["splits"].items():
@@ -238,7 +317,12 @@ def evaluate(cache, output, external=None, experiment=None):
     prediction, trace, observations = inference(cache, report, dataset, checkpoint, old, original, data, correction)
     groups = {"external" if external else "official": np.arange(len(rows))}
     if correction is not None:
-        reference_file = "pair-test-predictions.json" if experiment in SOURCE_EXPERIMENTS else "test-predictions.json"
+        if experiment in AUDIO_EXPERIMENTS:
+            reference_file = "source-guard-test-predictions.json"
+        elif experiment in SOURCE_EXPERIMENTS:
+            reference_file = "pair-test-predictions.json"
+        else:
+            reference_file = "test-predictions.json"
         frozen = json.loads((dataset / timeline.DIRECTORY / reference_file).read_text("utf8"))
         if frozen["ids"] != [row["id"] for row in rows]:
             raise ValueError("The previous timeline evaluator used different test IDs")
@@ -272,6 +356,8 @@ def evaluate(cache, output, external=None, experiment=None):
                 diagnostics[name][cohort] = {"eligible": len(eligible), "changed": int(values["changed"][indices].sum()),
                                              "weight_quantiles": np.quantile(weights, [.1, .5, .9], axis=0).tolist()
                                              if len(eligible) else []}
+                if "voice_active" in values:
+                    diagnostics[name][cohort]["voice_available"] = int(values["voice_active"][indices].sum())
         if "emotion2vec_scores" in methods and not external:
             cases[name]["audio_annotation"] = {cohort: condition_metrics(rows, methods, members, label="audio")
                                                for cohort, members in groups.items()}
@@ -306,15 +392,23 @@ def evaluate(cache, output, external=None, experiment=None):
     if external:
         result["external_cohort"] = {"source": manifest["source"], "selection": manifest["selection"],
                                      "manifest_sha256": sha_file(manifest_path)}
-        if "excluded_cohort_sha256" in manifest:
-            result["external_cohort"].update({key: manifest[key] for key in
-                    ("excluded_cohort_sha256", "excluded_conversations")})
+        result["external_cohort"].update({key: manifest[key] for key in ("excluded_cohort_sha256",
+                "excluded_cohorts_sha256", "excluded_conversations", "one_per_available_conversation") if key in manifest})
     else:
         result["release_metrics"] = has_directional_gain(result) if correction is not None else has_release_gain(result)
     if correction is not None:
         result["reference_sha256"] = sha_file(current_path)
         result["model_sha256"] = sha_file(cache / timeline.DIRECTORY / correction_path)
-        if experiment in SOURCE_EXPERIMENTS:
+        if experiment in AUDIO_EXPERIMENTS:
+            result["reference_sha256"] = correction["audio_review"]["guard"]
+            result["release_metrics"] = audio_release_metrics(result, external)
+            result["voice_review_validation"] = {case: {key: value for key, value in policy.items() if key != "residual"}
+                                                 for case, policy in correction["audio_review"]["policies"].items()}
+            if not external:
+                audio_truth = numbers(rows, "audio")
+                result["minicpm_voice_label_A"] = {case: {name: metrics(audio_truth, trace[case]["voice"], indices)
+                        for name, indices in groups.items()} for case in timeline.CASES}
+        elif experiment in SOURCE_EXPERIMENTS:
             result["reference_sha256"] = correction["previous_model"]
             result["source_review_validation"] = correction["review"]
             if "guard" in correction:
@@ -351,6 +445,20 @@ def main():
                        help="compare the frozen audio/window conflict review against the preceding pair model")
     modes.add_argument("--source-guard", action="store_const", const="source-guard", dest="experiment",
                        help="compare the frozen conflict review with neutral protection against the preceding pair model")
+    modes.add_argument("--minicpm-review", action="store_const", const="minicpm-review", dest="experiment",
+                       help="compare the frozen MiniCPM-o voice review against the released teacher")
+    modes.add_argument("--minicpm-protected", action="store_const", const="minicpm-protected", dest="experiment",
+                       help="compare the frozen polarity-protected voice review against the released teacher")
+    modes.add_argument("--context-review", action="store_const", const="context-review", dest="experiment",
+                       help="compare the frozen context-aware MiniCPM-o review against the released teacher")
+    modes.add_argument("--window-agreement", action="store_const", const="window-agreement", dest="experiment",
+                       help="compare the frozen review requiring agreement between retained modalities")
+    modes.add_argument("--source-calibration", action="store_const", const="source-calibration", dest="experiment",
+                       help="compare the source-calibrated acoustic and retained-window review")
+    modes.add_argument("--dynamic-conflict", action="store_const", const="dynamic-conflict", dest="experiment",
+                       help="compare source-learned text and acoustic weights under conflict")
+    modes.add_argument("--neutral-guard", action="store_const", const="neutral-guard", dest="experiment",
+                       help="compare the learned confirmation required for a negative review")
     args = parser.parse_args()
     with threadpool_limits(limits=5, user_api="blas"):
         evaluate(args.cache, args.output, args.external, args.experiment)
