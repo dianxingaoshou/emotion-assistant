@@ -9,6 +9,8 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts import chsims_teacher_acoustic_continuity_review as acoustic_continuity_review
+from scripts import chsims_teacher_acoustic_overlap_review as acoustic_overlap_review
 from scripts import chsims_teacher_directional as directional
 from scripts import chsims_teacher_directional_pair as pair
 from scripts import chsims_teacher_dynamic_conflict as dynamic_conflict
@@ -20,11 +22,15 @@ from scripts import chsims_teacher_dual_evidence_review as dual_evidence_review
 from scripts import chsims_teacher_minicpm_protected as minicpm_protected
 from scripts import chsims_teacher_minicpm_review as minicpm_review
 from scripts import chsims_teacher_neutral_guard as neutral_guard
+from scripts import chsims_teacher_neutral_agreement_review as neutral_agreement_review
 from scripts import chsims_teacher_neutral_corroboration as neutral_corroboration
 from scripts import chsims_teacher_neutral_consensus_review as neutral_consensus_review
+from scripts import chsims_teacher_neutral_pair_review as neutral_pair_review
 from scripts import chsims_teacher_neutral_precision as neutral_precision
 from scripts import chsims_teacher_neutral_precision_review as neutral_precision_review
+from scripts import chsims_teacher_neutral_reliability_review as neutral_reliability_review
 from scripts import chsims_teacher_precision_review as precision_review
+from scripts import chsims_teacher_protected_continuity_review as protected_continuity_review
 from scripts import chsims_teacher_refinement as refinement
 from scripts import chsims_teacher_robustness as prior
 from scripts import chsims_teacher_source_calibration as source_calibration
@@ -51,18 +57,30 @@ AUDIO_REVIEWERS = {"minicpm_review": minicpm_review, "minicpm_protected": minicp
                    "supported_review_corroborated": neutral_guard, "supported_review_complete_only": neutral_guard,
                    "neutral_consensus_review": neutral_guard, "temporal_neutral_review": neutral_guard,
                    "neutral_consensus_acoustic": neutral_guard, "dual_evidence_review": neutral_guard,
-                   "neutral_precision_review": neutral_guard}
+                   "neutral_precision_review": neutral_guard, "neutral_pair_review": neutral_guard,
+                   "neutral_reliability_review": neutral_guard, "acoustic_continuity_review": neutral_guard,
+                   "protected_continuity_review": neutral_guard, "acoustic_overlap_review": neutral_guard,
+                   "neutral_agreement_review": neutral_guard}
 AUDIO_EXPERIMENTS = tuple(kind.replace("_", "-") for kind in AUDIO_REVIEWERS)
 PRECISION_REVIEWERS = {"complete_precision": complete_review, "complete_precision_joint": complete_directional_review,
                        "supported_review": supported_review, "supported_review_corroborated": supported_review,
                        "supported_review_complete_only": supported_review, "neutral_consensus_review": supported_review,
                        "temporal_neutral_review": supported_review, "neutral_consensus_acoustic": supported_review,
-                       "dual_evidence_review": supported_review, "neutral_precision_review": supported_review}
+                       "dual_evidence_review": supported_review, "neutral_precision_review": supported_review,
+                       "neutral_pair_review": supported_review, "neutral_reliability_review": supported_review,
+                       "acoustic_continuity_review": supported_review, "protected_continuity_review": supported_review,
+                       "acoustic_overlap_review": supported_review, "neutral_agreement_review": supported_review}
 TEMPORAL_NEUTRAL_REVIEWERS = {"neutral_consensus_review": neutral_consensus_review,
                               "temporal_neutral_review": temporal_neutral_review,
                               "neutral_consensus_acoustic": neutral_consensus_review,
                               "dual_evidence_review": dual_evidence_review,
-                              "neutral_precision_review": neutral_precision_review}
+                              "neutral_precision_review": neutral_precision_review,
+                              "neutral_pair_review": neutral_pair_review,
+                              "neutral_reliability_review": neutral_reliability_review,
+                              "acoustic_continuity_review": acoustic_continuity_review,
+                              "protected_continuity_review": protected_continuity_review,
+                              "acoustic_overlap_review": acoustic_overlap_review,
+                              "neutral_agreement_review": neutral_agreement_review}
 NEUTRAL_PRECISION_REVIEWERS = {"supported_review": neutral_precision,
                                "supported_review_corroborated": neutral_corroboration, **TEMPORAL_NEUTRAL_REVIEWERS}
 PRECISION_EXPERIMENTS = tuple(kind.replace("_", "-") for kind in PRECISION_REVIEWERS)
@@ -468,7 +486,8 @@ def evaluate(cache, output, external=None, experiment=None):
                 result["complete_development"] = {key: correction["complete"][key] for key in fields
                                                   if key in correction["complete"]}
                 if correction["precision"] is not None:
-                    precision_fields = (*fields, "guard", "previous", "nearby_source_balanced_gain")
+                    precision_fields = (*fields, "guard", "previous", "nearby_source_balanced_gain",
+                                        "calibration_development")
                     result["precision_development"] = {key: correction["precision"][key] for key in precision_fields
                                                        if key in correction["precision"]}
             result["voice_review_validation"] = {case: {key: value for key, value in policy.items() if key != "residual"}
@@ -548,6 +567,18 @@ def main():
                        dest="experiment", help="compare whole-clip and retained evidence for proposed neutral revisions")
     modes.add_argument("--neutral-precision-review", action="store_const", const="neutral-precision-review",
                        dest="experiment", help="compare a source-trained confirmation of neutral revisions")
+    modes.add_argument("--neutral-pair-review", action="store_const", const="neutral-pair-review",
+                       dest="experiment", help="compare source-trained positive and neutral odds without video")
+    modes.add_argument("--neutral-reliability-review", action="store_const", const="neutral-reliability-review",
+                       dest="experiment", help="compare reliability-aware confirmation of neutral revisions")
+    modes.add_argument("--acoustic-continuity-review", action="store_const", const="acoustic-continuity-review",
+                       dest="experiment", help="compare the continuity of whole-clip and retained speech evidence")
+    modes.add_argument("--protected-continuity-review", action="store_const", const="protected-continuity-review",
+                       dest="experiment", help="confirm speech revisions with the frozen neutral reliability review")
+    modes.add_argument("--acoustic-overlap-review", action="store_const", const="acoustic-overlap-review",
+                       dest="experiment", help="limit positive evidence from overlapping acoustic views")
+    modes.add_argument("--neutral-agreement-review", action="store_const", const="neutral-agreement-review",
+                       dest="experiment", help="calibrate same-track reinforcement against whole-clip neutral agreement")
     args = parser.parse_args()
     with threadpool_limits(limits=5, user_api="blas"):
         evaluate(args.cache, args.output, args.external, args.experiment)
