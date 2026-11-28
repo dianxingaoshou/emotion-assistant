@@ -1,0 +1,4198 @@
+{
+  "test_ids_sha256": "dfb83972ba1d1f433b67b9e29e171cacf44f334b20e81b18b94101063e503da9",
+  "metadata_sha256": "11e7caeebe39c3c168adbf48dd482629516c5e127a17947ea6803d459a510367",
+  "desktop_model_sha256": "f7c5ae8fe83399abe95a53099a5087c16aed6f47048eae2d713a2e7c78a23393",
+  "teacher_predictions_sha256": "da720ee8c24a88b94430b79b2b213ad95db8949b8ffda81b4579b227f8e4b54b",
+  "classes": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "cohorts": {
+    "external": {
+      "n": 326,
+      "groups": 326
+    }
+  },
+  "arms": {
+    "desktop_character_v1": "v1 character n-grams, emotion2vec+ embedding and desktop cues",
+    "desktop_character_fixed_weights_v1": "v1 character n-grams and original Qwen-v1 fusion weights",
+    "desktop_base_v1": "v1 character n-grams and desktop cues without the speech embedding head",
+    "desktop_fixed_v1": "frozen v1 with Qwen text embeddings",
+    "teacher": "frozen neutral-guard teacher"
+  },
+  "cases": {
+    "complete": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16759962269825426,
+            "correct": 54,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                196,
+                3,
+                19,
+                0
+              ],
+              [
+                52,
+                0,
+                12,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 3,
+                "total": 218
+              },
+              "positive": {
+                "hits": 12,
+                "total": 64
+              }
+            },
+            "wrong": 272,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.29141104294478526,
+            "macro_f1": 0.31271854711400765,
+            "correct": 95,
+            "abstain": 0,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                151,
+                17,
+                50,
+                0
+              ],
+              [
+                25,
+                2,
+                37,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 17,
+                "total": 218
+              },
+              "positive": {
+                "hits": 37,
+                "total": 64
+              }
+            },
+            "wrong": 231,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.17177914110429449,
+            "macro_f1": 0.1704611851670675,
+            "correct": 56,
+            "abstain": 0,
+            "confusion": [
+              [
+                40,
+                0,
+                4,
+                0
+              ],
+              [
+                185,
+                3,
+                30,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 40,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 3,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 270,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.2852760736196319,
+            "macro_f1": 0.2764257550752349,
+            "correct": 93,
+            "abstain": 2,
+            "confusion": [
+              [
+                32,
+                6,
+                6,
+                0
+              ],
+              [
+                138,
+                47,
+                32,
+                1
+              ],
+              [
+                41,
+                8,
+                14,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 32,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 47,
+                "total": 218
+              },
+              "positive": {
+                "hits": 14,
+                "total": 64
+              }
+            },
+            "wrong": 231,
+            "coverage": 0.9938650306748467
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.19325153374233128,
+            "macro_f1": 0.20390680535608072,
+            "correct": 63,
+            "abstain": 0,
+            "confusion": [
+              [
+                42,
+                0,
+                2,
+                0
+              ],
+              [
+                189,
+                4,
+                25,
+                0
+              ],
+              [
+                47,
+                0,
+                17,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 42,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 218
+              },
+              "positive": {
+                "hits": 17,
+                "total": 64
+              }
+            },
+            "wrong": 263,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 45,
+            "regressed": 4,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.08588957055214724,
+                0.16564417177914112
+              ],
+              "macro_f1": [
+                0.09342159536720787,
+                0.19479551261976735
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 42,
+            "regressed": 3,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.08282208588957055,
+                0.15644171779141106
+              ],
+              "macro_f1": [
+                0.09521616357085454,
+                0.18660260569555207
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 49,
+            "regressed": 47,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.05521472392638038,
+                0.06134969325153378
+              ],
+              "macro_f1": [
+                -0.02684517532700392,
+                0.0919411839500456
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 36,
+            "regressed": 4,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06134969325153375,
+                0.13496932515337423
+              ],
+              "macro_f1": [
+                0.06272335149942207,
+                0.15461888205034327
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 12,
+          "regressed": 5,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.0030674846625766703,
+              0.04601226993865029
+            ],
+            "macro_f1": [
+              -0.0060740770204360355,
+              0.07125694415272119
+            ]
+          }
+        }
+      }
+    },
+    "no_text": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19225615541724964,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                193,
+                7,
+                18,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 7,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.3006134969325153,
+            "macro_f1": 0.324756088772311,
+            "correct": 98,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                2,
+                3,
+                0
+              ],
+              [
+                153,
+                29,
+                36,
+                0
+              ],
+              [
+                27,
+                7,
+                30,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 29,
+                "total": 218
+              },
+              "positive": {
+                "hits": 30,
+                "total": 64
+              }
+            },
+            "wrong": 228,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19225615541724964,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                193,
+                7,
+                18,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 7,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.2822085889570552,
+            "macro_f1": 0.2935585697040586,
+            "correct": 92,
+            "abstain": 67,
+            "confusion": [
+              [
+                22,
+                8,
+                3,
+                11
+              ],
+              [
+                103,
+                58,
+                11,
+                46
+              ],
+              [
+                34,
+                8,
+                12,
+                10
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 22,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 58,
+                "total": 218
+              },
+              "positive": {
+                "hits": 12,
+                "total": 64
+              }
+            },
+            "wrong": 167,
+            "coverage": 0.7944785276073619
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19225615541724964,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                193,
+                7,
+                18,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 7,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 47,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07055214723926381,
+                0.15644171779141103
+              ],
+              "macro_f1": [
+                0.08287057160399348,
+                0.184850038192704
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 47,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07055214723926381,
+                0.15644171779141103
+              ],
+              "macro_f1": [
+                0.08287057160399348,
+                0.184850038192704
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 59,
+            "regressed": 53,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.04601226993865032,
+                0.07369631901840451
+              ],
+              "macro_f1": [
+                -0.03619499067161236,
+                0.09352496676922523
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 47,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07055214723926381,
+                0.15644171779141103
+              ],
+              "macro_f1": [
+                0.08287057160399348,
+                0.184850038192704
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 0,
+          "regressed": 0,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0,
+              0.0
+            ],
+            "macro_f1": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "no_audio": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.17791411042944785,
+            "macro_f1": 0.17914106681769681,
+            "correct": 58,
+            "abstain": 2,
+            "confusion": [
+              [
+                37,
+                1,
+                6,
+                0
+              ],
+              [
+                161,
+                4,
+                52,
+                1
+              ],
+              [
+                46,
+                0,
+                17,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 218
+              },
+              "positive": {
+                "hits": 17,
+                "total": 64
+              }
+            },
+            "wrong": 266,
+            "coverage": 0.9938650306748467
+          },
+          "teacher": {
+            "accuracy": 0.2822085889570552,
+            "macro_f1": 0.3050254452926209,
+            "correct": 92,
+            "abstain": 0,
+            "confusion": [
+              [
+                38,
+                2,
+                4,
+                0
+              ],
+              [
+                152,
+                19,
+                47,
+                0
+              ],
+              [
+                28,
+                1,
+                35,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 19,
+                "total": 218
+              },
+              "positive": {
+                "hits": 35,
+                "total": 64
+              }
+            },
+            "wrong": 234,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.19325153374233128,
+            "macro_f1": 0.19390720390720392,
+            "correct": 63,
+            "abstain": 2,
+            "confusion": [
+              [
+                38,
+                1,
+                5,
+                0
+              ],
+              [
+                147,
+                6,
+                64,
+                1
+              ],
+              [
+                44,
+                0,
+                19,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 218
+              },
+              "positive": {
+                "hits": 19,
+                "total": 64
+              }
+            },
+            "wrong": 261,
+            "coverage": 0.9938650306748467
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.17791411042944785,
+            "macro_f1": 0.17914106681769681,
+            "correct": 58,
+            "abstain": 2,
+            "confusion": [
+              [
+                37,
+                1,
+                6,
+                0
+              ],
+              [
+                161,
+                4,
+                52,
+                1
+              ],
+              [
+                46,
+                0,
+                17,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 218
+              },
+              "positive": {
+                "hits": 17,
+                "total": 64
+              }
+            },
+            "wrong": 266,
+            "coverage": 0.9938650306748467
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.25153374233128833,
+            "macro_f1": 0.2681582933602626,
+            "correct": 82,
+            "abstain": 2,
+            "confusion": [
+              [
+                41,
+                1,
+                2,
+                0
+              ],
+              [
+                155,
+                12,
+                50,
+                1
+              ],
+              [
+                32,
+                2,
+                29,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 12,
+                "total": 218
+              },
+              "positive": {
+                "hits": 29,
+                "total": 64
+              }
+            },
+            "wrong": 242,
+            "coverage": 0.9938650306748467
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 46,
+            "regressed": 12,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06134969325153372,
+                0.147239263803681
+              ],
+              "macro_f1": [
+                0.07522883728132651,
+                0.1755952959207796
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 43,
+            "regressed": 14,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.04601226993865032,
+                0.13190184049079756
+              ],
+              "macro_f1": [
+                0.06111304573285956,
+                0.15704999636244724
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 46,
+            "regressed": 12,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06134969325153372,
+                0.147239263803681
+              ],
+              "macro_f1": [
+                0.07522883728132651,
+                0.1755952959207796
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 22,
+            "regressed": 12,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.0030674846625766694,
+                0.06441717791411045
+              ],
+              "macro_f1": [
+                0.00046460989223966615,
+                0.07549171370153386
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 33,
+          "regressed": 14,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.018404907975460127,
+              0.09815950920245398
+            ],
+            "macro_f1": [
+              0.025544239572652602,
+              0.12067600889704519
+            ]
+          }
+        }
+      }
+    },
+    "no_visual": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16726984654239263,
+            "correct": 54,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                0,
+                7,
+                0
+              ],
+              [
+                191,
+                5,
+                22,
+                0
+              ],
+              [
+                52,
+                0,
+                12,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 12,
+                "total": 64
+              }
+            },
+            "wrong": 272,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.27300613496932513,
+            "macro_f1": 0.29613260188000684,
+            "correct": 89,
+            "abstain": 0,
+            "confusion": [
+              [
+                36,
+                2,
+                6,
+                0
+              ],
+              [
+                154,
+                20,
+                44,
+                0
+              ],
+              [
+                28,
+                3,
+                33,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 36,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 20,
+                "total": 218
+              },
+              "positive": {
+                "hits": 33,
+                "total": 64
+              }
+            },
+            "wrong": 237,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.17791411042944785,
+            "macro_f1": 0.17903716714121332,
+            "correct": 58,
+            "abstain": 0,
+            "confusion": [
+              [
+                38,
+                0,
+                6,
+                0
+              ],
+              [
+                175,
+                5,
+                38,
+                0
+              ],
+              [
+                49,
+                0,
+                15,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 15,
+                "total": 64
+              }
+            },
+            "wrong": 268,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.3220858895705521,
+            "macro_f1": 0.3083381808135874,
+            "correct": 105,
+            "abstain": 3,
+            "confusion": [
+              [
+                29,
+                7,
+                7,
+                1
+              ],
+              [
+                113,
+                58,
+                46,
+                1
+              ],
+              [
+                35,
+                10,
+                18,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 29,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 58,
+                "total": 218
+              },
+              "positive": {
+                "hits": 18,
+                "total": 64
+              }
+            },
+            "wrong": 218,
+            "coverage": 0.99079754601227
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.19325153374233128,
+            "macro_f1": 0.20298187114330613,
+            "correct": 63,
+            "abstain": 0,
+            "confusion": [
+              [
+                40,
+                0,
+                4,
+                0
+              ],
+              [
+                182,
+                5,
+                31,
+                0
+              ],
+              [
+                46,
+                0,
+                18,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 40,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 18,
+                "total": 64
+              }
+            },
+            "wrong": 263,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 43,
+            "regressed": 8,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06748466257668712,
+                0.15030674846625766
+              ],
+              "macro_f1": [
+                0.07901939673849252,
+                0.17730701406179666
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 40,
+            "regressed": 9,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.055214723926380355,
+                0.1380368098159509
+              ],
+              "macro_f1": [
+                0.06919384921950907,
+                0.16485362043483456
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 40,
+            "regressed": 56,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.10736196319018404,
+                0.006134969325153394
+              ],
+              "macro_f1": [
+                -0.06946657032926998,
+                0.044649106439824775
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 32,
+            "regressed": 6,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.04601226993865032,
+                0.1165644171779141
+              ],
+              "macro_f1": [
+                0.054754403076998207,
+                0.13401852286021967
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 13,
+          "regressed": 8,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.012269938650306733,
+              0.04294478527607362
+            ],
+            "macro_f1": [
+              -0.015073761667716335,
+              0.06265126084056415
+            ]
+          }
+        }
+      }
+    },
+    "text_only": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.19631901840490798,
+            "macro_f1": 0.19945088184652615,
+            "correct": 64,
+            "abstain": 3,
+            "confusion": [
+              [
+                34,
+                1,
+                8,
+                1
+              ],
+              [
+                129,
+                8,
+                80,
+                1
+              ],
+              [
+                40,
+                1,
+                22,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 34,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 8,
+                "total": 218
+              },
+              "positive": {
+                "hits": 22,
+                "total": 64
+              }
+            },
+            "wrong": 259,
+            "coverage": 0.99079754601227
+          },
+          "teacher": {
+            "accuracy": 0.27300613496932513,
+            "macro_f1": 0.28898821090814875,
+            "correct": 89,
+            "abstain": 0,
+            "confusion": [
+              [
+                34,
+                2,
+                8,
+                0
+              ],
+              [
+                142,
+                24,
+                52,
+                0
+              ],
+              [
+                28,
+                5,
+                31,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 34,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 24,
+                "total": 218
+              },
+              "positive": {
+                "hits": 31,
+                "total": 64
+              }
+            },
+            "wrong": 237,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.19631901840490798,
+            "macro_f1": 0.19945088184652615,
+            "correct": 64,
+            "abstain": 3,
+            "confusion": [
+              [
+                34,
+                1,
+                8,
+                1
+              ],
+              [
+                129,
+                8,
+                80,
+                1
+              ],
+              [
+                40,
+                1,
+                22,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 34,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 8,
+                "total": 218
+              },
+              "positive": {
+                "hits": 22,
+                "total": 64
+              }
+            },
+            "wrong": 259,
+            "coverage": 0.99079754601227
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.19631901840490798,
+            "macro_f1": 0.19945088184652615,
+            "correct": 64,
+            "abstain": 3,
+            "confusion": [
+              [
+                34,
+                1,
+                8,
+                1
+              ],
+              [
+                129,
+                8,
+                80,
+                1
+              ],
+              [
+                40,
+                1,
+                22,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 34,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 8,
+                "total": 218
+              },
+              "positive": {
+                "hits": 22,
+                "total": 64
+              }
+            },
+            "wrong": 259,
+            "coverage": 0.99079754601227
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.24846625766871167,
+            "macro_f1": 0.26337805536885117,
+            "correct": 81,
+            "abstain": 3,
+            "confusion": [
+              [
+                35,
+                2,
+                6,
+                1
+              ],
+              [
+                142,
+                16,
+                59,
+                1
+              ],
+              [
+                30,
+                3,
+                30,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 35,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 16,
+                "total": 218
+              },
+              "positive": {
+                "hits": 30,
+                "total": 64
+              }
+            },
+            "wrong": 242,
+            "coverage": 0.99079754601227
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 45,
+            "regressed": 20,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.03067484662576686,
+                0.1197085889570548
+              ],
+              "macro_f1": [
+                0.03922073986385094,
+                0.1384945809313007
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 45,
+            "regressed": 20,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.03067484662576686,
+                0.1197085889570548
+              ],
+              "macro_f1": [
+                0.03922073986385094,
+                0.1384945809313007
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 45,
+            "regressed": 20,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.03067484662576686,
+                0.1197085889570548
+              ],
+              "macro_f1": [
+                0.03922073986385094,
+                0.1384945809313007
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 15,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.0030674846625766694,
+                0.05214723926380371
+              ],
+              "macro_f1": [
+                -0.004443983128918025,
+                0.05698554654264364
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 35,
+          "regressed": 18,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.009202453987730064,
+              0.09509202453987728
+            ],
+            "macro_f1": [
+              0.014882167355437868,
+              0.10894826725938285
+            ]
+          }
+        }
+      }
+    },
+    "audio_only": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19189439436026365,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                189,
+                9,
+                20,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 9,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.29754601226993865,
+            "macro_f1": 0.31694744513031553,
+            "correct": 97,
+            "abstain": 0,
+            "confusion": [
+              [
+                34,
+                1,
+                9,
+                0
+              ],
+              [
+                143,
+                29,
+                46,
+                0
+              ],
+              [
+                22,
+                8,
+                34,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 34,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 29,
+                "total": 218
+              },
+              "positive": {
+                "hits": 34,
+                "total": 64
+              }
+            },
+            "wrong": 229,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19189439436026365,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                189,
+                9,
+                20,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 9,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.2668711656441718,
+            "macro_f1": 0.2840673667962182,
+            "correct": 87,
+            "abstain": 126,
+            "confusion": [
+              [
+                12,
+                9,
+                3,
+                20
+              ],
+              [
+                59,
+                64,
+                9,
+                86
+              ],
+              [
+                24,
+                9,
+                11,
+                20
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 12,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 64,
+                "total": 218
+              },
+              "positive": {
+                "hits": 11,
+                "total": 64
+              }
+            },
+            "wrong": 113,
+            "coverage": 0.6134969325153374
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.19189439436026365,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                189,
+                9,
+                20,
+                0
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 9,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 46,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06748466257668714,
+                0.15337423312883436
+              ],
+              "macro_f1": [
+                0.07638929559531316,
+                0.1741521045830461
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 46,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06748466257668714,
+                0.15337423312883436
+              ],
+              "macro_f1": [
+                0.07638929559531316,
+                0.1741521045830461
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 58,
+            "regressed": 48,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.030674846625766916,
+                0.08895705521472391
+              ],
+              "macro_f1": [
+                -0.02887600010049857,
+                0.0948083866081167
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 46,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06748466257668714,
+                0.15337423312883436
+              ],
+              "macro_f1": [
+                0.07638929559531316,
+                0.1741521045830461
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 0,
+          "regressed": 0,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0,
+              0.0
+            ],
+            "macro_f1": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "visual_only": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.08895705521472393,
+            "macro_f1": 0.12703154021073096,
+            "correct": 29,
+            "abstain": 180,
+            "confusion": [
+              [
+                19,
+                1,
+                1,
+                23
+              ],
+              [
+                90,
+                6,
+                5,
+                117
+              ],
+              [
+                20,
+                0,
+                4,
+                40
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 19,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 218
+              },
+              "positive": {
+                "hits": 4,
+                "total": 64
+              }
+            },
+            "wrong": 117,
+            "coverage": 0.4478527607361963
+          },
+          "teacher": {
+            "accuracy": 0.22392638036809817,
+            "macro_f1": 0.247337804688239,
+            "correct": 73,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                3,
+                4,
+                0
+              ],
+              [
+                173,
+                11,
+                34,
+                0
+              ],
+              [
+                37,
+                2,
+                25,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 11,
+                "total": 218
+              },
+              "positive": {
+                "hits": 25,
+                "total": 64
+              }
+            },
+            "wrong": 253,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.08895705521472393,
+            "macro_f1": 0.12703154021073096,
+            "correct": 29,
+            "abstain": 180,
+            "confusion": [
+              [
+                19,
+                1,
+                1,
+                23
+              ],
+              [
+                90,
+                6,
+                5,
+                117
+              ],
+              [
+                20,
+                0,
+                4,
+                40
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 19,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 218
+              },
+              "positive": {
+                "hits": 4,
+                "total": 64
+              }
+            },
+            "wrong": 117,
+            "coverage": 0.4478527607361963
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.08895705521472393,
+            "macro_f1": 0.12703154021073096,
+            "correct": 29,
+            "abstain": 180,
+            "confusion": [
+              [
+                19,
+                1,
+                1,
+                23
+              ],
+              [
+                90,
+                6,
+                5,
+                117
+              ],
+              [
+                20,
+                0,
+                4,
+                40
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 19,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 218
+              },
+              "positive": {
+                "hits": 4,
+                "total": 64
+              }
+            },
+            "wrong": 117,
+            "coverage": 0.4478527607361963
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.08895705521472393,
+            "macro_f1": 0.12703154021073096,
+            "correct": 29,
+            "abstain": 180,
+            "confusion": [
+              [
+                19,
+                1,
+                1,
+                23
+              ],
+              [
+                90,
+                6,
+                5,
+                117
+              ],
+              [
+                20,
+                0,
+                4,
+                40
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 19,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 6,
+                "total": 218
+              },
+              "positive": {
+                "hits": 4,
+                "total": 64
+              }
+            },
+            "wrong": 117,
+            "coverage": 0.4478527607361963
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 47,
+            "regressed": 3,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0950920245398773,
+                0.17177914110429449
+              ],
+              "macro_f1": [
+                0.07010697440543721,
+                0.16875328481669316
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 47,
+            "regressed": 3,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0950920245398773,
+                0.17177914110429449
+              ],
+              "macro_f1": [
+                0.07010697440543721,
+                0.16875328481669316
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 47,
+            "regressed": 3,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0950920245398773,
+                0.17177914110429449
+              ],
+              "macro_f1": [
+                0.07010697440543721,
+                0.16875328481669316
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 47,
+            "regressed": 3,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0950920245398773,
+                0.17177914110429449
+              ],
+              "macro_f1": [
+                0.07010697440543721,
+                0.16875328481669316
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 0,
+          "regressed": 0,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0,
+              0.0
+            ],
+            "macro_f1": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "no_evidence": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "correct": 0,
+            "abstain": 326,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                44
+              ],
+              [
+                0,
+                0,
+                0,
+                218
+              ],
+              [
+                0,
+                0,
+                0,
+                64
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 0,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 0,
+            "coverage": 0.0
+          },
+          "teacher": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "correct": 0,
+            "abstain": 326,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                44
+              ],
+              [
+                0,
+                0,
+                0,
+                218
+              ],
+              [
+                0,
+                0,
+                0,
+                64
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 0,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 0,
+            "coverage": 0.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "correct": 0,
+            "abstain": 326,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                44
+              ],
+              [
+                0,
+                0,
+                0,
+                218
+              ],
+              [
+                0,
+                0,
+                0,
+                64
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 0,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 0,
+            "coverage": 0.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "correct": 0,
+            "abstain": 326,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                44
+              ],
+              [
+                0,
+                0,
+                0,
+                218
+              ],
+              [
+                0,
+                0,
+                0,
+                64
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 0,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 0,
+            "coverage": 0.0
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "correct": 0,
+            "abstain": 326,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                44
+              ],
+              [
+                0,
+                0,
+                0,
+                218
+              ],
+              [
+                0,
+                0,
+                0,
+                64
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 0,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 0,
+            "coverage": 0.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 0,
+            "regressed": 0,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0,
+                0.0
+              ],
+              "macro_f1": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 0,
+            "regressed": 0,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0,
+                0.0
+              ],
+              "macro_f1": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 0,
+            "regressed": 0,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0,
+                0.0
+              ],
+              "macro_f1": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 0,
+            "regressed": 0,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.0,
+                0.0
+              ],
+              "macro_f1": [
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 0,
+          "regressed": 0,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0,
+              0.0
+            ],
+            "macro_f1": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "text_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16499485117312618,
+            "correct": 54,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                191,
+                3,
+                24,
+                0
+              ],
+              [
+                52,
+                0,
+                12,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 3,
+                "total": 218
+              },
+              "positive": {
+                "hits": 12,
+                "total": 64
+              }
+            },
+            "wrong": 272,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.2852760736196319,
+            "macro_f1": 0.30295354194166213,
+            "correct": 93,
+            "abstain": 0,
+            "confusion": [
+              [
+                38,
+                1,
+                5,
+                0
+              ],
+              [
+                143,
+                20,
+                55,
+                0
+              ],
+              [
+                25,
+                4,
+                35,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 20,
+                "total": 218
+              },
+              "positive": {
+                "hits": 35,
+                "total": 64
+              }
+            },
+            "wrong": 233,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.16257668711656442,
+            "macro_f1": 0.16215491809963087,
+            "correct": 53,
+            "abstain": 0,
+            "confusion": [
+              [
+                38,
+                0,
+                6,
+                0
+              ],
+              [
+                182,
+                1,
+                35,
+                0
+              ],
+              [
+                50,
+                0,
+                14,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 1,
+                "total": 218
+              },
+              "positive": {
+                "hits": 14,
+                "total": 64
+              }
+            },
+            "wrong": 273,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.2883435582822086,
+            "macro_f1": 0.28081978881045444,
+            "correct": 94,
+            "abstain": 2,
+            "confusion": [
+              [
+                29,
+                5,
+                10,
+                0
+              ],
+              [
+                133,
+                49,
+                35,
+                1
+              ],
+              [
+                38,
+                9,
+                16,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 29,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 49,
+                "total": 218
+              },
+              "positive": {
+                "hits": 16,
+                "total": 64
+              }
+            },
+            "wrong": 230,
+            "coverage": 0.9938650306748467
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.18711656441717792,
+            "macro_f1": 0.2000705768519309,
+            "correct": 61,
+            "abstain": 0,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                193,
+                3,
+                22,
+                0
+              ],
+              [
+                47,
+                0,
+                17,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 3,
+                "total": 218
+              },
+              "positive": {
+                "hits": 17,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 46,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07668711656441718,
+                0.16257668711656442
+              ],
+              "macro_f1": [
+                0.08549749346266597,
+                0.1893261846831983
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 45,
+            "regressed": 5,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.08282208588957055,
+                0.16257668711656442
+              ],
+              "macro_f1": [
+                0.09222725324361736,
+                0.1888012350950788
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 49,
+            "regressed": 50,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.06134969325153378,
+                0.05521472392638038
+              ],
+              "macro_f1": [
+                -0.0364532920356399,
+                0.07769810037049296
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 39,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.05828220858895705,
+                0.13803680981595093
+              ],
+              "macro_f1": [
+                0.05460755231018491,
+                0.1516691615902043
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 15,
+          "regressed": 7,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.003067484662576697,
+              0.052147239263803685
+            ],
+            "macro_f1": [
+              -0.0018546457242572354,
+              0.0767137627510592
+            ]
+          }
+        }
+      }
+    },
+    "audio_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.147239263803681,
+            "macro_f1": 0.1293201133144476,
+            "correct": 48,
+            "abstain": 1,
+            "confusion": [
+              [
+                42,
+                0,
+                2,
+                0
+              ],
+              [
+                209,
+                0,
+                8,
+                1
+              ],
+              [
+                58,
+                0,
+                6,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 42,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 6,
+                "total": 64
+              }
+            },
+            "wrong": 277,
+            "coverage": 0.9969325153374233
+          },
+          "teacher": {
+            "accuracy": 0.27300613496932513,
+            "macro_f1": 0.29674517796180205,
+            "correct": 89,
+            "abstain": 0,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                159,
+                16,
+                43,
+                0
+              ],
+              [
+                28,
+                2,
+                34,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 16,
+                "total": 218
+              },
+              "positive": {
+                "hits": 34,
+                "total": 64
+              }
+            },
+            "wrong": 237,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16641337386018237,
+            "correct": 54,
+            "abstain": 1,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                193,
+                0,
+                24,
+                1
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 271,
+            "coverage": 0.9969325153374233
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.18098159509202455,
+            "macro_f1": 0.18174234320093305,
+            "correct": 59,
+            "abstain": 2,
+            "confusion": [
+              [
+                38,
+                1,
+                5,
+                0
+              ],
+              [
+                161,
+                4,
+                52,
+                1
+              ],
+              [
+                46,
+                0,
+                17,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 4,
+                "total": 218
+              },
+              "positive": {
+                "hits": 17,
+                "total": 64
+              }
+            },
+            "wrong": 265,
+            "coverage": 0.9938650306748467
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.17177914110429449,
+            "macro_f1": 0.17285994514036415,
+            "correct": 56,
+            "abstain": 1,
+            "confusion": [
+              [
+                42,
+                0,
+                2,
+                0
+              ],
+              [
+                193,
+                1,
+                23,
+                1
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 42,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 1,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 269,
+            "coverage": 0.9969325153374233
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 45,
+            "regressed": 4,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.08588957055214724,
+                0.1656441717791411
+              ],
+              "macro_f1": [
+                0.11520810137026835,
+                0.21488153463126003
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 41,
+            "regressed": 6,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06748466257668712,
+                0.14417177914110432
+              ],
+              "macro_f1": [
+                0.08042638412519468,
+                0.17839928291911378
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 41,
+            "regressed": 11,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.04907975460122699,
+                0.13190184049079756
+              ],
+              "macro_f1": [
+                0.06523645360545145,
+                0.16177225436769122
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 41,
+            "regressed": 8,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06134969325153375,
+                0.1411042944785276
+              ],
+              "macro_f1": [
+                0.07313769729662992,
+                0.17354771810470476
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 7,
+          "regressed": 5,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.01533742331288343,
+              0.02760736196319019
+            ],
+            "macro_f1": [
+              -0.03236923916879641,
+              0.046566667636580655
+            ]
+          }
+        }
+      }
+    },
+    "visual_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16726984654239263,
+            "correct": 54,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                0,
+                7,
+                0
+              ],
+              [
+                191,
+                5,
+                22,
+                0
+              ],
+              [
+                52,
+                0,
+                12,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 12,
+                "total": 64
+              }
+            },
+            "wrong": 272,
+            "coverage": 1.0
+          },
+          "teacher": {
+            "accuracy": 0.2607361963190184,
+            "macro_f1": 0.2814857778446101,
+            "correct": 85,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                1,
+                6,
+                0
+              ],
+              [
+                155,
+                14,
+                49,
+                0
+              ],
+              [
+                27,
+                3,
+                34,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 218
+              },
+              "positive": {
+                "hits": 34,
+                "total": 64
+              }
+            },
+            "wrong": 241,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.17791411042944785,
+            "macro_f1": 0.17903716714121332,
+            "correct": 58,
+            "abstain": 0,
+            "confusion": [
+              [
+                38,
+                0,
+                6,
+                0
+              ],
+              [
+                175,
+                5,
+                38,
+                0
+              ],
+              [
+                49,
+                0,
+                15,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 38,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 15,
+                "total": 64
+              }
+            },
+            "wrong": 268,
+            "coverage": 1.0
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.3220858895705521,
+            "macro_f1": 0.3091867603386375,
+            "correct": 105,
+            "abstain": 3,
+            "confusion": [
+              [
+                29,
+                7,
+                7,
+                1
+              ],
+              [
+                116,
+                58,
+                43,
+                1
+              ],
+              [
+                35,
+                10,
+                18,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 29,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 58,
+                "total": 218
+              },
+              "positive": {
+                "hits": 18,
+                "total": 64
+              }
+            },
+            "wrong": 218,
+            "coverage": 0.99079754601227
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.19325153374233128,
+            "macro_f1": 0.20298187114330613,
+            "correct": 63,
+            "abstain": 0,
+            "confusion": [
+              [
+                40,
+                0,
+                4,
+                0
+              ],
+              [
+                182,
+                5,
+                31,
+                0
+              ],
+              [
+                46,
+                0,
+                18,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 40,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 5,
+                "total": 218
+              },
+              "positive": {
+                "hits": 18,
+                "total": 64
+              }
+            },
+            "wrong": 263,
+            "coverage": 1.0
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 38,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.05521472392638038,
+                0.1349693251533742
+              ],
+              "macro_f1": [
+                0.0651973089412257,
+                0.16154411110555555
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 36,
+            "regressed": 9,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.04601226993865029,
+                0.1196319018404908
+              ],
+              "macro_f1": [
+                0.05676895632938097,
+                0.14632731980905955
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 37,
+            "regressed": 57,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                -0.11970858895705525,
+                -0.006134969325153394
+              ],
+              "macro_f1": [
+                -0.08495358035464211,
+                0.02741694297124101
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 27,
+            "regressed": 5,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.03680981595092023,
+                0.098159509202454
+              ],
+              "macro_f1": [
+                0.038592624671091716,
+                0.11649044306807871
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 13,
+          "regressed": 8,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.012269938650306733,
+              0.04294478527607362
+            ],
+            "macro_f1": [
+              -0.015073761667716335,
+              0.06265126084056415
+            ]
+          }
+        }
+      }
+    },
+    "audio_visual_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1411042944785276,
+            "macro_f1": 0.11825588066551922,
+            "correct": 46,
+            "abstain": 1,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                206,
+                0,
+                11,
+                1
+              ],
+              [
+                59,
+                0,
+                5,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 5,
+                "total": 64
+              }
+            },
+            "wrong": 279,
+            "coverage": 0.9969325153374233
+          },
+          "teacher": {
+            "accuracy": 0.25766871165644173,
+            "macro_f1": 0.2767586505655318,
+            "correct": 84,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                0,
+                7,
+                0
+              ],
+              [
+                155,
+                14,
+                49,
+                0
+              ],
+              [
+                29,
+                2,
+                33,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 14,
+                "total": 218
+              },
+              "positive": {
+                "hits": 33,
+                "total": 64
+              }
+            },
+            "wrong": 242,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.1656441717791411,
+            "macro_f1": 0.16341120180129468,
+            "correct": 54,
+            "abstain": 1,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                187,
+                0,
+                30,
+                1
+              ],
+              [
+                51,
+                0,
+                13,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 13,
+                "total": 64
+              }
+            },
+            "wrong": 271,
+            "coverage": 0.9969325153374233
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.19631901840490798,
+            "macro_f1": 0.1987062414257658,
+            "correct": 64,
+            "abstain": 3,
+            "confusion": [
+              [
+                35,
+                1,
+                7,
+                1
+              ],
+              [
+                131,
+                8,
+                78,
+                1
+              ],
+              [
+                41,
+                1,
+                21,
+                1
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 35,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 8,
+                "total": 218
+              },
+              "positive": {
+                "hits": 21,
+                "total": 64
+              }
+            },
+            "wrong": 259,
+            "coverage": 0.99079754601227
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.17791411042944785,
+            "macro_f1": 0.18090975267866272,
+            "correct": 58,
+            "abstain": 1,
+            "confusion": [
+              [
+                42,
+                0,
+                2,
+                0
+              ],
+              [
+                187,
+                1,
+                29,
+                1
+              ],
+              [
+                49,
+                0,
+                15,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 42,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 1,
+                "total": 218
+              },
+              "positive": {
+                "hits": 15,
+                "total": 64
+              }
+            },
+            "wrong": 267,
+            "coverage": 0.9969325153374233
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 43,
+            "regressed": 5,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07975460122699385,
+                0.15644171779141103
+              ],
+              "macro_f1": [
+                0.10896155296213257,
+                0.20388524185900506
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 37,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.052147239263803685,
+                0.12883435582822086
+              ],
+              "macro_f1": [
+                0.06509390886473912,
+                0.15715837056514184
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 37,
+            "regressed": 17,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.018404907975460127,
+                0.10429447852760737
+              ],
+              "macro_f1": [
+                0.0292647168432687,
+                0.12359092610754492
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 33,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.04601226993865029,
+                0.11656441717791408
+              ],
+              "macro_f1": [
+                0.05333436821525302,
+                0.13753125261496027
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 9,
+          "regressed": 5,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.009202453987730064,
+              0.03374233128834356
+            ],
+            "macro_f1": [
+              -0.02201951269570845,
+              0.05476840036394707
+            ]
+          }
+        }
+      }
+    },
+    "synchronous_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1411042944785276,
+            "macro_f1": 0.12482112357475879,
+            "correct": 46,
+            "abstain": 3,
+            "confusion": [
+              [
+                40,
+                0,
+                4,
+                0
+              ],
+              [
+                206,
+                0,
+                9,
+                3
+              ],
+              [
+                58,
+                0,
+                6,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 40,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 6,
+                "total": 64
+              }
+            },
+            "wrong": 277,
+            "coverage": 0.99079754601227
+          },
+          "teacher": {
+            "accuracy": 0.25766871165644173,
+            "macro_f1": 0.27513875867173404,
+            "correct": 84,
+            "abstain": 0,
+            "confusion": [
+              [
+                37,
+                1,
+                6,
+                0
+              ],
+              [
+                155,
+                20,
+                43,
+                0
+              ],
+              [
+                33,
+                4,
+                27,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 37,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 20,
+                "total": 218
+              },
+              "positive": {
+                "hits": 27,
+                "total": 64
+              }
+            },
+            "wrong": 242,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.15030674846625766,
+            "macro_f1": 0.14131006006006006,
+            "correct": 49,
+            "abstain": 3,
+            "confusion": [
+              [
+                39,
+                0,
+                5,
+                0
+              ],
+              [
+                183,
+                0,
+                32,
+                3
+              ],
+              [
+                54,
+                0,
+                10,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 39,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 10,
+                "total": 64
+              }
+            },
+            "wrong": 274,
+            "coverage": 0.99079754601227
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.19631901840490798,
+            "macro_f1": 0.20580053737948475,
+            "correct": 64,
+            "abstain": 12,
+            "confusion": [
+              [
+                29,
+                2,
+                12,
+                1
+              ],
+              [
+                117,
+                7,
+                86,
+                8
+              ],
+              [
+                32,
+                1,
+                28,
+                3
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 29,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 7,
+                "total": 218
+              },
+              "positive": {
+                "hits": 28,
+                "total": 64
+              }
+            },
+            "wrong": 250,
+            "coverage": 0.9631901840490797
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.15644171779141106,
+            "macro_f1": 0.14805825242718448,
+            "correct": 51,
+            "abstain": 3,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                189,
+                0,
+                26,
+                3
+              ],
+              [
+                54,
+                0,
+                10,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 10,
+                "total": 64
+              }
+            },
+            "wrong": 272,
+            "coverage": 0.99079754601227
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 45,
+            "regressed": 7,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.07668711656441718,
+                0.15644171779141106
+              ],
+              "macro_f1": [
+                0.09568638444482172,
+                0.20228225447726514
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 45,
+            "regressed": 10,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06441717791411045,
+                0.15030674846625766
+              ],
+              "macro_f1": [
+                0.08043673196607622,
+                0.18403685552704035
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 49,
+            "regressed": 29,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.009202453987730064,
+                0.11349693251533743
+              ],
+              "macro_f1": [
+                0.011443124803802645,
+                0.1265219839657621
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 38,
+            "regressed": 5,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.06441717791411045,
+                0.13803680981595093
+              ],
+              "macro_f1": [
+                0.08387372315559302,
+                0.1730217996631611
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 10,
+          "regressed": 8,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              -0.021472392638036797,
+              0.03067484662576689
+            ],
+            "macro_f1": [
+              -0.03692333662401626,
+              0.046903018297117106
+            ]
+          }
+        }
+      }
+    },
+    "audio_only_with_gap": {
+      "external": {
+        "n": 326,
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.147239263803681,
+            "macro_f1": 0.13432596861991675,
+            "correct": 48,
+            "abstain": 3,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                205,
+                0,
+                10,
+                3
+              ],
+              [
+                57,
+                0,
+                7,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 7,
+                "total": 64
+              }
+            },
+            "wrong": 275,
+            "coverage": 0.99079754601227
+          },
+          "teacher": {
+            "accuracy": 0.3098159509202454,
+            "macro_f1": 0.3268682257789011,
+            "correct": 101,
+            "abstain": 0,
+            "confusion": [
+              [
+                35,
+                0,
+                9,
+                0
+              ],
+              [
+                139,
+                32,
+                47,
+                0
+              ],
+              [
+                25,
+                5,
+                34,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 35,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 32,
+                "total": 218
+              },
+              "positive": {
+                "hits": 34,
+                "total": 64
+              }
+            },
+            "wrong": 225,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.147239263803681,
+            "macro_f1": 0.13432596861991675,
+            "correct": 48,
+            "abstain": 3,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                205,
+                0,
+                10,
+                3
+              ],
+              [
+                57,
+                0,
+                7,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 7,
+                "total": 64
+              }
+            },
+            "wrong": 275,
+            "coverage": 0.99079754601227
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.003067484662576687,
+            "macro_f1": 0.013888888888888888,
+            "correct": 1,
+            "abstain": 321,
+            "confusion": [
+              [
+                1,
+                1,
+                0,
+                42
+              ],
+              [
+                2,
+                0,
+                0,
+                216
+              ],
+              [
+                1,
+                0,
+                0,
+                63
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 1,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 0,
+                "total": 64
+              }
+            },
+            "wrong": 4,
+            "coverage": 0.015337423312883458
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.147239263803681,
+            "macro_f1": 0.13432596861991675,
+            "correct": 48,
+            "abstain": 3,
+            "confusion": [
+              [
+                41,
+                0,
+                3,
+                0
+              ],
+              [
+                205,
+                0,
+                10,
+                3
+              ],
+              [
+                57,
+                0,
+                7,
+                0
+              ]
+            ],
+            "recall": {
+              "negative": {
+                "hits": 41,
+                "total": 44
+              },
+              "neutral": {
+                "hits": 0,
+                "total": 218
+              },
+              "positive": {
+                "hits": 7,
+                "total": 64
+              }
+            },
+            "wrong": 275,
+            "coverage": 0.99079754601227
+          }
+        },
+        "teacher_vs": {
+          "desktop_character_v1": {
+            "corrected": 61,
+            "regressed": 8,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.11648773006134966,
+                0.20858895705521474
+              ],
+              "macro_f1": [
+                0.1361265613758051,
+                0.24626008424540272
+              ]
+            }
+          },
+          "desktop_character_fixed_weights_v1": {
+            "corrected": 61,
+            "regressed": 8,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.11648773006134966,
+                0.20858895705521474
+              ],
+              "macro_f1": [
+                0.1361265613758051,
+                0.24626008424540272
+              ]
+            }
+          },
+          "desktop_base_v1": {
+            "corrected": 101,
+            "regressed": 1,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.2576687116564417,
+                0.3558282208588957
+              ],
+              "macro_f1": [
+                0.2504416772526143,
+                0.3690559754905885
+              ]
+            }
+          },
+          "desktop_fixed_v1": {
+            "corrected": 61,
+            "regressed": 8,
+            "candidate_minus_reference_95_source_bootstrap": {
+              "accuracy": [
+                0.11648773006134966,
+                0.20858895705521474
+              ],
+              "macro_f1": [
+                0.1361265613758051,
+                0.24626008424540272
+              ]
+            }
+          }
+        },
+        "qwen_text_fixed_weight_comparison": {
+          "corrected": 0,
+          "regressed": 0,
+          "candidate_minus_reference_95_source_bootstrap": {
+            "accuracy": [
+              0.0,
+              0.0
+            ],
+            "macro_f1": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    }
+  },
+  "averages": {
+    "one_missing": {
+      "external": {
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.17689161554192231,
+            "macro_f1": 0.17955568959244636,
+            "coverage": 0.9979550102249489
+          },
+          "teacher": {
+            "accuracy": 0.28527607361963186,
+            "macro_f1": 0.30863804531497957,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.18609406952965235,
+            "macro_f1": 0.18840017548855562,
+            "coverage": 0.9979550102249489
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.2607361963190184,
+            "macro_f1": 0.2603459391117809,
+            "coverage": 0.9263803680981596
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.21063394683026584,
+            "macro_f1": 0.2211321066402728,
+            "coverage": 0.9979550102249489
+          }
+        }
+      }
+    },
+    "one_remaining": {
+      "external": {
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.1574642126789366,
+            "macro_f1": 0.17279227213917359,
+            "coverage": 0.8128834355828221
+          },
+          "teacher": {
+            "accuracy": 0.26482617586912066,
+            "macro_f1": 0.2844244869089011,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.1574642126789366,
+            "macro_f1": 0.17279227213917359,
+            "coverage": 0.8128834355828221
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.18404907975460125,
+            "macro_f1": 0.20351659628449179,
+            "coverage": 0.6840490797546012
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.17484662576687118,
+            "macro_f1": 0.19410132997994858,
+            "coverage": 0.8128834355828221
+          }
+        }
+      }
+    },
+    "partial": {
+      "external": {
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.15214723926380366,
+            "macro_f1": 0.14093236305404888,
+            "coverage": 0.9969325153374233
+          },
+          "teacher": {
+            "accuracy": 0.2668711656441718,
+            "macro_f1": 0.286616381397068,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.16441717791411042,
+            "macro_f1": 0.16246534419247627,
+            "coverage": 0.9969325153374233
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.23680981595092027,
+            "macro_f1": 0.23525113423105512,
+            "coverage": 0.9865030674846625
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.17730061349693252,
+            "macro_f1": 0.18097607964828968,
+            "coverage": 0.9969325153374233
+          }
+        }
+      }
+    },
+    "missing": {
+      "external": {
+        "metrics": {
+          "desktop_character_v1": {
+            "accuracy": 0.160345789180145,
+            "macro_f1": 0.16015506367864585,
+            "coverage": 0.9470161740100391
+          },
+          "teacher": {
+            "accuracy": 0.27133296151701053,
+            "macro_f1": 0.2920245003324529,
+            "coverage": 1.0
+          },
+          "desktop_character_fixed_weights_v1": {
+            "accuracy": 0.1684327941996654,
+            "macro_f1": 0.17235491489505175,
+            "coverage": 0.9470161740100391
+          },
+          "desktop_base_v1": {
+            "accuracy": 0.22894590072504187,
+            "macro_f1": 0.23344029794037216,
+            "coverage": 0.8876185164528722
+          },
+          "desktop_fixed_v1": {
+            "accuracy": 0.1857222532069158,
+            "macro_f1": 0.19550733710019202,
+            "coverage": 0.9470161740100391
+          }
+        }
+      }
+    }
+  }
+}

@@ -36,6 +36,20 @@ def input_pair(cache, clip):
     return bundles
 
 
+def desktop_case_inputs(clean, speech, gap, gap_speech):
+    for case, (state, mask) in CASES.items():
+        dropped = previous.PARTIAL.get(state, ())
+        text = gap["joint_text"] if "joint_text" in dropped else (gap if "text" in dropped else clean)["text"]
+        acoustic = (gap if "audio" in dropped else clean)["audio"]
+        visual = (gap if "visual" in dropped else clean)["visual"]
+        used_speech = gap_speech if "audio" in dropped else speech
+        active = {name: bool(mask & bit) for name, bit in previous.CHANNEL.items()}
+        yield case, {"text": text if active["text"] else "",
+                     "audio": acoustic if active["audio"] else None,
+                     "audio_embedding": used_speech if active["audio"] and used_speech.size else None,
+                     "visual": visual if active["visual"] else None}
+
+
 def fixed_desktop(cache, test):
     baseline = test["models"]["baseline"]
     if sha_file(ASSET) != baseline["classifier_sha256"] or TEXT_DIGEST != baseline["embedding_digest"]:
@@ -43,7 +57,6 @@ def fixed_desktop(cache, test):
     rows = test["rows"]
     results = {case: [] for case in CASES}
     audio_only = {case: [] for case in ("audio_only", "audio_only_with_gap")}
-    weights = previous.CHANNEL
     for start in range(0, len(rows), 10):
         batch = [input_pair(cache, row["id"]) for row in rows[start:start + 10]]
         utterances = sorted({text for (clean, _), (gap, _) in batch
@@ -51,23 +64,13 @@ def fixed_desktop(cache, test):
         vectors = embed_texts(utterances) if utterances else []
         embeddings = dict(zip(utterances, vectors, strict=True))
         for (clean, speech), (gap, gap_speech) in batch:
-            for case, (state, mask) in CASES.items():
-                dropped = previous.PARTIAL.get(state, ())
-                text = gap["joint_text"] if "joint_text" in dropped else (gap if "text" in dropped else clean)["text"]
-                acoustic = (gap if "audio" in dropped else clean)["audio"]
-                visual = (gap if "visual" in dropped else clean)["visual"]
-                used_speech = gap_speech if "audio" in dropped else speech
-                active = {name: bool(mask & bit) for name, bit in weights.items()}
-                result = predict_foundation_clip(text if active["text"] else "",
-                    embedding=embeddings.get(text) if active["text"] else None,
-                    audio=acoustic if active["audio"] else None,
-                    audio_embedding=used_speech if active["audio"] and used_speech.size else None,
-                    visual=visual if active["visual"] else None)
+            for case, inputs in desktop_case_inputs(clean, speech, gap, gap_speech):
+                result = predict_foundation_clip(**inputs, embedding=embeddings.get(inputs["text"]))
                 if result["status"] not in ("ok", "insufficient_evidence"):
                     raise RuntimeError(f"Cannot replay the original desktop: {result['status']}")
                 results[case].append(result["label"] or "abstain")
                 if case in audio_only:
-                    scores, _ = cue_scores(acoustic)
+                    scores, _ = cue_scores(inputs["audio"])
                     audio_only[case].append(LABELS[scores.argmax()] if scores is not None else "abstain")
     for view, condition in (("full", "complete"), ("audio", "audio_only"), ("visual", "visual_only"),
                             ("text", "text_only")):

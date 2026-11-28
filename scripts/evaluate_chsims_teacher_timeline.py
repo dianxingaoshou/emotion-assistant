@@ -14,14 +14,24 @@ from scripts import chsims_teacher_directional_pair as pair
 from scripts import chsims_teacher_dynamic_conflict as dynamic_conflict
 from scripts import chsims_teacher_context_evidence as context_evidence
 from scripts import chsims_teacher_context_review as context_review
+from scripts import chsims_teacher_complete_review as complete_review
+from scripts import chsims_teacher_complete_directional_review as complete_directional_review
+from scripts import chsims_teacher_dual_evidence_review as dual_evidence_review
 from scripts import chsims_teacher_minicpm_protected as minicpm_protected
 from scripts import chsims_teacher_minicpm_review as minicpm_review
 from scripts import chsims_teacher_neutral_guard as neutral_guard
+from scripts import chsims_teacher_neutral_corroboration as neutral_corroboration
+from scripts import chsims_teacher_neutral_consensus_review as neutral_consensus_review
+from scripts import chsims_teacher_neutral_precision as neutral_precision
+from scripts import chsims_teacher_neutral_precision_review as neutral_precision_review
+from scripts import chsims_teacher_precision_review as precision_review
 from scripts import chsims_teacher_refinement as refinement
 from scripts import chsims_teacher_robustness as prior
 from scripts import chsims_teacher_source_calibration as source_calibration
 from scripts import chsims_teacher_source_guard as source_guard
 from scripts import chsims_teacher_source_review as source_review
+from scripts import chsims_teacher_supported_review as supported_review
+from scripts import chsims_teacher_temporal_neutral_review as temporal_neutral_review
 from scripts import chsims_teacher_timeline as timeline
 from scripts import chsims_teacher_window_agreement as window_agreement
 from scripts.benchmark_chsims_teacher import save_json
@@ -36,9 +46,27 @@ SOURCE_EXPERIMENTS = ("source-review", "source-guard")
 AUDIO_REVIEWERS = {"minicpm_review": minicpm_review, "minicpm_protected": minicpm_protected,
                    "context_review": context_review, "window_agreement": window_agreement,
                    "source_calibration": source_calibration, "dynamic_conflict": dynamic_conflict,
-                   "neutral_guard": neutral_guard}
+                   "neutral_guard": neutral_guard, "complete_precision": neutral_guard,
+                   "complete_precision_joint": neutral_guard, "supported_review": neutral_guard,
+                   "supported_review_corroborated": neutral_guard, "supported_review_complete_only": neutral_guard,
+                   "neutral_consensus_review": neutral_guard, "temporal_neutral_review": neutral_guard,
+                   "neutral_consensus_acoustic": neutral_guard, "dual_evidence_review": neutral_guard,
+                   "neutral_precision_review": neutral_guard}
 AUDIO_EXPERIMENTS = tuple(kind.replace("_", "-") for kind in AUDIO_REVIEWERS)
-WEIGHT_REVIEWERS = ("dynamic_conflict", "neutral_guard")
+PRECISION_REVIEWERS = {"complete_precision": complete_review, "complete_precision_joint": complete_directional_review,
+                       "supported_review": supported_review, "supported_review_corroborated": supported_review,
+                       "supported_review_complete_only": supported_review, "neutral_consensus_review": supported_review,
+                       "temporal_neutral_review": supported_review, "neutral_consensus_acoustic": supported_review,
+                       "dual_evidence_review": supported_review, "neutral_precision_review": supported_review}
+TEMPORAL_NEUTRAL_REVIEWERS = {"neutral_consensus_review": neutral_consensus_review,
+                              "temporal_neutral_review": temporal_neutral_review,
+                              "neutral_consensus_acoustic": neutral_consensus_review,
+                              "dual_evidence_review": dual_evidence_review,
+                              "neutral_precision_review": neutral_precision_review}
+NEUTRAL_PRECISION_REVIEWERS = {"supported_review": neutral_precision,
+                               "supported_review_corroborated": neutral_corroboration, **TEMPORAL_NEUTRAL_REVIEWERS}
+PRECISION_EXPERIMENTS = tuple(kind.replace("_", "-") for kind in PRECISION_REVIEWERS)
+WEIGHT_REVIEWERS = ("dynamic_conflict", "neutral_guard", *PRECISION_REVIEWERS)
 ACOUSTIC_REVIEWERS = ("source_calibration", *WEIGHT_REVIEWERS)
 CONTEXT_REVIEWERS = ("context_review", "window_agreement", *ACOUSTIC_REVIEWERS)
 
@@ -143,12 +171,22 @@ def inference(cache, report, data_cache, checkpoint, old_model, original, data, 
                             if kind in WEIGHT_REVIEWERS:
                                 checked["quality"] = dynamic_conflict.quality_input(checked)
                         teacher = AUDIO_REVIEWERS[kind].infer(checked, audio_review["policies"][name]).copy()
+                        if kind in PRECISION_REVIEWERS:
+                            methods["teacher_previous"] = labels(teacher)
+                            if name == precision_review.CONDITION and correction["precision"] is not None:
+                                if kind in TEMPORAL_NEUTRAL_REVIEWERS:
+                                    checked["retained"] = neutral_consensus_review.retained_text_audio(
+                                        observations["synchronous_gap"]["windows"], time["windows"])
+                                refiner = NEUTRAL_PRECISION_REVIEWERS.get(kind, precision_review)
+                                teacher = refiner.infer(checked, teacher, correction["precision"])
                         diagnostics[name]["voice"] = voice
                         diagnostics[name]["voice_active"] = checked["active"]
                 else:
                     corrector = pair if correction.get("kind") == "pair" else directional
                     teacher[active] = corrector.predict(batch, correction["policies"][name])[active]
                 diagnostics[name]["changed"] = np.asarray(labels(teacher)) != np.asarray(methods["teacher_previous"])
+        if kind in PRECISION_REVIEWERS and name == "complete":
+            teacher = PRECISION_REVIEWERS[kind].infer(blocks, teacher, correction["complete"])
         if name in emotion2vec:
             methods["emotion2vec_scores"] = emotion2vec[name]
         methods["teacher_timeline_unguarded"] = labels(unguarded)
@@ -253,7 +291,25 @@ def evaluate(cache, output, external=None, experiment=None):
     if (checkpoint["code"] != sha_file(Path(timeline.__file__)) or checkpoint["reference"] != sha_file(original_path)
             or checkpoint["metadata"] != test["meta_sha256"]):
         raise ValueError("The timeline model and previous teacher must be frozen against the same release")
-    if experiment == "neutral-guard":
+    if experiment in PRECISION_EXPERIMENTS:
+        joint = experiment == "complete-precision-joint"
+        kind = experiment.replace("-", "_")
+        correction = neutral_guard.load(cache, current_path)
+        if kind == "neutral_consensus_acoustic":
+            precision = neutral_consensus_review.load(cache, correction["splits"], acoustic_support=True)
+            correction_path = neutral_consensus_review.ACOUSTIC_MODEL
+        elif kind in NEUTRAL_PRECISION_REVIEWERS:
+            refiner = NEUTRAL_PRECISION_REVIEWERS[kind]
+            precision = refiner.load(cache, correction["splits"])
+            correction_path = refiner.MODEL
+        elif kind == "supported_review_complete_only":
+            precision, correction_path = None, neutral_guard.MODEL
+        else:
+            precision = precision_review.load(cache, correction["splits"], joint)
+            correction_path = precision_review.JOINT_MODEL if joint else precision_review.MODEL
+        correction = {**correction, "kind": kind, "complete": PRECISION_REVIEWERS[kind].load(cache),
+                      "precision": precision}
+    elif experiment == "neutral-guard":
         correction, correction_path = neutral_guard.load(cache, current_path), neutral_guard.MODEL
     elif experiment == "dynamic-conflict":
         correction, correction_path = dynamic_conflict.load(cache, current_path), dynamic_conflict.MODEL
@@ -317,7 +373,9 @@ def evaluate(cache, output, external=None, experiment=None):
     prediction, trace, observations = inference(cache, report, dataset, checkpoint, old, original, data, correction)
     groups = {"external" if external else "official": np.arange(len(rows))}
     if correction is not None:
-        if experiment in AUDIO_EXPERIMENTS:
+        if experiment in PRECISION_EXPERIMENTS:
+            reference_file = "neutral-guard-test-predictions.json"
+        elif experiment in AUDIO_EXPERIMENTS:
             reference_file = "source-guard-test-predictions.json"
         elif experiment in SOURCE_EXPERIMENTS:
             reference_file = "pair-test-predictions.json"
@@ -402,6 +460,17 @@ def evaluate(cache, output, external=None, experiment=None):
         if experiment in AUDIO_EXPERIMENTS:
             result["reference_sha256"] = correction["audio_review"]["guard"]
             result["release_metrics"] = audio_release_metrics(result, external)
+            if experiment in PRECISION_EXPERIMENTS:
+                result["reference_sha256"] = sha_file(cache / timeline.DIRECTORY / neutral_guard.MODEL)
+                result["complete_model_sha256"] = sha_file(
+                    cache / timeline.DIRECTORY / PRECISION_REVIEWERS[correction["kind"]].MODEL)
+                fields = ("rule", "rules", "before", "after")
+                result["complete_development"] = {key: correction["complete"][key] for key in fields
+                                                  if key in correction["complete"]}
+                if correction["precision"] is not None:
+                    precision_fields = (*fields, "guard", "previous", "nearby_source_balanced_gain")
+                    result["precision_development"] = {key: correction["precision"][key] for key in precision_fields
+                                                       if key in correction["precision"]}
             result["voice_review_validation"] = {case: {key: value for key, value in policy.items() if key != "residual"}
                                                  for case, policy in correction["audio_review"]["policies"].items()}
             if not external:
@@ -459,6 +528,26 @@ def main():
                        help="compare source-learned text and acoustic weights under conflict")
     modes.add_argument("--neutral-guard", action="store_const", const="neutral-guard", dest="experiment",
                        help="compare the learned confirmation required for a negative review")
+    modes.add_argument("--complete-precision", action="store_const", const="complete-precision", dest="experiment",
+                       help="compare source-trained full-input and missing-visual precision reviews")
+    modes.add_argument("--complete-precision-joint", action="store_const", const="complete-precision-joint", dest="experiment",
+                       help="compare direction-specific full-input and missing-visual reviews")
+    modes.add_argument("--supported-review", action="store_const", const="supported-review", dest="experiment",
+                       help="compare full-input evidence checks and missing-visual neutral precision")
+    modes.add_argument("--supported-review-corroborated", action="store_const", const="supported-review-corroborated",
+                       dest="experiment", help="compare full-input evidence checks and two acoustic heads")
+    modes.add_argument("--supported-review-complete-only", action="store_const", const="supported-review-complete-only",
+                       dest="experiment", help="compare full-input evidence checks with the released missing-input policy")
+    modes.add_argument("--neutral-consensus-review", action="store_const", const="neutral-consensus-review",
+                       dest="experiment", help="compare grouped text and audio calibration for neutral predictions")
+    modes.add_argument("--neutral-consensus-acoustic", action="store_const", const="neutral-consensus-acoustic",
+                       dest="experiment", help="compare neutral calibration with an acoustic support requirement")
+    modes.add_argument("--temporal-neutral-review", action="store_const", const="temporal-neutral-review",
+                       dest="experiment", help="compare neutral review using retained text and acoustic evidence")
+    modes.add_argument("--dual-evidence-review", action="store_const", const="dual-evidence-review",
+                       dest="experiment", help="compare whole-clip and retained evidence for proposed neutral revisions")
+    modes.add_argument("--neutral-precision-review", action="store_const", const="neutral-precision-review",
+                       dest="experiment", help="compare a source-trained confirmation of neutral revisions")
     args = parser.parse_args()
     with threadpool_limits(limits=5, user_api="blas"):
         evaluate(args.cache, args.output, args.external, args.experiment)
