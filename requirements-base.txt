@@ -11,3 +11,6 @@ Pillow==11.1.0
 psutil==7.0.0
 pytest==8.4.2
 huggingface_hub==0.34.4
+# CPU dependencies imported by the teacher regression tests.
+scikit-learn==1.9.1
+threadpoolctl==3.8.0
